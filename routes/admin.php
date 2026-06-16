@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -83,13 +84,22 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::delete('/delete/{id}', [MenuController::class, 'destroy'])->name('destroy');
     });
 
+    // Modules
+    Route::prefix('modules')->name('modules.')->group(function () {
+        Route::get('/', [ModuleController::class, 'index'])->name('index');
+        Route::get('/create', [ModuleController::class, 'create'])->name('create');
+        Route::post('/store', [ModuleController::class, 'store'])->name('store');
+        Route::get('/{module}/edit', [ModuleController::class, 'edit'])->name('edit');
+        Route::post('/{module}/update', [ModuleController::class, 'update'])->name('update');
+    });
+
     Route::resource('roles', RoleController::class);
 
     Route::resource('permissions', PermissionController::class);
 
     Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions');
 
-    Route::post('roles/{role}/permissions',[RoleController::class, 'assignPermissions'])->name('roles.permissions.store');
+    Route::post('roles/{role}/permissions', [RoleController::class, 'assignPermissions'])->name('roles.permissions.store');
 
     Route::get('/test-permission', function () {
 

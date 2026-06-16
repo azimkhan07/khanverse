@@ -1,5 +1,5 @@
 <head>
-
+    
     <title>Khanverse Admin Panel</title>
 
     <!-- Meta -->
@@ -48,6 +48,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .pcoded-content {
             padding: 20px;
