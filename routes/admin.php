@@ -91,6 +91,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/store', [ModuleController::class, 'store'])->name('store');
         Route::get('/{module}/edit', [ModuleController::class, 'edit'])->name('edit');
         Route::post('/{module}/update', [ModuleController::class, 'update'])->name('update');
+        // DELETE
+        Route::delete('/{module}', [ModuleController::class, 'destroy'])->name('destroy');
+
+        // STATUS TOGGLE
+        Route::post('/{module}/status', [ModuleController::class, 'toggleStatus'])->name('status');
     });
 
     Route::resource('roles', RoleController::class);

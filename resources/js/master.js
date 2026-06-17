@@ -121,20 +121,53 @@ $(document).on('submit', '.ajaxForm', function (e) {
 |--------------------------------------------------------------------------
 */
 
-$(document).on('click', '.deleteBtn', function () {
+
+$(document).on('click', '.deleteModuleBtn', function () {
+
+    if (!confirm('Are you sure?')) {
+        return;
+    }
 
     let url = $(this).data('url');
 
-    if (!confirm('Are you sure?')) {
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
 
-        return false;
+            toastr.success(response.message);
+
+            location.reload();
+        }
+    });
+
+});
+
+
+
+$(document).on('change', '.moduleStatusToggle', function () {
+
+    let checkbox = $(this);
+
+    let url = checkbox.data('url');
+
+    let checked = checkbox.prop('checked');
+
+    if (!confirm('Are you sure you want to change module status?')) {
+
+        checkbox.prop('checked', !checked);
+
+        return;
     }
 
     $.ajax({
 
         url: url,
 
-        type: 'DELETE',
+        type: 'POST',
 
         data: {
             _token: $('meta[name="csrf-token"]').attr('content')
@@ -144,11 +177,13 @@ $(document).on('click', '.deleteBtn', function () {
 
             toastr.success(response.message);
 
-            setTimeout(function () {
+        },
 
-                location.reload();
+        error: function () {
 
-            }, 800);
+            checkbox.prop('checked', !checked);
+
+            toastr.error('Something went wrong');
 
         }
 

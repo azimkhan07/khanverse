@@ -12,6 +12,7 @@ class Module extends Model
         'name',
         'slug',
         'route',
+        'menu_id',
         'view_path',
         'controller',
         'panel',
@@ -23,4 +24,9 @@ class Module extends Model
         'roles' => 'array',
         'status' => 'boolean',
     ];
+
+    public function menu()
+    {
+        return $this->belongsTo(MenuItem::class, 'menu_id');
+    }
 }

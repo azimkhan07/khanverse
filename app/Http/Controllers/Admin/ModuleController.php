@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MenuItem;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -39,7 +40,25 @@ class ModuleController extends Controller
         $data['roles'] = $data['roles'] ?? [];
         $data['status'] = $request->boolean('status', true);
 
-        Module::create($data);
+        $module = Module::create($data);
+
+        if (!MenuItem::where('route_name', $module->route)->exists()) {
+
+            $menu = MenuItem::create([
+                'title'       => $module->name,
+                'icon'        => 'feather icon-grid',
+                'route_name'  => $module->route,
+                'parent_id'   => null,
+                'sorting'     => 0,
+                'roles'       => $module->roles,
+                'permission'  => null,
+                'sort_order'  => 0,
+                'is_active'   => $module->status,
+            ]);
+            $module->update([
+                'menu_id' => $menu->id
+            ]);
+        }
 
         return response()->json([
             'status' => true,
@@ -77,10 +96,57 @@ class ModuleController extends Controller
 
         $module->update($data);
 
+        if ($module->menu_id) {
+
+            MenuItem::where('id', $module->menu_id)
+                ->update([
+                    'title'      => $module->name,
+                    'route_name' => $module->route,
+                    'roles'      => $module->roles,
+                    'is_active'  => $module->status,
+                ]);
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'Module Updated Successfully',
             'reload' => true,
+        ]);
+    }
+
+    public function destroy(Module $module)
+    {
+        if ($module->menu_id) {
+
+            MenuItem::where('id', $module->menu_id)->delete();
+        }
+
+        $module->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Module Deleted Successfully'
+        ]);
+    }
+    public function toggleStatus(Module $module)
+    {
+        $newStatus = !$module->status;
+
+        $module->update([
+            'status' => $newStatus
+        ]);
+
+        if ($module->menu_id) {
+
+            MenuItem::where('id', $module->menu_id)
+                ->update([
+                    'is_active' => $newStatus
+                ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Status Updated Successfully'
         ]);
     }
 }
