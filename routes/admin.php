@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,12 +35,38 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // SERVICES
     Route::prefix('services')->name('services.')->group(function () {
-        Route::get('/', fn() => "Services List")->name('index');
+        Route::get('/', [ServiceController::class, 'index'])->name('index');
+        Route::get('/create', [ServiceController::class, 'create'])->name('create');
+        Route::post('/store', [ServiceController::class, 'store'])->name('store');
+        Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('edit');
+        Route::post('/{service}/update', [ServiceController::class, 'update'])->name('update');
+        Route::delete('/{service}/delete', [ServiceController::class, 'destroy'])->name('destroy');
+
+        Route::get('/{service}/gallery', [ServiceController::class, 'gallery'])->name('gallery');
+        Route::post('/{service}/gallery/store', [ServiceController::class, 'galleryStore'])->name('gallery.store');
+        Route::delete('/gallery/{image}', [ServiceController::class, 'galleryDelete'])->name('gallery.delete');
     });
 
     // CATEGORIES
     Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', fn() => "Categories List")->name('index');
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit');
+        Route::post('/{category}/update', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}/delete', [CategoryController::class, 'destroy'])->name('destroy');
+        Route::post('/{category}/status', [CategoryController::class, 'toggleStatus'])->name('status');
+    });
+
+    // Banner
+    Route::prefix('banners')->name('banners.')->group(function () {
+        Route::get('/', [BannerController::class, 'index'])->name('index');
+        Route::get('/create', [BannerController::class, 'create'])->name('create');
+        Route::post('/store', [BannerController::class, 'store'])->name('store');
+        Route::get('/{banner}/edit', [BannerController::class, 'edit'])->name('edit');
+        Route::post('/{banner}/update', [BannerController::class, 'update'])->name('update');
+        Route::delete('/{banner}', [BannerController::class, 'destroy'])->name('destroy');
+        Route::post('/status/{banner}', [BannerController::class, 'status'])->name('status');
     });
 
     // USERS (Buyers + Sellers)

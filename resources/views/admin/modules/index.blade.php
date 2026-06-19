@@ -38,7 +38,7 @@
                             <td>{{ ucfirst($module->panel) }}</td>
                             <td>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input moduleStatusToggle" type="checkbox"
+                                    <input class="form-check-input statusToggle" type="checkbox"
                                         data-url="{{ route('admin.modules.status', $module->id) }}"
                                         {{ $module->status ? 'checked' : '' }}>
                                 </div>
@@ -49,7 +49,7 @@
                                     Edit
                                 </button>
 
-                                <button class="btn btn-sm btn-danger deleteModuleBtn"
+                                <button class="btn btn-sm btn-danger deleteBtn"
                                     data-url="{{ route('admin.modules.destroy', $module->id) }}">
                                     Delete
                                 </button>

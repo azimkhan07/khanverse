@@ -30,6 +30,7 @@
 
                         <div class="page-inner">
                             @yield('content')
+                            @include('components.modal')
                         </div>
 
                     </div>
