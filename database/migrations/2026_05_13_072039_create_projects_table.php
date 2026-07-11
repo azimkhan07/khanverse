@@ -31,7 +31,7 @@ class CreateProjectsTable extends Migration
                 'open',
                 'in_progress',
                 'completed',
-                'cancelled'
+                'cancelled',
             ])->default('open');
 
             $table->timestamps();

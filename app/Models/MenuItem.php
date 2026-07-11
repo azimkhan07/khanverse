@@ -20,6 +20,10 @@ class MenuItem extends Model
         'is_active'
     ];
 
+    protected $casts = [
+        'roles' => 'array',
+    ];
+
     public function children()
     {
         return $this->hasMany(MenuItem::class, 'parent_id')->orderBy('sort_order');

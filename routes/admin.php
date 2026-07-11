@@ -5,7 +5,10 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ModuleController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProjectAttachmentController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
@@ -19,18 +22,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Orders
     Route::prefix('orders')->name('orders.')->group(function () {
 
-        Route::get('/', function () {
-            return "Orders List";
-        })->name('index');
-
-        Route::get('/create', function () {
-            return "Create Order";
-        })->name('create');
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/{order}/status', [OrderController::class, 'changeStatus'])->name('status');
     });
 
     // PROJECTS
     Route::prefix('projects')->name('projects.')->group(function () {
-        Route::get('/', fn() => "Projects List")->name('index');
+        Route::get('/', [ProjectController::class, 'index'])->name('index');
+        Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('projects/{project}')->name('projects.')->group(function () {
+        Route::get('/', [ProjectAttachmentController::class, 'index'])->name('attachments.index');
+        Route::post('/attachments', [ProjectAttachmentController::class, 'store'])->name('attachments.store');
+        Route::get('/attachments/{attachment}/download', [ProjectAttachmentController::class, 'download'])->name('attachments.download');
+        Route::delete('/attachments/{attachment}', [ProjectAttachmentController::class, 'destroy'])->name('attachments.destroy');
+        Route::get('/attachments/create', [ProjectAttachmentController::class, 'create'])->name('attachments.create');
     });
 
     // SERVICES

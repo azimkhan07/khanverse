@@ -39,9 +39,9 @@ class ModuleController extends Controller
 
         $data['roles'] = $data['roles'] ?? [];
         $data['status'] = $request->boolean('status', true);
-
+        // dd('before create', $data);
         $module = Module::create($data);
-
+        // dd($data);
         if (!MenuItem::where('route_name', $module->route)->exists()) {
 
             $menu = MenuItem::create([
