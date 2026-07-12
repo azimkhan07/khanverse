@@ -68,4 +68,19 @@ class User extends Authenticatable
             ->where('role_permissions.role_id', $this->role_id)
             ->select('permissions.*');
     }
+
+    public function buyer()
+    {
+        return $this->hasOne(Buyer::class);
+    }
+
+    public function seller()
+    {
+        return $this->hasOne(Seller::class);
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(UserDevice::class);
+    }
 }

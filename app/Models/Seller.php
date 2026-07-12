@@ -29,4 +29,19 @@ class Seller extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

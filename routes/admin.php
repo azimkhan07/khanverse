@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BuyerController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LoginDeviceController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\OrderController;
@@ -10,8 +12,10 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProjectAttachmentController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SellerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SuspiciousUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -80,9 +84,26 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // USERS (Buyers + Sellers)
     Route::prefix('users')->name('users.')->group(function () {
 
-        Route::get('/buyers', fn() => "Buyers List")->name('buyers.index');
+        // Buyers
+        Route::get('/buyers', [BuyerController::class, 'index'])->name('buyers.index');
+        Route::get('/buyers/{buyer}', [BuyerController::class, 'show'])->name('buyers.show');
+        Route::post('/buyers/{buyer}/status', [BuyerController::class, 'toggleStatus'])->name('buyers.status');
+        Route::post('/buyers/{buyer}/ban', [BuyerController::class, 'toggleBan'])->name('buyers.ban');
 
-        Route::get('/sellers', fn() => "Sellers List")->name('sellers.index');
+        // Sellers
+        Route::get('/sellers', [SellerController::class, 'index'])->name('sellers.index');
+        Route::get('/sellers/{seller}', [SellerController::class, 'show'])->name('sellers.show');
+        Route::post('/sellers/{seller}/status', [SellerController::class, 'toggleStatus'])->name('sellers.status');
+        Route::post('/sellers/{seller}/ban', [SellerController::class, 'toggleBan'])->name('sellers.ban');
+        Route::post('/sellers/{seller}/available', [SellerController::class, 'toggleAvailable'])->name('sellers.available');
+        
+        // Suspicious Users
+        Route::get('/suspicious-users', [SuspiciousUserController::class, 'index'])->name('suspicious-users');
+
+        // Login Devices
+        Route::get('/login-devices', [LoginDeviceController::class, 'index'])->name('login-devices');
+
+
     });
 
     Route::prefix('reports')->name('reports.')->group(function () {
