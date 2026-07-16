@@ -52,7 +52,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         toastr.options = {
             closeButton: true,
@@ -61,7 +61,7 @@
             timeOut: 3000
         };
     </script>
-    @stack('js')
+    @stack('scripts')
 </body>
 
 </html>

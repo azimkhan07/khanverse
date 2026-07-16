@@ -16,6 +16,13 @@ use App\Http\Controllers\Admin\SellerController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SuspiciousUserController;
+use App\Http\Controllers\Admin\Website\AboutController;
+use App\Http\Controllers\Admin\Website\ContactController;
+use App\Http\Controllers\Admin\Website\FaqController;
+use App\Http\Controllers\Admin\Website\HomepageController;
+use App\Http\Controllers\Admin\Website\PageController;
+use App\Http\Controllers\Admin\Website\SeoController;
+use App\Http\Controllers\Admin\Website\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -96,14 +103,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/sellers/{seller}/status', [SellerController::class, 'toggleStatus'])->name('sellers.status');
         Route::post('/sellers/{seller}/ban', [SellerController::class, 'toggleBan'])->name('sellers.ban');
         Route::post('/sellers/{seller}/available', [SellerController::class, 'toggleAvailable'])->name('sellers.available');
-        
+
         // Suspicious Users
         Route::get('/suspicious-users', [SuspiciousUserController::class, 'index'])->name('suspicious-users');
 
         // Login Devices
         Route::get('/login-devices', [LoginDeviceController::class, 'index'])->name('login-devices');
-
-
     });
 
     Route::prefix('reports')->name('reports.')->group(function () {
@@ -140,6 +145,30 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [MenuController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [MenuController::class, 'destroy'])->name('destroy');
+    });
+
+    // website management
+    Route::prefix('website')->name('website.')->group(function () {
+        Route::prefix('homepage')->name('homepage.')->group(function () {
+            Route::get('/', [HomepageController::class, 'index'])->name('index');
+            Route::get('/create', [HomepageController::class, 'create'])->name('create');
+            Route::post('/', [HomepageController::class, 'store'])->name('store');
+            Route::get('/{homepage}', [HomepageController::class, 'show'])->name('show');
+            Route::get('/{homepage}/edit', [HomepageController::class, 'edit'])->name('edit');
+            Route::put('/{homepage}', [HomepageController::class, 'update'])->name('update');
+            Route::delete('/{homepage}', [HomepageController::class, 'destroy'])->name('destroy');
+        });
+        Route::resource('about', AboutController::class);
+
+        Route::resource('contact', ContactController::class);
+
+        Route::resource('faq', FaqController::class);
+
+        Route::resource('testimonials', TestimonialController::class);
+
+        Route::resource('seo', SeoController::class);
+
+        Route::resource('pages', PageController::class);
     });
 
     // Modules
