@@ -1,0 +1,17 @@
+<div class="row">
+
+    <div class="col-lg-8">
+
+        @include('components.admin.website.testimonial.basic-information')
+
+    </div>
+
+    <div class="col-lg-4">
+
+        @include('components.admin.website.testimonial.media')
+
+        @include('components.admin.website.testimonial.publish')
+
+    </div>
+
+</div>
