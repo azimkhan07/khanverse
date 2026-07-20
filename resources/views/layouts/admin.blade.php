@@ -3,7 +3,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @include('partials.header')
 {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-
+<link rel="stylesheet" href="{{ asset('admin/assets/css/dashboard.css') }}">
 <body>
 
     <div class="loader-bg">

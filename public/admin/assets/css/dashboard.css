@@ -1,0 +1,298 @@
+/* ===============================
+   Dashboard Global
+================================ */
+
+.dashboard-card,
+.dashboard-chart-card,
+.dashboard-table-card,
+.dashboard-action-card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:.35s ease;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.dashboard-card:hover,
+.dashboard-chart-card:hover,
+.dashboard-table-card:hover,
+.dashboard-action-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 40px rgba(0,0,0,.15);
+
+}
+
+/* ===============================
+   Dashboard Header
+================================ */
+
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.dashboard-header h5{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.dashboard-header small{
+
+    color:#777;
+
+}
+
+/* ===============================
+   Gradient Border
+================================ */
+
+.dashboard-card::before,
+.dashboard-chart-card::before,
+.dashboard-table-card::before,
+.dashboard-action-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    top:0;
+
+    width:100%;
+
+    height:4px;
+
+    background:linear-gradient(90deg,#4F46E5,#06B6D4,#10B981);
+
+}
+
+/* ===============================
+   Dashboard Icon
+================================ */
+
+.dashboard-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:28px;
+
+    transition:.35s;
+
+}
+
+.dashboard-card:hover .dashboard-icon{
+
+    transform:rotate(10deg) scale(1.12);
+
+}
+
+/* ===============================
+   Quick Action
+================================ */
+
+.quick-action{
+
+    display:block;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    color:#333;
+
+    transition:.35s;
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+.quick-action:hover{
+
+    transform:translateY(-8px);
+
+    text-decoration:none;
+
+}
+
+.quick-icon{
+
+    transition:.35s;
+
+}
+
+.quick-action:hover .quick-icon{
+
+    transform:rotate(12deg) scale(1.12);
+
+}
+
+/* ===============================
+   Table
+================================ */
+
+.dashboard-table{
+
+    border-collapse:separate;
+
+    border-spacing:0 12px;
+
+}
+
+.dashboard-table thead th{
+
+    border:none;
+
+    color:#777;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+}
+
+.dashboard-table tbody tr{
+
+    background:#f8fafc;
+
+    transition:.3s;
+
+}
+
+.dashboard-table tbody tr:hover{
+
+    background:#eef4ff;
+
+}
+
+.dashboard-table td{
+
+    border:none;
+
+    padding:16px;
+
+}
+
+/* ===============================
+   Scrollbar
+================================ */
+
+::-webkit-scrollbar{
+
+    width:7px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#4F46E5;
+
+    border-radius:20px;
+
+}
+
+/* ===============================
+   Animation
+================================ */
+
+.fade-up{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ===============================
+   Shine Effect
+================================ */
+
+.shine{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.shine::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:50%;
+
+    height:100%;
+
+    transform:skewX(-20deg);
+
+    background:rgba(255,255,255,.25);
+
+}
+
+.shine:hover::after{
+
+    left:140%;
+
+    transition:.9s;
+
+}

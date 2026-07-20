@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Website\BannerController;
 use App\Http\Controllers\Admin\Website\ContactController;
 use App\Http\Controllers\Admin\Website\FaqController;
 use App\Http\Controllers\Admin\Website\HomepageController;
+use App\Http\Controllers\Admin\Website\MaintenanceController;
 use App\Http\Controllers\Admin\Website\PageController;
 use App\Http\Controllers\Admin\Website\SeoController;
 use App\Http\Controllers\Admin\Website\TestimonialController;
@@ -169,6 +170,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
             Route::delete('/{banner}', [BannerController::class, 'destroy'])->name('destroy');
             Route::post('/status/{banner}', [BannerController::class, 'status'])->name('status');
         });
+
+        // Maintenance
+        Route::get('maintenance',[MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::put('maintenance',[MaintenanceController::class, 'update'])->name('maintenance.update');
     });
 
     // Modules
