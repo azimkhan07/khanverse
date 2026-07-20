@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BuyerController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -17,6 +16,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SuspiciousUserController;
 use App\Http\Controllers\Admin\Website\AboutController;
+use App\Http\Controllers\Admin\Website\BannerController;
 use App\Http\Controllers\Admin\Website\ContactController;
 use App\Http\Controllers\Admin\Website\FaqController;
 use App\Http\Controllers\Admin\Website\HomepageController;
@@ -75,17 +75,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/{category}/update', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{category}/delete', [CategoryController::class, 'destroy'])->name('destroy');
         Route::post('/{category}/status', [CategoryController::class, 'toggleStatus'])->name('status');
-    });
-
-    // Banner
-    Route::prefix('banners')->name('banners.')->group(function () {
-        Route::get('/', [BannerController::class, 'index'])->name('index');
-        Route::get('/create', [BannerController::class, 'create'])->name('create');
-        Route::post('/store', [BannerController::class, 'store'])->name('store');
-        Route::get('/{banner}/edit', [BannerController::class, 'edit'])->name('edit');
-        Route::post('/{banner}/update', [BannerController::class, 'update'])->name('update');
-        Route::delete('/{banner}', [BannerController::class, 'destroy'])->name('destroy');
-        Route::post('/status/{banner}', [BannerController::class, 'status'])->name('status');
     });
 
     // USERS (Buyers + Sellers)
@@ -169,6 +158,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::resource('seo', SeoController::class);
 
         Route::resource('pages', PageController::class);
+
+        // Banner
+        Route::prefix('banners')->name('banners.')->group(function () {
+            Route::get('/', [BannerController::class, 'index'])->name('index');
+            Route::get('/create', [BannerController::class, 'create'])->name('create');
+            Route::post('/store', [BannerController::class, 'store'])->name('store');
+            Route::get('/{banner}/edit', [BannerController::class, 'edit'])->name('edit');
+            Route::post('/{banner}/update', [BannerController::class, 'update'])->name('update');
+            Route::delete('/{banner}', [BannerController::class, 'destroy'])->name('destroy');
+            Route::post('/status/{banner}', [BannerController::class, 'status'])->name('status');
+        });
     });
 
     // Modules
