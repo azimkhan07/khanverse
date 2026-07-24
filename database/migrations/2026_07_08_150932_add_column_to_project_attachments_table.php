@@ -31,7 +31,7 @@ return new class extends Migration
 
             $table->index('user_id');
 
-            $table->index('uploaded_by');
+            $table->string('attribute');
         });
     }
 

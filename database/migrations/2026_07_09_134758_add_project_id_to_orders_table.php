@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id')
                 ->nullable()
                 ->after('id');
+            $table->string('attribute');
         });
     }
 

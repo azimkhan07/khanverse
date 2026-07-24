@@ -4,6 +4,1306 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('seller/assets/css/profile.css') }}">
+    <style>
+        /*=========================================================
+      Seller Profile Design System
+    =========================================================*/
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+
+            --primary: #4F46E5;
+            --primary2: #6366F1;
+
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+
+            --text: #111827;
+            --text-light: #6B7280;
+
+            --bg: #F4F7FC;
+
+            --card: #ffffff;
+
+            --border: #E8ECF4;
+
+            --radius: 22px;
+
+            --transition: .35s;
+
+            --shadow:
+
+                0 15px 45px rgba(15, 23, 42, .08);
+
+        }
+
+        /*====================================*/
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        /*====================================*/
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+        /*====================================*/
+
+        body {
+
+            font-family: 'Poppins', sans-serif;
+
+            background:
+
+                linear-gradient(180deg,
+
+                    #EEF4FF,
+
+                    #F6F9FC,
+
+                    #FFFFFF);
+
+            color: var(--text);
+
+        }
+
+        /*====================================*/
+
+        .profile-page {
+
+            padding: 35px;
+
+        }
+
+        /*====================================*/
+
+        a {
+
+            text-decoration: none;
+
+        }
+
+        button {
+
+            transition: var(--transition);
+
+        }
+
+        /*====================================*/
+
+        .glass {
+
+            background:
+
+                rgba(255, 255, 255, .75);
+
+            backdrop-filter:
+
+                blur(18px);
+
+            border:
+
+                1px solid rgba(255, 255, 255, .45);
+
+        }
+
+        /*====================================*/
+
+        .card-ui {
+
+            background: var(--card);
+
+            border-radius: 24px;
+
+            border: 1px solid var(--border);
+
+            box-shadow: var(--shadow);
+
+            transition: .35s;
+
+        }
+
+        .card-ui:hover {
+
+            transform: translateY(-6px);
+
+        }
+
+        /*====================================*/
+
+        .section-title {
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            margin-bottom: 20px;
+
+        }
+
+        /*====================================*/
+
+        .subtitle {
+
+            color: var(--text-light);
+
+        }
+
+        /*====================================*/
+
+        .gradient-text {
+
+            background:
+
+                linear-gradient(135deg,
+
+                    #4F46E5,
+
+                    #06B6D4);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+
+        /*====================================*/
+
+        .gradient-btn {
+
+            border: none;
+
+            color: #fff;
+
+            border-radius: 50px;
+
+            padding: 13px 28px;
+
+            font-weight: 600;
+
+            background:
+
+                linear-gradient(135deg,
+
+                    #4F46E5,
+
+                    #06B6D4);
+
+            box-shadow:
+
+                0 10px 30px rgba(79, 70, 229, .30);
+
+        }
+
+        .gradient-btn:hover {
+
+            transform:
+
+                translateY(-3px);
+
+        }
+
+        /*====================================*/
+
+        .light-btn {
+
+            background: #fff;
+
+            border-radius: 50px;
+
+            border: none;
+
+            padding: 13px 28px;
+
+            font-weight: 600;
+
+            box-shadow:
+
+                0 8px 25px rgba(0, 0, 0, .06);
+
+        }
+
+        /*====================================*/
+
+        .badge-ui {
+
+            padding: 8px 18px;
+
+            border-radius: 30px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+        /*====================================*/
+
+        .badge-success {
+
+            color: #fff;
+
+            background: #10B981;
+
+        }
+
+        .badge-primary {
+
+            color: #fff;
+
+            background: #4F46E5;
+
+        }
+
+        /*====================================*/
+
+        .fade-up {
+
+            animation: fadeUp .7s ease;
+
+        }
+
+        @keyframes fadeUp {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(35px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        /*====================================*/
+
+        .float {
+
+            animation: float 5s ease-in-out infinite;
+
+        }
+
+        @keyframes float {
+
+            0% {
+
+                transform: translateY(0);
+
+            }
+
+            50% {
+
+                transform: translateY(-8px);
+
+            }
+
+            100% {
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        /*=========================================================
+     HERO SECTION
+    =========================================================*/
+
+        .profile-cover {
+
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 32px;
+
+            padding: 45px;
+
+            min-height: 330px;
+
+            background:
+
+                linear-gradient(135deg,
+                    #4338CA,
+                    #4F46E5,
+                    #06B6D4);
+
+            box-shadow:
+                0 30px 60px rgba(79, 70, 229, .25);
+
+        }
+
+        /*================================*/
+
+        .profile-cover::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 420px;
+
+            height: 420px;
+
+            right: -150px;
+
+            top: -150px;
+
+            border-radius: 50%;
+
+            background:
+
+                rgba(255, 255, 255, .08);
+
+        }
+
+        /*================================*/
+
+        .profile-cover::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 260px;
+
+            height: 260px;
+
+            left: -80px;
+
+            bottom: -80px;
+
+            border-radius: 50%;
+
+            background:
+
+                rgba(255, 255, 255, .08);
+
+        }
+
+        /*================================*/
+
+        .cover-content {
+
+            position: relative;
+
+            z-index: 10;
+
+        }
+
+        /*================================*/
+
+        .profile-avatar {
+
+            width: 170px;
+
+            height: 170px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            border: 7px solid rgba(255, 255, 255, .25);
+
+            box-shadow:
+
+                0 20px 45px rgba(0, 0, 0, .18);
+
+            transition: .35s;
+
+        }
+
+        .profile-avatar:hover {
+
+            transform: scale(1.05);
+
+        }
+
+        /*================================*/
+
+        .profile-avatar img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+        /*================================*/
+
+        .online-indicator {
+
+            position: absolute;
+
+            width: 22px;
+
+            height: 22px;
+
+            border-radius: 50%;
+
+            right: 10px;
+
+            bottom: 15px;
+
+            background: #22C55E;
+
+            border: 4px solid #fff;
+
+            animation: pulse 2s infinite;
+
+        }
+
+        @keyframes pulse {
+
+            0% {
+
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, .6);
+
+            }
+
+            70% {
+
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+
+            }
+
+            100% {
+
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+
+            }
+
+        }
+
+        /*================================*/
+
+        .profile-name {
+
+            color: #fff;
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+
+        }
+
+        /*================================*/
+
+        .profile-role {
+
+            color: rgba(255, 255, 255, .85);
+
+            font-size: 17px;
+
+        }
+
+        /*================================*/
+
+        .profile-meta {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+            margin-top: 20px;
+
+        }
+
+        .profile-meta span {
+
+            color: #fff;
+
+            font-size: 14px;
+
+        }
+
+        /*================================*/
+
+        .profile-actions {
+
+            margin-top: 35px;
+
+        }
+
+        .profile-actions .btn {
+
+            margin-right: 12px;
+
+        }
+
+        /*================================*/
+
+        .hero-info-card {
+
+            background:
+
+                rgba(255, 255, 255, .15);
+
+            backdrop-filter: blur(15px);
+
+            border-radius: 25px;
+
+            padding: 28px;
+
+            color: #fff;
+
+            text-align: center;
+
+            border: 1px solid rgba(255, 255, 255, .18);
+
+        }
+
+        .hero-info-card h2 {
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+        }
+
+        .hero-info-card hr {
+
+            border-color: rgba(255, 255, 255, .2);
+
+        }
+
+        .hero-info-card small {
+
+            opacity: .8;
+
+        }
+
+        /*=========================================================
+        STATS CARDS
+    =========================================================*/
+
+        .stats-section {
+
+            margin-top: -60px;
+
+            position: relative;
+
+            z-index: 20;
+
+        }
+
+        .stat-card {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background: #fff;
+
+            border-radius: 24px;
+
+            padding: 28px;
+
+            border: 1px solid #edf2f7;
+
+            box-shadow: 0 15px 40px rgba(15, 23, 42, .08);
+
+            transition: .35s;
+
+        }
+
+        .stat-card:hover {
+
+            transform: translateY(-8px);
+
+            box-shadow: 0 25px 55px rgba(79, 70, 229, .18);
+
+        }
+
+        /*--------------------------------*/
+
+        .stat-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: -70px;
+
+            right: -70px;
+
+            width: 150px;
+
+            height: 150px;
+
+            border-radius: 50%;
+
+            background: rgba(79, 70, 229, .06);
+
+        }
+
+        /*--------------------------------*/
+
+        .stat-icon {
+
+            width: 65px;
+
+            height: 65px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 28px;
+
+            color: #fff;
+
+            margin-bottom: 22px;
+
+        }
+
+        /*--------------------------------*/
+
+        .bg-project {
+
+            background: linear-gradient(135deg, #4F46E5, #6366F1);
+
+        }
+
+        .bg-order {
+
+            background: linear-gradient(135deg, #06B6D4, #0EA5E9);
+
+        }
+
+        .bg-wallet {
+
+            background: linear-gradient(135deg, #10B981, #34D399);
+
+        }
+
+        .bg-rating {
+
+            background: linear-gradient(135deg, #F59E0B, #FBBF24);
+
+        }
+
+        /*--------------------------------*/
+
+        .stat-number {
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            line-height: 1;
+
+        }
+
+        .stat-title {
+
+            margin-top: 10px;
+
+            color: #6B7280;
+
+            font-size: 15px;
+
+        }
+
+        .stat-change {
+
+            margin-top: 18px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 6px 12px;
+
+            border-radius: 50px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+        .up {
+
+            background: #ECFDF5;
+
+            color: #10B981;
+
+        }
+
+        .down {
+
+            background: #FEF2F2;
+
+            color: #EF4444;
+
+        }
+
+        /*--------------------------------*/
+
+        .stat-card:hover .stat-icon {
+
+            transform: rotate(8deg) scale(1.08);
+
+        }
+
+        .stat-icon {
+
+            transition: .35s;
+
+        }
+
+        /*--------------------------------*/
+
+        .counter {
+
+            transition: .3s;
+
+        }
+
+        /*--------------------------------*/
+
+        .stat-glow {
+
+            position: absolute;
+
+            width: 120px;
+
+            height: 120px;
+
+            border-radius: 50%;
+
+            right: -30px;
+
+            bottom: -30px;
+
+            opacity: .08;
+
+            background: #4F46E5;
+
+        }
+
+        /*=========================================================
+        LEFT SIDEBAR
+    =========================================================*/
+
+        .sidebar-card {
+
+            background: #fff;
+
+            border-radius: 24px;
+
+            padding: 28px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid #edf2f7;
+
+            box-shadow: 0 15px 40px rgba(15, 23, 42, .08);
+
+            transition: .35s;
+
+        }
+
+        .sidebar-card:hover {
+
+            transform: translateY(-6px);
+
+            box-shadow: 0 25px 55px rgba(79, 70, 229, .15);
+
+        }
+
+        /*--------------------------------*/
+
+        .sidebar-title {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin-bottom: 22px;
+
+        }
+
+        /*--------------------------------*/
+
+        .progress-wrapper {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin: 25px 0;
+
+        }
+
+        .progress-ring {
+
+            width: 170px;
+
+            height: 170px;
+
+            border-radius: 50%;
+
+            background: conic-gradient(#4F46E5 72%,
+
+                    #E8ECF4 0%);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        .progress-inner {
+
+            width: 130px;
+
+            height: 130px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        .progress-inner h2 {
+
+            font-size: 34px;
+
+            font-weight: 700;
+
+            color: #4F46E5;
+
+        }
+
+        .progress-inner span {
+
+            color: #6B7280;
+
+            font-size: 13px;
+
+        }
+
+        /*--------------------------------*/
+
+        .profile-info {
+
+            list-style: none;
+
+            padding: 0;
+
+            margin: 0;
+
+        }
+
+        .profile-info li {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 14px 0;
+
+            border-bottom: 1px solid #F1F5F9;
+
+        }
+
+        .profile-info li:last-child {
+
+            border: none;
+
+        }
+
+        .profile-info strong {
+
+            color: #111827;
+
+        }
+
+        /*--------------------------------*/
+
+        .level-card {
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            border-radius: 18px;
+
+            background: linear-gradient(135deg,
+
+                    #4F46E5,
+
+                    #6366F1);
+
+            color: #fff;
+
+        }
+
+        .level-card h5 {
+
+            margin-bottom: 5px;
+
+        }
+
+        .level-card small {
+
+            opacity: .85;
+
+        }
+
+        /*--------------------------------*/
+
+        .wallet-card {
+
+            background: linear-gradient(135deg,
+
+                    #10B981,
+
+                    #34D399);
+
+            border-radius: 20px;
+
+            padding: 22px;
+
+            color: #fff;
+
+            margin-top: 20px;
+
+        }
+
+        .wallet-card h2 {
+
+            font-size: 34px;
+
+            font-weight: 700;
+
+        }
+
+        .wallet-card p {
+
+            opacity: .85;
+
+            margin-bottom: 0;
+
+        }
+
+        /*--------------------------------*/
+
+        .rating-box {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+        }
+
+        .rating-stars {
+
+            font-size: 22px;
+
+            color: #FBBF24;
+
+        }
+
+        .rating-number {
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            margin-top: 8px;
+
+        }
+
+        /*--------------------------------*/
+
+        .skill-list {
+
+            margin-top: 20px;
+
+        }
+
+        .skill {
+
+            display: inline-block;
+
+            padding: 8px 18px;
+
+            margin: 6px;
+
+            border-radius: 50px;
+
+            background: #EEF2FF;
+
+            color: #4F46E5;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition: .3s;
+
+        }
+
+        .skill:hover {
+
+            background: #4F46E5;
+
+            color: #fff;
+
+            transform: translateY(-3px);
+
+        }
+
+        /*--------------------------------*/
+
+        .achievement {
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            padding: 22px;
+
+            border-radius: 20px;
+
+            background: #FFF8E7;
+
+        }
+
+        .achievement i {
+
+            font-size: 42px;
+
+            color: #F59E0B;
+
+            margin-bottom: 12px;
+
+        }
+
+        .achievement h5 {
+
+            font-weight: 700;
+
+        }
+
+        .achievement p {
+
+            color: #6B7280;
+
+            margin-bottom: 0;
+
+        }
+
+
+        /*=========================================================
+        PROFILE FORM
+    =========================================================*/
+
+        .form-card {
+
+            background: #fff;
+
+            border-radius: 24px;
+
+            padding: 35px;
+
+            border: 1px solid #edf2f7;
+
+            box-shadow: 0 15px 40px rgba(15, 23, 42, .08);
+
+        }
+
+        .form-title {
+
+            font-size: 22px;
+
+            font-weight: 700;
+
+            margin-bottom: 30px;
+
+        }
+
+        /*--------------------------------*/
+
+        .form-group {
+
+            margin-bottom: 25px;
+
+        }
+
+        /*--------------------------------*/
+
+        .form-label {
+
+            display: block;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+
+            color: #374151;
+
+        }
+
+        /*--------------------------------*/
+
+        .form-control,
+        .form-select {
+
+            height: 58px;
+
+            border-radius: 18px;
+
+            border: 2px solid #E8ECF4;
+
+            background: #F8FAFC;
+
+            padding: 0 20px;
+
+            transition: .35s;
+
+            box-shadow: none;
+
+        }
+
+        textarea.form-control {
+
+            height: 150px;
+
+            padding-top: 15px;
+
+            resize: none;
+
+        }
+
+        /*--------------------------------*/
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color: #4F46E5;
+
+            background: #fff;
+
+            box-shadow:
+
+                0 0 0 5px rgba(79, 70, 229, .08);
+
+        }
+
+        /*--------------------------------*/
+
+        .input-icon {
+
+            position: relative;
+
+        }
+
+        .input-icon i {
+
+            position: absolute;
+
+            left: 18px;
+
+            top: 18px;
+
+            color: #6B7280;
+
+        }
+
+        .input-icon input {
+
+            padding-left: 50px;
+
+        }
+
+        /*--------------------------------*/
+
+        .save-btn {
+
+            padding: 14px 35px;
+
+            border: none;
+
+            border-radius: 50px;
+
+            background:
+
+                linear-gradient(135deg,
+
+                    #4F46E5,
+
+                    #06B6D4);
+
+            color: #fff;
+
+            font-weight: 600;
+
+            transition: .35s;
+
+        }
+
+        .save-btn:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow:
+
+                0 15px 35px rgba(79, 70, 229, .30);
+
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -134,20 +1434,25 @@
 
             <div class="col-lg-3 mb-4">
 
-                <div class="profile-card stats-box">
+                <div class="stat-card">
+                    <div class="stat-icon bg-project">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
 
-                    <h2>
-
+                    <div class="stat-number">
                         <span class="counter" data-target="24">0</span>
+                    </div>
 
-                    </h2>
-
-                    <span>
-
+                    <div class="stat-title">
                         Total Projects
+                    </div>
 
-                    </span>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        12% this month
+                    </div>
 
+                    <div class="stat-glow"></div>
                 </div>
 
             </div>
