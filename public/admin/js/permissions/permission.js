@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+    console.log("Permission JS Loaded");
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -15,7 +15,7 @@ $(document).ready(function () {
     }
 
     $(document).on('click', '#addPermissionBtn', function () {
-
+        // alert("Clicked");
         $.ajax({
 
             url: '/admin/permissions/create',

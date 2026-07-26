@@ -66,12 +66,12 @@
     </div>
 @endsection
 
-@push('js')
+@push('scripts')
     <script>
         $('#assignPermissionForm').submit(function(e) {
 
             e.preventDefault();
-
+            // console.log($(this).serialize());
             $.ajax({
 
                 url: "{{ route('admin.roles.permissions.store', $role->id) }}",

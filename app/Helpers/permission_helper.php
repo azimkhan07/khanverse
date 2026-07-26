@@ -25,7 +25,7 @@ if (!function_exists('hasPermission')) {
 
             return false;
         }
-
+        
         // PERMISSION CHECK
         return $user->roleData
             ->permissions()

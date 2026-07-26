@@ -94,6 +94,6 @@
 
 @endsection
 
-@push('js')
+@push('scripts')
     <script src="{{ asset('admin/js/permissions/permission.js') }}"></script>
 @endpush

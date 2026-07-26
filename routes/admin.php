@@ -43,14 +43,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::prefix('projects')->name('projects.')->group(function () {
         Route::get('/', [ProjectController::class, 'index'])->name('index');
         Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
-    });
-
-    Route::prefix('projects/{project}')->name('projects.')->group(function () {
-        Route::get('/', [ProjectAttachmentController::class, 'index'])->name('attachments.index');
-        Route::post('/attachments', [ProjectAttachmentController::class, 'store'])->name('attachments.store');
-        Route::get('/attachments/{attachment}/download', [ProjectAttachmentController::class, 'download'])->name('attachments.download');
-        Route::delete('/attachments/{attachment}', [ProjectAttachmentController::class, 'destroy'])->name('attachments.destroy');
-        Route::get('/attachments/create', [ProjectAttachmentController::class, 'create'])->name('attachments.create');
+        Route::get('/{project}/attachments', [ProjectAttachmentController::class, 'index'])->name('attachments.index');
+        Route::post('/{project}/attachments', [ProjectAttachmentController::class, 'store'])->name('attachments.store');
+        Route::get('/{project}/attachments/create', [ProjectAttachmentController::class, 'create'])->name('attachments.create');
+        Route::get('/{project}/attachments/{attachment}/download', [ProjectAttachmentController::class, 'download']) ->name('attachments.download');
+        Route::delete('/{project}/attachments/{attachment}', [ProjectAttachmentController::class, 'destroy']) ->name('attachments.destroy');
     });
 
     // SERVICES
@@ -172,8 +169,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         });
 
         // Maintenance
-        Route::get('maintenance',[MaintenanceController::class, 'index'])->name('maintenance.index');
-        Route::put('maintenance',[MaintenanceController::class, 'update'])->name('maintenance.update');
+        Route::get('maintenance', [MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::put('maintenance', [MaintenanceController::class, 'update'])->name('maintenance.update');
     });
 
     // Modules

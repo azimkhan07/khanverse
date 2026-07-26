@@ -82,6 +82,6 @@
 
 @endsection
 
-@push('js')
+@push('scripts')
     <script src="{{ asset('admin/js/roles/role.js') }}"></script>
 @endpush

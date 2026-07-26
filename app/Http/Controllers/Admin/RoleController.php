@@ -95,6 +95,7 @@ class RoleController extends Controller
 
     public function assignPermissions(Request $request, Role $role)
     {
+        // dd($role);
         $role->permissions()->sync(
             $request->permissions ?? []
         );

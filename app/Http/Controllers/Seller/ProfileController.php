@@ -3,447 +3,258 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
+use App\Models\ProjectAttachment;
 use App\Models\Seller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     /**
-     * Display Seller Profile
+     * Display Seller Projects
      */
     public function index()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Auth User
-        |--------------------------------------------------------------------------
-        */
+        $seller = Seller::where('user_id', Auth::id())->first();
 
-        $user = Auth::user();
+        if (!$seller) {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Seller Profile
-        |--------------------------------------------------------------------------
-        */
+            return back()->with('error', 'Seller profile not found.');
+        }
 
-        $seller = Seller::with([
+        $projects = Project::with([
 
-            'social',
+            'buyer',
+            'service'
 
-            'documents',
+        ])
+            ->where('seller_id', $seller->id)
+            ->latest()
+            ->paginate(10);
 
-            'bankAccount',
+        return view('seller.projects.index', compact(
 
-            'languages',
+            'seller',
 
-            'certificates',
-
-            'experiences',
-
-            'portfolios',
-
-            'setting'
-
-        ])->where('user_id', $user->id)->first();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Return View
-        |--------------------------------------------------------------------------
-        */
-
-        return view('seller.profile.index', compact(
-
-            'user',
-
-            'seller'
+            'projects'
 
         ));
     }
 
     /**
-     * Update Seller Profile
+     * Display Single Project
      */
-    public function updateProfile(Request $request)
+    public function show($id)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validation
-        |--------------------------------------------------------------------------
-        */
+        $seller = Seller::where('user_id', Auth::id())->first();
 
-        $request->validate([
+        if (!$seller) {
 
-            'name'                => 'required|string|max:255',
-
-            'email'               => 'required|email|unique:users,email,' . Auth::id(),
-
-            'phone'               => 'nullable|string|max:20',
-
-            'full_name'           => 'required|string|max:255',
-
-            'bio'                 => 'nullable|string',
-
-            'skills'              => 'nullable|string',
-
-            'country'             => 'nullable|string|max:100',
-
-            'city'                => 'nullable|string|max:100',
-
-            'hourly_rate'         => 'nullable|numeric|min:0',
-
-            'experience_level'    => 'required|in:junior,mid,senior',
-
-            'available_for_work'  => 'nullable|boolean',
-
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update User & Seller
-        |--------------------------------------------------------------------------
-        */
-
-        DB::beginTransaction();
-
-        try {
-
-            $user = Auth::user();
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update User
-            |--------------------------------------------------------------------------
-            */
-
-            $user->update([
-
-                'name'  => $request->name,
-
-                'email' => $request->email,
-
-                'phone' => $request->phone,
-
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | Seller Profile
-            |--------------------------------------------------------------------------
-            */
-
-            $seller = Seller::firstOrCreate(
-
-                ['user_id' => $user->id],
-
-                ['full_name' => $request->full_name]
-
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update Seller
-            |--------------------------------------------------------------------------
-            */
-
-            $seller->update([
-
-                'full_name'          => $request->full_name,
-
-                'bio'                => $request->bio,
-
-                'skills'             => $request->skills,
-
-                'country'            => $request->country,
-
-                'city'               => $request->city,
-
-                'hourly_rate'        => $request->hourly_rate,
-
-                'experience_level'   => $request->experience_level,
-
-                'available_for_work' => $request->boolean('available_for_work'),
-
-            ]);
-
-            DB::commit();
-
-            return back()->with(
-
-                'success',
-
-                'Profile updated successfully.'
-
-            );
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return back()->with(
-
-                'error',
-
-                $e->getMessage()
-
-            );
+            return back()->with('error', 'Seller profile not found.');
         }
+
+        $project = Project::with([
+
+            'buyer',
+
+            'service',
+
+            'attachments'
+
+        ])
+            ->where('seller_id', $seller->id)
+            ->findOrFail($id);
+
+        return view('seller.projects.show', compact(
+
+            'project'
+
+        ));
     }
 
     /**
-     * Update Seller Password
+     * Update Project Status
      */
-    public function updatePassword(Request $request)
+    public function changeStatus(Request $request, $id)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validation
-        |--------------------------------------------------------------------------
-        */
-
         $request->validate([
 
-            'current_password' => 'required',
-
-            'password' => 'required|string|min:8|confirmed',
+            'status' => 'required|in:open,in_progress,completed,cancelled',
 
         ]);
 
-        /*
-    |--------------------------------------------------------------------------
-    | Auth User
-    |--------------------------------------------------------------------------
-    */
+        $seller = Seller::where('user_id', Auth::id())->first();
 
-        $user = Auth::user();
+        if (!$seller) {
 
-        /*
-    |--------------------------------------------------------------------------
-    | Check Current Password
-    |--------------------------------------------------------------------------
-    */
-
-        if (!Hash::check($request->current_password, $user->password)) {
-
-            return back()->withErrors([
-
-                'current_password' => 'Current password is incorrect.'
-
-            ]);
+            return back()->with('error', 'Seller profile not found.');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update Password
-        |--------------------------------------------------------------------------
-        */
+        $project = Project::where('seller_id', $seller->id)
+            ->findOrFail($id);
 
-        $user->update([
+        $project->update([
 
-            'password' => Hash::make($request->password)
+            'status' => $request->status
 
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
 
         return back()->with(
 
             'success',
 
-            'Password updated successfully.'
+            'Project status updated successfully.'
 
         );
     }
 
     /**
-     * Update Seller Profile Photo
+     * Display Project Attachments
      */
-    public function updatePhoto(Request $request)
+    public function attachments($id)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validation
-        |--------------------------------------------------------------------------
-        */
-
-        $request->validate([
-
-            'profile_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Auth User
-        |--------------------------------------------------------------------------
-        */
-
-        $user = Auth::user();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Seller Profile
-        |--------------------------------------------------------------------------
-        */
-
-        $seller = Seller::where('user_id', $user->id)->first();
+        $seller = Seller::where('user_id', Auth::id())->first();
 
         if (!$seller) {
 
-            return back()->with(
-                'error',
-                'Seller profile not found.'
-            );
+            return back()->with('error', 'Seller profile not found.');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Upload Image
-        |--------------------------------------------------------------------------
-        */
+        $project = Project::where('seller_id', $seller->id)
+            ->with('attachments')
+            ->findOrFail($id);
 
-        if ($request->hasFile('profile_image')) {
+        $attachments = $project->attachments()
+            ->latest()
+            ->get();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Delete Old Image
-            |--------------------------------------------------------------------------
-            */
+        return view('seller.projects.attachments', compact(
 
-            if (
-                $seller->profile_image &&
-                Storage::disk('public')->exists($seller->profile_image)
-            ) {
+            'project',
 
-                Storage::disk('public')->delete($seller->profile_image);
-            }
+            'attachments'
 
-            /*
-            |--------------------------------------------------------------------------
-            | Store New Image
-            |--------------------------------------------------------------------------
-            */
+        ));
+    }
 
-            $path = $request->file('profile_image')->store(
+    /**
+     * Upload Project Attachment
+     */
+    public function uploadAttachment(Request $request, $id)
+    {
+        $request->validate([
 
-                'seller/profile',
+            'file' => 'required|file|max:10240',
 
-                'public'
+            'attribute' => 'nullable|string|max:255',
 
-            );
+        ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Update Database
-            |--------------------------------------------------------------------------
-            */
+        $seller = Seller::where('user_id', Auth::id())->first();
 
-            $seller->update([
+        if (!$seller) {
 
-                'profile_image' => $path
+            return back()->with('error', 'Seller profile not found.');
+        }
+
+        $project = Project::where('seller_id', $seller->id)
+            ->findOrFail($id);
+
+        if ($request->hasFile('file')) {
+
+            $file = $request->file('file');
+
+            $path = $file->store('project-attachments', 'public');
+
+            ProjectAttachment::create([
+
+                'project_id' => $project->id,
+
+                'user_id' => Auth::id(),
+
+                'uploaded_by' => 'seller',
+
+                'file_name' => $file->getClientOriginalName(),
+
+                'file_path' => $path,
+
+                'file_size' => $file->getSize(),
+
+                'mime_type' => $file->getMimeType(),
+
+                'attribute' => $request->attribute,
 
             ]);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
 
         return back()->with(
 
             'success',
 
-            'Profile photo updated successfully.'
+            'Attachment uploaded successfully.'
 
         );
     }
 
     /**
-     * Remove Seller Profile Photo
+     * Download Project Attachment
      */
-    public function deletePhoto()
+    public function downloadAttachment($id)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Auth User
-        |--------------------------------------------------------------------------
-        */
+        $attachment = ProjectAttachment::findOrFail($id);
 
-        $user = Auth::user();
-
-        /*
-    |--------------------------------------------------------------------------
-    | Seller Profile
-    |--------------------------------------------------------------------------
-    */
-
-        $seller = Seller::where('user_id', $user->id)->first();
-
-        if (!$seller) {
+        if (!Storage::disk('public')->exists($attachment->file_path)) {
 
             return back()->with(
 
                 'error',
 
-                'Seller profile not found.'
+                'File not found.'
 
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Delete Old Image
-        |--------------------------------------------------------------------------
-        */
+        return Storage::disk('public')->download(
+
+            $attachment->file_path,
+
+            $attachment->file_name
+
+        );
+    }
+
+    /**
+     * Delete Project Attachment
+     */
+    public function deleteAttachment($id)
+    {
+        $attachment = ProjectAttachment::findOrFail($id);
 
         if (
 
-            $seller->profile_image &&
+            Storage::disk('public')->exists(
 
-            Storage::disk('public')->exists($seller->profile_image)
+                $attachment->file_path
+
+            )
 
         ) {
 
             Storage::disk('public')->delete(
 
-                $seller->profile_image
+                $attachment->file_path
 
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Remove Image From Database
-        |--------------------------------------------------------------------------
-        */
-
-        $seller->update([
-
-            'profile_image' => null
-
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
+        $attachment->delete();
 
         return back()->with(
 
             'success',
 
-            'Profile photo removed successfully.'
+            'Attachment deleted successfully.'
 
         );
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectAttachment extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'project_id', 'file', 'created_at', 'updated_at'];
+    protected $fillable = ['project_id', 'user_id', 'uploaded_by', 'file_name', 'file_path', 'file_size', 'mime_type', 'attribute',];
 
     public function project()
     {

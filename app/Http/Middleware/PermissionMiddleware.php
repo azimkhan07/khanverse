@@ -10,6 +10,7 @@ class PermissionMiddleware
 {
     public function handle(Request $request, Closure $next, $permission): Response
     {
+
         $user = auth()->user();
 
         // USER LOGIN CHECK
