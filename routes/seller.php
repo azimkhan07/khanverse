@@ -9,7 +9,7 @@ use App\Http\Controllers\Seller\ServiceController;
 use App\Http\Controllers\Seller\WalletController;
 use App\Http\Controllers\Seller\ReviewController;
 use App\Http\Controllers\Seller\NotificationController;
-use App\Http\Controllers\Seller\ChatController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Seller\ProfileController;
 use App\Http\Controllers\Seller\SettingController;
 
@@ -57,28 +57,45 @@ Route::prefix('orders')->name('orders.')->group(function () {
 });
 
 /*
-        |--------------------------------------------------------------------------
-        | Services
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| Services
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+Route::prefix('services')->name('services.')->group(function () {
+    Route::get('/', [ServiceController::class, 'index'])->name('index');
+    Route::get('/create', [ServiceController::class, 'create'])->name('create');
+    Route::post('/store', [ServiceController::class, 'store'])->name('store');
+    Route::get('/{service}/show', [ServiceController::class, 'show'])->name('show');
+    Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('edit');
+    Route::post('/{service}/update', [ServiceController::class, 'update'])->name('update');
+    Route::delete('/{service}/delete', [ServiceController::class, 'destroy'])->name('delete');
 
-/*
-        |--------------------------------------------------------------------------
-        | Wallet
-        |--------------------------------------------------------------------------
-        */
+    // Gallery
 
-Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::get('/{service}/gallery', [ServiceController::class, 'gallery'])->name('gallery');
+    Route::post('/{service}/gallery/store', [ServiceController::class, 'galleryStore'])->name('gallery.store');
+    Route::delete('/gallery/{image}/delete', [ServiceController::class, 'galleryDelete'])->name('gallery.delete');
+});
 
-/*
-        |--------------------------------------------------------------------------
-        | Reviews
-        |--------------------------------------------------------------------------
-        */
 
-Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+// Seller Walet
+Route::prefix('wallet')->name('wallet.')->group(function () {
+    Route::get('/', [WalletController::class, 'index'])->name('index');
+
+    Route::get('/transactions', [WalletController::class, 'transactions'])->name('transactions');
+    Route::get('/transaction/{id}', [WalletController::class, 'showTransaction'])->name('transaction.show');
+
+    Route::get('/withdraw', [WalletController::class, 'withdrawForm'])->name('withdraw.form');
+    Route::post('/withdraw', [WalletController::class, 'withdrawRequest'])->name('withdraw.request');
+    Route::get('/withdraw-history', [WalletController::class, 'withdrawHistory'])->name('withdraw.history');
+});
+
+// Review
+Route::prefix('reviews')->name('reviews.')->group(function () {
+    Route::get('/', [ReviewController::class, 'index'])->name('index');
+    Route::get('/{review}', [ReviewController::class, 'show'])->name('show');
+});
 
 /*
         |--------------------------------------------------------------------------
@@ -86,15 +103,44 @@ Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index'
         |--------------------------------------------------------------------------
         */
 
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::get('/latest', [NotificationController::class, 'latest'])->name('latest');
+    Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('count');
+    Route::post('/{id}/read', [NotificationController::class, 'markRead'])->name('read');
+    Route::post('/read-all', [NotificationController::class, 'markAllRead'])->name('read.all');
+    Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+});
 
 /*
-        |--------------------------------------------------------------------------
-        | Chat
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| Seller Chat
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::prefix('chat')->name('chat.')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Conversation
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/{conversation}', [ChatController::class, 'show'])->name('show');
+    Route::get('/{conversation}/messages', [ChatController::class, 'loadMessages'])->name('messages');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Message
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/send', [ChatController::class, 'sendMessage'])->name('send');
+    Route::post('/{conversation}/seen', [ChatController::class, 'markAsSeen'])->name('seen');
+    Route::delete('/message/{message}', [ChatController::class, 'deleteMessage'])->name('delete');
+
+    Route::post('/open', [ChatController::class, 'openConversation'])->name('open');
+});
 
 /*
         |--------------------------------------------------------------------------

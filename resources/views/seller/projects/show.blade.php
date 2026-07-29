@@ -1,5 +1,5 @@
 @extends('seller.layouts.app')
-
+<link rel="stylesheet" href="{{ asset('seller/assets/css/chat.css') }}">
 @section('content')
     <div class="container-fluid">
 
@@ -266,11 +266,11 @@
 
                         </a>
 
-                        <button class="btn btn-success" disabled>
+                        <button class="btn btn-success" id="openChat" data-project="{{ $project->id }}">
 
                             <i class="ti-comments mr-2"></i>
 
-                            Open Chat (Coming Soon)
+                            Open Chat
 
                         </button>
 
@@ -523,8 +523,8 @@
         </div>
 
         <!-- =========================
-                            PROJECT WORKSPACE
-                        ========================== -->
+                                                PROJECT WORKSPACE
+                                            ========================== -->
 
         <div class="card shadow-sm border-0 mt-4">
 
@@ -714,4 +714,50 @@
         </div>
 
     </div>
+    @include('seller.projects.partials.chat-popup')
 @endsection
+@push('scripts')
+    <script>
+        let chatMinimized = false;
+        $("#minimizeChat").on("click", function() {
+            if (!chatMinimized) {
+                $("#chatContent").slideUp(200);
+                $("#chatPopup").addClass("minimized");
+                $("#minimizeChat i").removeClass("icon-minus").addClass("icon-plus");
+                chatMinimized = true;
+            } else {
+                $("#chatContent").slideDown(200);
+                $("#chatPopup").removeClass("minimized");
+                $("#minimizeChat i").removeClass("icon-plus").addClass("icon-minus");
+                chatMinimized = false;
+            }
+        });
+
+        $("#closeChat").on("click", function() {
+            $("#chatPopup").css("right", "-450px");
+        });
+
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $("#openChat").click(function() {
+                let project = $(this).data("project");
+                $.ajax({
+                    url: "{{ route('seller.chat.open') }}",
+                    type: "POST",
+                    data: {
+                        project_id: project
+                    },
+                    success: function(response) {
+                        $("#chatPopup").css("right", "20px");
+                        console.log(response);
+                        $("#chatUserName").text(response.buyer.full_name);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
