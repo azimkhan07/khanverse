@@ -157,13 +157,24 @@ Route::prefix('profile')->name('profile.')->group(function () {
 });
 
 /*
-        |--------------------------------------------------------------------------
-        | Settings
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| Settings
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+Route::prefix('settings')->name('settings.')->group(function () {
+    Route::get('/', [SettingController::class, 'index'])->name('index');
+    Route::post('/password', [SettingController::class, 'updatePassword'])->name('password.update');
+    Route::post('/notifications', [SettingController::class, 'updateNotifications'])->name('notifications.update');
+    Route::delete('/devices/{id}', [SettingController::class, 'removeDevice'])->name('devices.remove');
+    Route::post('/privacy', [SettingController::class, 'updatePrivacy'])->name('privacy.update');
+    Route::post('/delete-account', [SettingController::class, 'destroyAccount'])->name('destroy');
+});
 
+// support index(chat with admin for any qury)
+Route::get('/support', function () {
+    return view('seller.support.index');
+})->name('seller.support.index');
 //  test
 Route::get('/test', function () {
     return "SELLER ROUTE WORKING";

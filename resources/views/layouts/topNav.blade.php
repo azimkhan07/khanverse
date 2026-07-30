@@ -105,50 +105,78 @@
                             <span>{{ auth()->user()->username }}</span>
                             <i class="feather icon-chevron-down"></i>
                         </div>
-                        <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn"
-                            data-dropdown-out="fadeOut">
-                            <li>
-                                <a href="#!">
-                                    <i class="feather icon-settings"></i> Settings
+                        <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="feather icon-user"></i> Profile
+                            @if (auth()->check())
+                                {{-- Seller --}}
+                                @if (auth()->user()->role == 'seller')
+                                    <li>
+                                        <a href="{{ route('seller.settings.index') }}">
+                                            <i class="feather icon-settings"></i>
+                                            Settings
+                                        </a>
+                                    </li>
 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-inbox.html">
-                                    <i class="feather icon-mail"></i> My Messages
+                                    <li>
+                                        <a href="{{ route('seller.profile.index') }}">
+                                            <i class="feather icon-user"></i>
+                                            Profile
+                                        </a>
+                                    </li>
 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="auth-lock-screen.html">
-                                    <i class="feather icon-lock"></i> Lock Screen
+                                    <li>
+                                        <a href="{{ route('seller.support.index') }}">
+                                            <i class="feather icon-mail"></i>
+                                            Support Inbox
+                                        </a>
+                                    </li>
 
-                                </a>
-                            </li>
+                                    {{-- Buyer --}}
+                                @elseif(auth()->user()->role == 'buyer')
+                                    <li>
+                                        <a href="{{ route('buyer.settings.index') }}">
+                                            <i class="feather icon-settings"></i>
+                                            Settings
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ route('buyer.profile.index') }}">
+                                            <i class="feather icon-user"></i>
+                                            Profile
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ route('buyer.support.index') }}">
+                                            <i class="feather icon-mail"></i>
+                                            Support Inbox
+                                        </a>
+                                    </li>
+                                @endif
+
+                            @endif
+
                             <li>
 
                                 <a href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 
                                     <i class="feather icon-log-out"></i>
+
                                     Logout
 
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
+                                    style="display:none;">
 
                                     @csrf
 
                                 </form>
 
                             </li>
+
                         </ul>
                     </div>
                 </li>
