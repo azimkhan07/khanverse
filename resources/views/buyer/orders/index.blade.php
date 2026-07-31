@@ -15,7 +15,7 @@
 
                 <small class="text-muted">
 
-                    Manage all your client orders.
+                    Manage all your purchased orders.
 
                 </small>
 
@@ -32,57 +32,26 @@
                     <table class="table table-hover align-middle">
 
                         <thead>
-
                             <tr>
-
                                 <th>#</th>
-
-                                <th>Project</th>
-
-                                <th>Buyer</th>
-
+                                <th>Service</th>
+                                <th>Service Provider</th>
                                 <th>Amount</th>
-
                                 <th>Status</th>
-
                                 <th>Delivery</th>
-
                                 <th>Action</th>
-
                             </tr>
-
                         </thead>
 
                         <tbody>
                             @forelse($orders as $order)
                                 <tr>
 
+                                    <td> #{{ $order->id }} </td>
+                                    <td> {{ optional($order->service)->title ?? '-' }} </td>
+                                    <td> {{ ($order->seller->full_name) ?? '-' }} </td>
+                                    <td> ₹{{ number_format($order->total_amount ?? 0, 2) }} </td>
                                     <td>
-
-                                        #{{ $order->id }}
-
-                                    </td>
-
-                                    <td>
-
-                                        {{ optional($order->project)->title ?? '-' }}
-
-                                    </td>
-
-                                    <td>
-
-                                        {{ optional($order->buyer)->name ?? '-' }}
-
-                                    </td>
-
-                                    <td>
-
-                                        ₹{{ number_format($order->amount, 2) }}
-
-                                    </td>
-
-                                    <td>
-
                                         @switch($order->status)
                                             @case('pending')
                                                 <span class="badge bg-warning">
@@ -124,57 +93,38 @@
                                                 </span>
                                             @break
                                         @endswitch
-
                                     </td>
-
+                                    <td> {{ $order->delivery_date ?? '-' }} </td>
                                     <td>
-
-                                        {{ $order->delivery_date ?? '-' }}
-
-                                    </td>
-
-                                    <td>
-
-                                        <a href="{{ route('seller.orders.show', $order->id) }}"
-                                            class="btn btn-sm btn-primary">
-
+                                        <a href="{{ route('buyer.orders.show', $order->id) }}" class="btn btn-sm btn-primary">
                                             <i class="ti-eye"></i>
-
                                             View
-
                                         </a>
-
                                     </td>
-
                                 </tr>
 
                                 @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5">
+                                            No Purchase Orders Found
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
 
-                                <tr>
+                        </table>
 
-                                    <td colspan="7" class="text-center py-5">
+                    </div>
 
-                                        No Orders Found
+                    <div class="mt-3">
 
-                                    </td>
+                        {{ $orders->links() }}
 
-                                </tr>
-                            @endforelse
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-                <div class="mt-3">
-
-                    {{ $orders->links() }}
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
-
-    </div>
-@endsection
+    @endsection

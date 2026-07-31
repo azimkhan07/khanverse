@@ -33,4 +33,9 @@ class Order extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }
