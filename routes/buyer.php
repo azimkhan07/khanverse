@@ -72,4 +72,8 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
         Route::post('/read/{id}', [NotificationController::class, 'markAsRead'])->name('read');
     });
 
+    // support index(chat with admin for any qury)
+    Route::get('/support', function () {
+        return view('seller.support.index');
+    })->name('support.index');
 });
