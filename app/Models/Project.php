@@ -44,4 +44,14 @@ class Project extends Model
     {
         return $this->hasMany(ProjectAttachment::class);
     }
+
+    public function deliveries()
+    {
+        return $this->hasMany(ProjectDelivery::class);
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }

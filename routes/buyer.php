@@ -26,6 +26,9 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     Route::prefix('projects')->name('projects.')->group(function () {
         Route::get('/', [ProjectController::class, 'index'])->name('index');
         Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
+
+        Route::get('projects/attachments/{attachment}', [ProjectController::class, 'Attachments'])->name('attachments');
+        Route::get('projects/attachments/{attachment}/download', [ProjectController::class, 'downloadAttachment'])->name('attachments.download');
     });
 
     // Wallet

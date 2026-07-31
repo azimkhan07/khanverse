@@ -142,9 +142,9 @@
                 </div>
 
                 <div class="col-lg-4 mb-3">
-                    <a href="{{ route('buyer.projects.show', $order->project_id) }}" class="btn btn-info w-100">
+                    <a href="{{ route('buyer.projects.attachments', $order->project_id) }}" class="btn btn-info w-100">
                         <i class="ti-folder mr-1"></i>
-                        View Project
+                        View Project File
                     </a>
                 </div>
 

@@ -1,4 +1,4 @@
-@extends('seller.layouts.app')
+@extends('buyer.layouts.app')
 
 @section('content')
     <div class="container-fluid">
@@ -23,7 +23,7 @@
 
             <div>
 
-                <a href="{{ route('seller.projects.show', $project->id) }}" class="btn btn-secondary">
+                <a href="{{ route('buyer.projects.show', $project->id) }}" class="btn btn-secondary">
 
                     <i class="ti-arrow-left"></i>
 
@@ -35,54 +35,6 @@
 
         </div>
 
-        <div class="card shadow-sm border-0 mb-4">
-
-            <div class="card-header">
-
-                <strong>
-
-                    Upload Attachment
-
-                </strong>
-
-            </div>
-
-            <div class="card-body">
-
-                <form action="{{ route('seller.projects.attachments.upload', $project->id) }}" method="POST"
-                    enctype="multipart/form-data">
-
-                    @csrf
-
-                    <div class="row">
-
-                        <div class="col-md-9">
-
-                            <input type="file" name="file" class="form-control" required>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <button class="btn btn-primary w-100">
-
-                                <i class="ti-upload"></i>
-
-                                Upload
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-
 
         <div class="card shadow-sm border-0">
 
@@ -90,7 +42,7 @@
 
                 <strong>
 
-                    Uploaded Files
+                    Files
 
                 </strong>
 
@@ -129,139 +81,85 @@
                         <tbody>
 
                             @forelse($project->attachments as $attachment)
+                                @php
+                                    $icon = 'ti-file';
+                                    if (Str::contains($attachment->mime_type, 'pdf')) {
+                                        $icon = 'ti-file';
+                                    } elseif (Str::contains($attachment->mime_type, 'image')) {
+                                        $icon = 'ti-image';
+                                    } elseif (Str::contains($attachment->mime_type, 'zip')) {
+                                        $icon = 'ti-archive';
+                                    } elseif (Str::contains($attachment->mime_type, 'word')) {
+                                        $icon = 'ti-write';
+                                    }
+                                @endphp
+
                                 <tr>
-
+                                    <td> {{ $loop->iteration }} </td>
                                     <td>
-
-                                        {{ $loop->iteration }}
-
-                                    </td>
-
-                                    <td>
-
                                         <div class="d-flex align-items-center">
-
-                                            <i class="ti-file text-primary me-2"></i>
-
+                                            <i class="{{ $icon }} text-primary me-2"></i>
                                             <div>
-
-                                                <strong>
-
-                                                    {{ $attachment->file_name }}
-
-                                                </strong>
-
+                                                <strong> {{ $attachment->file_name }} </strong>
                                                 <br>
-
-                                                <small class="text-muted">
-
-                                                    {{ $attachment->mime_type }}
-
-                                                </small>
-
+                                                <small class="text-muted"> {{ $attachment->mime_type }} </small>
                                             </div>
-
                                         </div>
-
                                     </td>
-
                                     <td>
-
-                                        {{ number_format($attachment->file_size / 1024, 2) }} KB
-
+                                        @php
+                                            $size = $attachment->file_size;
+                                            if ($size >= 1048576) {
+                                                $size = number_format($size / 1048576, 2) . ' MB';
+                                            } else {
+                                                $size = number_format($size / 1024, 2) . ' KB';
+                                            }
+                                        @endphp
+                                        {{ $size }}
                                     </td>
-
                                     <td>
-
-                                        <span class="badge bg-info">
-
-                                            {{ ucfirst($attachment->uploaded_by) }}
-
-                                        </span>
-
+                                        @php
+                                            $uploadedBy = [
+                                                'seller' => 'Seller',
+                                                'buyer' => 'Buyer',
+                                                'admin' => 'Admin',
+                                            ];
+                                        @endphp
+                                        <span class="badge bg-info"> {{ $uploadedBy[$attachment->uploaded_by] ?? ucfirst($attachment->uploaded_by) }} </span>
                                     </td>
-
                                     <td>
-
                                         {{ $attachment->created_at->format('d M Y') }}
-
                                         <br>
-
-                                        <small class="text-muted">
-
-                                            {{ $attachment->created_at->format('h:i A') }}
-
-                                        </small>
-
+                                        <small class="text-muted"> {{ $attachment->created_at->format('h:i A') }} </small>
                                     </td>
-
                                     <td>
-
                                         <div class="btn-group">
-
-                                            <a href="{{ route('seller.projects.attachments.download', $attachment->id) }}"
-                                                class="btn btn-sm btn-success">
-
+                                            <a href="{{ route('buyer.projects.attachments.download', $attachment->id) }}"
+                                                class="btn btn-success btn-sm">
                                                 <i class="ti-download"></i>
-
+                                                Download
                                             </a>
-
-                                            <form
-                                                action="{{ route('seller.projects.attachments.delete', $attachment->id) }}"
-                                                method="POST" onsubmit="return confirm('Delete this file?')">
-
-                                                @csrf
-
-                                                @method('DELETE')
-
-                                                <button class="btn btn-sm btn-danger">
-
-                                                    <i class="ti-trash"></i>
-
-                                                </button>
-
-                                            </form>
-
                                         </div>
-
                                     </td>
-
                                 </tr>
-
                             @empty
-
                                 <tr>
-
                                     <td colspan="6" class="text-center py-5">
-
                                         <i class="ti-folder display-4 text-muted"></i>
-
                                         <h5 class="mt-3">
-
                                             No Attachments Found
-
                                         </h5>
 
                                         <p class="text-muted">
-
                                             Upload the first project file.
-
                                         </p>
-
                                     </td>
-
                                 </tr>
                             @endforelse
-
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 @endsection
