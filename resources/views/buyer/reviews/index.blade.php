@@ -1,251 +1,71 @@
-@extends('seller.layouts.app')
-
-@section('title', 'My Reviews')
+@extends('buyer.layouts.app')
 
 @section('content')
 
-    <div class="page-body">
-
-        <div class="page-header">
-
-            <div class="page-header-title">
-
-                <h4>
-
-                    <i class="feather icon-star"></i>
-
-                    Customer Reviews
-
-                </h4>
-
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="mb-1">My Reviews</h3>
+                <small class="text-muted"> Reviews you have submitted to sellers. </small>
             </div>
-
-        </div>
-        <div class="row">
-
-            <div class="col-md-4">
-
-                <div class="card">
-
-                    <div class="card-body text-center">
-
-                        <h2 class="text-warning">
-
-                            ⭐ {{ number_format($reviews->avg('rating'), 1) }}
-
-                        </h2>
-
-                        <small>
-
-                            Average Rating
-
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="card">
-
-                    <div class="card-body text-center">
-
-                        <h2>
-
-                            {{ $reviews->count() }}
-
-                        </h2>
-
-                        <small>
-
-                            Total Reviews
-
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="card">
-
-                    <div class="card-body text-center">
-
-                        <h2 class="text-success">
-
-                            {{ $reviews->where('rating', 5)->count() }}
-
-                        </h2>
-
-                        <small>
-
-                            5 Star Reviews
-
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
-        <div class="card">
-
-            <div class="card-header">
-
-                <h5>
-
-                    Review List
-
-                </h5>
-
-            </div>
-
-            <div class="card-body">
-
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-
-                    <table class="table table-bordered table-hover" id="reviewTable">
-
+                    <table class="table table-hover align-middle mb-0">
                         <thead>
-
                             <tr>
-
                                 <th>#</th>
-
-                                <th>Buyer</th>
-
-                                <th>Order</th>
-
+                                <th>Project</th>
+                                <th>Seller</th>
                                 <th>Rating</th>
-
                                 <th>Review</th>
-
                                 <th>Date</th>
-
-                                <th width="100">
-
-                                    Action
-
-                                </th>
-
+                                <th width="100"> Action </th>
                             </tr>
-
                         </thead>
-
                         <tbody>
-
-                            @if ($reviews->count())
-
-                                @foreach ($reviews as $review)
-                                    <tr>
-
-                                        <td>
-
-                                            {{ $loop->iteration }}
-
-                                        </td>
-
-                                        <td>
-
-                                            {{ $review->buyer->full_name ?? '-' }}
-
-                                        </td>
-
-                                        <td>
-
-                                            #{{ $review->order_id }}
-
-                                        </td>
-
-                                        <td>
-
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $review->rating)
-                                                    <i class="feather icon-star text-warning"></i>
-                                                @else
-                                                    <i class="feather icon-star text-muted"></i>
-                                                @endif
-                                            @endfor
-
-                                        </td>
-
-                                        <td>
-
-                                            {{ \Illuminate\Support\Str::limit($review->review, 50) }}
-
-                                        </td>
-
-                                        <td>
-
-                                            {{ $review->created_at->format('d M Y') }}
-
-                                        </td>
-
-                                        <td>
-
-                                            <a href="{{ route('seller.reviews.show', $review->id) }}"
-                                                class="btn btn-primary btn-sm">
-
-                                                <i class="feather icon-eye"></i>
-
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            @else
+                            @forelse($reviews as $review)
                                 <tr>
-
-                                    <td colspan="7" class="text-center">
-
-                                        No Reviews Found
-
+                                    <td> {{ $loop->iteration + ($reviews->currentPage() - 1) * $reviews->perPage() }}</td>
+                                    <td> {{ optional(optional($review->order)->project)->title ?? '-' }} </td>
+                                    <td>{{ optional($review->seller)->full_name ?? '-' }} </td>
+                                    <td>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $review->rating)
+                                                <i class="ti-star text-warning"></i>
+                                            @else
+                                                <i class="ti-star text-muted"></i>
+                                            @endif
+                                        @endfor
+                                        <br>
+                                        <small> {{ $review->rating }}/5 </small>
                                     </td>
-
+                                    <td> {{ Str::limit($review->review, 60) }} </td>
+                                    <td> {{ $review->created_at->format('d M Y') }} </td>
+                                    <td> <a href="{{ route('buyer.reviews.show', $review->id) }}" class="btn btn-sm btn-primary"><i class="ti-eye"></i></a> </td>
                                 </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <i class="ti-star display-4 text-muted"></i>
 
-                            @endif
-
+                                        <h5 class="mt-3"> No Reviews Found </h5>
+                                        <p class="text-muted mb-0">
+                                            You haven't submitted any reviews yet.
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </div>
 
+        <div class="mt-4">
+            {{ $reviews->links() }}
+        </div>
     </div>
-
 @endsection
-
-@push('scripts')
-    <script>
-        $(function() {
-
-            $('#reviewTable').DataTable({
-
-                pageLength: 20,
-
-                responsive: true,
-
-                order: [
-                    [5, 'desc']
-                ]
-
-            });
-
-        });
-    </script>
-@endpush

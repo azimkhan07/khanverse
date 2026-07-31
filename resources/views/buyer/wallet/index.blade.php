@@ -1,138 +1,243 @@
-@extends('seller.layouts.app')
-
-@section('title', 'My Wallet')
+@extends('buyer.layouts.app')
 
 @section('content')
+    <div class="container-fluid">
 
-    <div class="page-body">
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4>
-                    <i class="feather icon-credit-card"></i>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h3 class="mb-1">
+
                     My Wallet
-                </h4>
+
+                </h3>
+
+                <small class="text-muted">
+
+                    Manage your wallet balance and transactions.
+
+                </small>
+
             </div>
+
+            <div>
+
+                <a href="{{ route('buyer.wallet.deposit') }}" class="btn btn-primary">
+
+                    <i class="ti-plus"></i>
+
+                    Add Balance
+
+                </a>
+
+            </div>
+
         </div>
+
         <div class="row">
-            <div class="card">
-                <div class="card-header">
-                    <h5> Quick Actions </h5>
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{{ route('seller.wallet.withdraw.form') }}" class="btn btn-success">
-                        <i class="feather icon-download"></i>
-                        Withdraw Money
-                    </a>
-                    <a href="{{ route('seller.wallet.transactions') }}" class="btn btn-primary">
-                        <i class="feather icon-list"></i>
-                        View All Transactions
-                    </a>
-                    <a href="{{ route('seller.wallet.withdraw.history') }}" class="btn btn-warning">
-                        <i class="feather icon-clock"></i>
-                        Withdraw History
-                    </a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h5> Recent Transactions </h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Credit</th>
-                                    <th>Debit</th>
-                                    <th>Balance</th>
-                                    <th>Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                                @if ($transactions->count())
+            <div class="col-lg-4 mb-4">
 
-                                    @foreach ($transactions as $transaction)
-                                        <tr>
+                <div class="card shadow-sm border-0">
 
-                                            <td>
+                    <div class="card-body text-center">
 
-                                                {{ $transaction->created_at->format('d M Y') }}
+                        <h6 class="text-muted">
 
-                                                <br>
+                            Available Balance
 
-                                                <small class="text-muted">
+                        </h6>
 
-                                                    {{ $transaction->created_at->format('h:i A') }}
+                        <h2 class="text-success mb-0">
 
-                                                </small>
+                            ₹{{ number_format($wallet->balance ?? 0, 2) }}
 
-                                            </td>
+                        </h2>
 
-                                            <td>
-
-                                                <span class="badge bg-info">
-
-                                                    {{ ucfirst($transaction->type) }}
-
-                                                </span>
-
-                                            </td>
-
-                                            <td class="text-success fw-bold">
-
-                                                @if ($transaction->credit > 0)
-                                                    + ₹ {{ number_format($transaction->credit, 2) }}
-                                                @else
-                                                    -
-                                                @endif
-
-                                            </td>
-
-                                            <td class="text-danger fw-bold">
-
-                                                @if ($transaction->debit > 0)
-                                                    - ₹ {{ number_format($transaction->debit, 2) }}
-                                                @else
-                                                    -
-                                                @endif
-
-                                            </td>
-
-                                            <td>
-
-                                                ₹ {{ number_format($transaction->balance_after, 2) }}
-
-                                            </td>
-
-                                            <td>
-
-                                                {{ $transaction->remarks ?? '-' }}
-
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-
-                                        <td colspan="6" class="text-center text-muted">
-
-                                            No Transactions Found
-
-                                        </td>
-
-                                    </tr>
-
-                                @endif
-
-                            </tbody>
-                        </table>
                     </div>
+
                 </div>
+
             </div>
+
+            <div class="col-lg-4 mb-4">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body text-center">
+
+                        <h6 class="text-muted">
+
+                            Total Deposits
+
+                        </h6>
+
+                        <h2 class="text-primary mb-0">
+
+                            ₹{{ number_format($totalDeposit ?? 0, 2) }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 mb-4">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body text-center">
+
+                        <h6 class="text-muted">
+
+                            Total Spent
+
+                        </h6>
+
+                        <h2 class="text-danger mb-0">
+
+                            ₹{{ number_format($totalSpent ?? 0, 2) }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <strong>
+
+                    Recent Transactions
+
+                </strong>
+
+                <a href="{{ route('buyer.wallet.transactions') }}" class="btn btn-sm btn-primary">
+
+                    View All
+
+                </a>
+
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Type</th>
+
+                                <th>Amount</th>
+
+                                <th>Status</th>
+
+                                <th>Date</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @forelse($transactions as $transaction)
+                                <tr>
+
+                                    <td>
+
+                                        #{{ $transaction->id }}
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ ucfirst($transaction->type) }}
+
+                                    </td>
+
+                                    <td>
+
+                                        @if ($transaction->type == 'deposit')
+                                            <span class="text-success">
+
+                                                + ₹{{ number_format($transaction->amount, 2) }}
+
+                                            </span>
+                                        @else
+                                            <span class="text-danger">
+
+                                                - ₹{{ number_format($transaction->amount, 2) }}
+
+                                            </span>
+                                        @endif
+
+                                    </td>
+
+                                    <td>
+
+                                        @php
+
+                                            $color = [
+                                                'pending' => 'warning',
+                                                'success' => 'success',
+                                                'failed' => 'danger',
+                                            ];
+
+                                        @endphp
+
+                                        <span class="badge bg-{{ $color[$transaction->status] ?? 'secondary' }}">
+
+                                            {{ ucfirst($transaction->status) }}
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ $transaction->created_at->format('d M Y') }}
+
+                                    </td>
+
+                                </tr>
+
+                            @empty
+
+                                <tr>
+
+                                    <td colspan="5" class="text-center py-5">
+
+                                        No Transactions Found
+
+                                    </td>
+
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 @endsection

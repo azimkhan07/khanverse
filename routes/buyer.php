@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Buyer\ChatController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ReviewController;
 use App\Http\Controllers\Buyer\WalletController;
@@ -10,6 +10,7 @@ use App\Http\Controllers\Buyer\SettingController;
 use App\Http\Controllers\Buyer\DashboardController;
 use App\Http\Controllers\Buyer\ProjectController;
 use App\Http\Controllers\Buyer\NotificationController;
+use App\Http\Controllers\ChatController as ControllersChatController;
 
 Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->group(function () {
 
@@ -42,7 +43,7 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     // Reviews
     Route::prefix('reviews')->name('reviews.')->group(function () {
         Route::get('/', [ReviewController::class, 'index'])->name('index');
-        Route::get('/create', [ReviewController::class, 'create'])->name('create');
+        Route::get('/create/{order}', [ReviewController::class, 'create'])->name('create');
         Route::post('/store', [ReviewController::class, 'store'])->name('store');
         Route::get('/{review}', [ReviewController::class, 'show'])->name('show');
     });

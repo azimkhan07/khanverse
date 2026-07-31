@@ -1,7 +1,6 @@
 @extends('buyer.layouts.app')
 
 @section('content')
-
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -86,7 +85,7 @@
                     <td> ₹{{ number_format(optional($order->project)->budget, 2) }} </td>
                 </tr>
                 <tr>
-                    <th>  Deadline </th>
+                    <th> Deadline </th>
                     <td> {{ optional($order->project)->deadline }} </td>
                 </tr>
                 <tr>
@@ -110,11 +109,12 @@
                 </tr>
                 <tr>
                     <th> Platform Fee </th>
-                    <td class="text-end text-danger"> - ₹{{ number_format($order->amount,2) }} </td>
+                    <td class="text-end text-danger"> - ₹{{ number_format($order->amount, 2) }} </td>
                 </tr>
                 <tr>
-                    <th>  Total Paid </th>
-                    <td class="text-end fw-bold text-success"> ₹{{ number_format($order->amount - $order->platform_fee, 2) }} </td>
+                    <th> Total Paid </th>
+                    <td class="text-end fw-bold text-success">
+                        ₹{{ number_format($order->amount - $order->platform_fee, 2) }} </td>
                 </tr>
                 <tr>
                     <th> Delivery Date </th>
@@ -155,6 +155,14 @@
                     </button>
                 </div>
 
+                @if($order->status == 'completed' && !$order->review)
+                    <div class="col-lg-4 mb-3">
+                        <a href="{{ route('buyer.reviews.create',$order->id) }}" class="btn btn-primary w-100">
+                            <i class="ti-star mr-1"></i>
+                            Add Review
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <hr>
