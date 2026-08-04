@@ -360,7 +360,7 @@
 
                 </div>
 
-                <div class="col-lg-4 mb-3">
+                {{-- <div class="col-lg-4 mb-3">
 
                     <button class="btn btn-success w-100" disabled>
 
@@ -370,7 +370,7 @@
 
                     </button>
 
-                </div>
+                </div> --}}
 
             </div>
 

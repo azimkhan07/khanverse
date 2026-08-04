@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Buyer;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use App\Models\WalletTransaction;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -54,7 +55,7 @@ class WalletController extends Controller
 
         $buyer = Auth::user()->buyer;
 
-        WalletTransaction::create([
+        $walletTransaction = WalletTransaction::create([
             'wallet_id'      => $buyer->wallet->id,
             'type'           => 'deposit',
             'amount'         => $request->amount,
@@ -62,6 +63,14 @@ class WalletController extends Controller
             'status'         => 'pending',
             'reference'      => 'DEP-' . strtoupper(Str::random(10)),
         ]);
+
+        // NotificationService::send(
+        //     Auth::id(),
+        //     'Deposit Successful',
+        //     '₹' . number_format($request->amount, 2) . ' has been added to your wallet.',
+        //     'wallet',
+        //     route('buyer.wallet.transactions')
+        // );
 
         return redirect()->route('buyer.wallet.transactions')->with('success', 'Deposit request created successfully.');
     }

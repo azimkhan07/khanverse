@@ -523,8 +523,8 @@
         </div>
 
         <!-- =========================
-                                                PROJECT WORKSPACE
-                                            ========================== -->
+                                                    PROJECT WORKSPACE
+                                                ========================== -->
 
         <div class="card shadow-sm border-0 mt-4">
 
@@ -753,11 +753,160 @@
                     },
                     success: function(response) {
                         $("#chatPopup").css("right", "20px");
-                        console.log(response);
-                        $("#chatUserName").text(response.buyer.full_name);
+                        $("#conversationId").val(response.conversation_id);
+                        $("#chatUserName").text(response.buyer.name);
+                        loadMessages(response.conversation_id);
+                        markAsSeen(response.conversation_id);
                     }
                 });
             });
         });
+
+        function loadMessages(id) {
+
+            $.get("/seller/chat/" + id +"/messages", function(response) {
+
+                let html = "";
+
+                let currentUser = {{ auth()->id() }};
+
+                $.each(response.messages, function(index, message) {
+
+                    let mine = message.sender_id == currentUser;
+                    let senderName = message.sender.username;
+                    let profileImage = "/admin/assets/images/avatar-4.jpg";
+
+                    if (message.sender.role == "buyer") {
+                        if (message.sender.buyer) {
+                            senderName = message.sender.buyer.full_name;
+                            if (message.sender.buyer.profile_image) {
+                                profileImage = "/storage/" + message.sender.buyer.profile_image;
+                            }
+                        }
+                    } else {
+                        if (message.sender.seller) {
+                            senderName = message.sender.seller.full_name;
+                            if (message.sender.seller.profile_image) {
+                                profileImage = "/storage/" + message.sender.seller.profile_image;
+                            }
+                        }
+                    }
+
+                    if (mine) {
+
+                        html += `
+
+                            <div class="d-flex justify-content-end mb-3">
+
+                                <div>
+
+                                    <div class="chat-bubble chat-me">
+
+                                        ${message.message}
+
+                                    </div>
+
+                                    <small class="text-muted d-block text-end">
+
+                                        ${message.chat_time}
+                                    </small>
+
+                                </div>
+
+                            </div>`;
+
+                    } else {
+
+                        html += `
+
+                        <div class="d-flex align-items-end mb-3">
+
+                            <img src="${profileImage}"
+
+                                class="rounded-circle me-2"
+
+                                style="width:38px;height:38px;object-fit:cover;">
+
+                            <div>
+
+                                <div class="small fw-bold text-muted mb-1">
+
+                                    ${senderName}
+
+                                </div>
+
+                                <div class="chat-bubble chat-other">
+                                    ${message.message}
+                                </div>
+
+                                <small class="text-muted">
+                                    ${message.chat_time}
+                                </small>
+
+                            </div>
+
+                        </div>`;
+                    }
+                });
+                $("#chatBody").html(html);
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+            });
+        }
+
+
+        $("#sendMessage").click(function() {
+            let formData = new FormData();
+            formData.append(
+                "conversation_id",
+                $("#conversationId").val()
+            );
+            formData.append(
+                "message",
+                $("#chatMessage").val()
+            );
+            if ($("#chatAttachment")[0].files.length) {
+                formData.append(
+                    "attachment",
+                    $("#chatAttachment")[0].files[0]
+                );
+            }
+
+            $.ajax({
+                url: "{{ route('seller.chat.send') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+
+                success: function() {
+                    $("#chatMessage").val('');
+                    $("#chatAttachment").val('');
+                    loadMessages($("#conversationId").val());
+                }
+            });
+        });
+
+        function markAsSeen(id) {
+            $.post("{{ url('seller/chat/seen') }}/" + id);
+        }
     </script>
 @endpush
+<style>
+    .chat-bubble {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 20px;
+        max-width: 320px;
+        word-break: break-word;
+    }
+    .chat-me {
+        background: #4f46e5;
+        color: #fff;
+        border-bottom-right-radius: 6px;
+    }
+    .chat-other {
+        background: #f3f4f6;
+        color: #222;
+        border-bottom-left-radius: 6px;
+    }
+</style>

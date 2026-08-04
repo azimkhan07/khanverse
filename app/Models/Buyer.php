@@ -34,4 +34,9 @@ class Buyer extends Model
     {
         return $this->hasMany(Order::class);
     }
+    
+    public function profile()
+    {
+        return $this->hasOne(BuyerProfile::class);
+    }
 }

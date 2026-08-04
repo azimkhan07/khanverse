@@ -129,4 +129,9 @@ class Seller extends Model
     // {
     //     return $this->hasMany(Gig::class);
     // }
+
+    public function profile()
+    {
+        return $this->hasOne(SellerProfile::class);
+    }
 }

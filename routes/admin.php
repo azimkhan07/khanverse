@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\Website\MaintenanceController;
 use App\Http\Controllers\Admin\Website\PageController;
 use App\Http\Controllers\Admin\Website\SeoController;
 use App\Http\Controllers\Admin\Website\TestimonialController;
+use App\Http\Controllers\Admin\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -46,8 +47,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/{project}/attachments', [ProjectAttachmentController::class, 'index'])->name('attachments.index');
         Route::post('/{project}/attachments', [ProjectAttachmentController::class, 'store'])->name('attachments.store');
         Route::get('/{project}/attachments/create', [ProjectAttachmentController::class, 'create'])->name('attachments.create');
-        Route::get('/{project}/attachments/{attachment}/download', [ProjectAttachmentController::class, 'download']) ->name('attachments.download');
-        Route::delete('/{project}/attachments/{attachment}', [ProjectAttachmentController::class, 'destroy']) ->name('attachments.destroy');
+        Route::get('/{project}/attachments/{attachment}/download', [ProjectAttachmentController::class, 'download'])->name('attachments.download');
+        Route::delete('/{project}/attachments/{attachment}', [ProjectAttachmentController::class, 'destroy'])->name('attachments.destroy');
     });
 
     // SERVICES
@@ -98,6 +99,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/login-devices', [LoginDeviceController::class, 'index'])->name('login-devices');
     });
 
+    // Notification
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/latest', [NotificationController::class, 'latest'])->name('latest');
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('count');
+        Route::post('/{id}/read', [NotificationController::class, 'markRead'])->name('read');
+        Route::post('/read-all', [NotificationController::class, 'markAllRead'])->name('read.all');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+    });
+    // Report
     Route::prefix('reports')->name('reports.')->group(function () {
 
         Route::get('/invoices', fn() => "Invoices Report")->name('invoices');

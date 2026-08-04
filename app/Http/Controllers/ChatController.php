@@ -36,9 +36,9 @@ class ChatController extends Controller
     |--------------------------------------------------------------------------
     */
 
-        $buyerUserId = optional($conversation->buyer)->user_id;
+        $buyerUserId = optional($conversation->buyer)->id;
 
-        $sellerUserId = optional($conversation->seller)->user_id;
+        $sellerUserId = optional($conversation->seller)->id;
 
         if (
             $buyerUserId != $user->id &&
@@ -59,12 +59,9 @@ class ChatController extends Controller
     public function loadMessages($conversationId)
     {
         $user = Auth::user();
-
         $conversation = ChatConversation::findOrFail($conversationId);
-
-        $buyerUserId = optional($conversation->buyer)->user_id;
-
-        $sellerUserId = optional($conversation->seller)->user_id;
+        $buyerUserId = optional($conversation->buyer)->id;
+        $sellerUserId = optional($conversation->seller)->id;
 
         if (
             $buyerUserId != $user->id &&
@@ -73,10 +70,15 @@ class ChatController extends Controller
             abort(403);
         }
 
-        $messages = ChatMessage::with('sender')
+        $messages = ChatMessage::with(['sender.buyer', 'sender.seller'])
             ->where('conversation_id', $conversation->id)
             ->orderBy('id')
-            ->get();
+            ->get()->map(function ($message) {
+
+                $message->chat_time = $message->created_at->format('h:i A');
+
+                return $message;
+            });
 
         return response()->json([
             'status' => true,
@@ -107,10 +109,19 @@ class ChatController extends Controller
 
         return response()->json([
             'status' => true,
-            'buyer' => $buyer,
             'conversation_id' => $conversation->id,
-            'buyer_name' => optional($conversation->buyer)->name,
-            'seller_name' => optional($conversation->seller)->name,
+
+            'buyer' => [
+                'id' => $buyer->user_id,
+                'name' => $buyer->full_name,
+                'image' => $buyer->profile_image,
+            ],
+
+            'seller' => [
+                'id' => $seller->user_id,
+                'name' => $seller->full_name,
+                'image' => $seller->profile_image,
+            ],
         ]);
     }
 
@@ -135,9 +146,9 @@ class ChatController extends Controller
             $request->conversation_id
         );
 
-        $buyerUserId = optional($conversation->buyer)->user_id;
+        $buyerUserId = optional($conversation->buyer)->id;
 
-        $sellerUserId = optional($conversation->seller)->user_id;
+        $sellerUserId = optional($conversation->seller)->id;
 
         if (
             $buyerUserId != $user->id &&
@@ -174,10 +185,12 @@ class ChatController extends Controller
             $receiverId = $buyerUserId;
         }
 
+        $senderName = optional($user->buyer)->full_name ?? optional($user->seller)->full_name ?? $user->username;
+
         NotificationService::send(
             $receiverId,
             'New Message',
-            auth()->user()->username . ' sent you a new message.',
+            $senderName . ' sent you a new message.',
             route(auth()->user()->role == 'buyer' ? 'seller.chat.show' : 'buyer.chat.show', $conversation->id),
             'message'
         );

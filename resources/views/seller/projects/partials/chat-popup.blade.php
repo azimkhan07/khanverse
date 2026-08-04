@@ -38,6 +38,7 @@
 
     <div id="chatContent">
 
+        <input type="hidden" id="conversationId">
         <div class="chat-body" id="chatBody">
 
             <div class="text-center text-muted mt-5">
@@ -58,11 +59,18 @@
             <button class="footer-btn" id="attachmentBtn">
                 📎
             </button>
-            <input type="file" id="chatAttachment" hidden>
-            <input type="text" class="form-control" id="chatMessage" placeholder="Type your message..." autocomplete="off">
+            <input type="file" id="chatAttachment" hidden accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx">
+            <input type="text" class="form-control" id="chatMessage" placeholder="Type your message..."
+                autocomplete="off">
             <button class="btn btn-primary ms-2" id="sendMessage">
                 <i class="feather icon-send"></i>
             </button>
         </div>
     </div>
 </div>
+<style>
+    .text-success {
+        --bs-text-opacity: 1;
+        color: rgb(0 255 107) !important;
+    }
+</style>

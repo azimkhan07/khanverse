@@ -2,8 +2,14 @@
 <html lang="en">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @include('partials.header')
-{{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
+<script>
+    window.notificationUrl = "{{ route('seller.notifications.latest') }}";
+    // window.notificationReadUrl = "{{ route('seller.notifications.read.all') }}";
+</script>
 {{-- <link rel="stylesheet" href="{{ asset('admin/assets/css/dashboard.css') }}"> --}}
+
 <body>
 
     <div class="loader-bg">

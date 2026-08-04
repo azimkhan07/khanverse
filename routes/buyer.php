@@ -51,7 +51,12 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     // Profile
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
-        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+        Route::post('/update', [ProfileController::class, 'updateProfile'])->name('update');
+        Route::post('/password', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::post('/photo', [ProfileController::class, 'updatePhoto'])->name('photo');
+        Route::delete('/photo', [ProfileController::class, 'deletePhoto'])->name('photo.delete');
+        Route::get('/states/{country}', [ProfileController::class, 'getStates'])->name('states');
+        Route::get('/cities/{state}', [ProfileController::class, 'getCities'])->name('cities');
     });
 
     // Settings
@@ -66,14 +71,21 @@ Route::middleware(['auth', 'role:buyer'])->prefix('buyer')->name('buyer.')->grou
     // Chat
     Route::prefix('chat')->name('chat.')->group(function () {
         Route::post('/open', [ChatController::class, 'openConversation'])->name('open');
-        Route::get('/messages/{conversation}', [ChatController::class, 'messages'])->name('messages');
-        Route::post('/send', [ChatController::class, 'send'])->name('send');
+        Route::get('/messages/{conversation}', [ChatController::class, 'loadMessages'])->name('messages');
+        Route::post('/send', [ChatController::class, 'sendMessage'])->name('send');
+        Route::post('/seen/{conversation}', [ChatController::class, 'markAsSeen'])->name('seen');
+        Route::delete('/message/{message}', [ChatController::class, 'deleteMessage'])->name('delete');
+        Route::get('/{conversation}', [ChatController::class, 'show'])->name('show');
     });
 
     // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', [NotificationController::class, 'index'])->name('index');
-        Route::post('/read/{id}', [NotificationController::class, 'markAsRead'])->name('read');
+        Route::get('/latest', [NotificationController::class, 'latest'])->name('latest');
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('count');
+        Route::post('/{id}/read', [NotificationController::class, 'markRead'])->name('read');
+        Route::post('/read-all', [NotificationController::class, 'markAllRead'])->name('read.all');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
     });
 
     // support index(chat with admin for any qury)

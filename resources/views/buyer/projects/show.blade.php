@@ -103,7 +103,8 @@
                             <i class="ti-package mr-2"></i>
                             View Deliveries
                         </button>
-                        <a class="btn btn-info" href="{{ route('buyer.projects.attachments', $project->id) }}" class="btn btn-primary">
+                        <a class="btn btn-info" href="{{ route('buyer.projects.attachments', $project->id) }}"
+                            class="btn btn-primary">
                             <i class="ti-download mr-2"></i>
                             Download Files
                         </a>
@@ -111,6 +112,12 @@
                             <i class="ti-server mr-2"></i>
                             Hosting Details
                         </button>
+                        <a href="javascript:void(0)" id="openChat" data-project="{{ $project->id }}"
+                            class="btn btn-primary">
+                            <i class="ti-comments"></i>
+
+                            Chat with Seller
+                        </a>
                     </div>
                 </div>
 
@@ -212,13 +219,16 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#deliveriesTab"><i class="ti-package"></i> Deliveries </button>
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#deliveriesTab"><i
+                                class="ti-package"></i> Deliveries </button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#filesTab"><i class="ti-folder"></i> Files </button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#filesTab"><i class="ti-folder"></i>
+                            Files </button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#activityTab"><i class="ti-time"></i> Activity </button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#activityTab"><i class="ti-time"></i>
+                            Activity </button>
                     </li>
                 </ul>
             </div>
@@ -235,7 +245,7 @@
                                 Seller delivery reports, milestones and
                                 submitted documents will appear here.
                             </p>
-                            <button class="btn btn-primary" disabled>  No Deliveries Yet </button>
+                            <button class="btn btn-primary" disabled> No Deliveries Yet </button>
                         </div>
                     </div>
 
@@ -249,7 +259,7 @@
                                 attachments will be available here.
                             </p>
 
-                            <button class="btn btn-warning" disabled>  No Files Available </button>
+                            <button class="btn btn-warning" disabled> No Files Available </button>
                         </div>
                     </div>
 
@@ -285,4 +295,198 @@
             </div>
         </div>
     </div>
+    @include('buyer.projects.partials.chat-popup')
 @endsection
+@push('scripts')
+    <script>
+        let chatMinimized = false;
+        $("#minimizeChat").on("click", function() {
+            if (!chatMinimized) {
+                $("#chatContent").slideUp(200);
+                $("#chatPopup").addClass("minimized");
+                $("#minimizeChat i").removeClass("icon-minus").addClass("icon-plus");
+                chatMinimized = true;
+            } else {
+                $("#chatContent").slideDown(200);
+                $("#chatPopup").removeClass("minimized");
+                $("#minimizeChat i").removeClass("icon-plus").addClass("icon-minus");
+                chatMinimized = false;
+            }
+        });
+
+        $("#closeChat").on("click", function() {
+            $("#chatPopup").css("right", "-450px");
+        });
+
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $("#openChat").click(function() {
+                let project = $(this).data("project");
+                $.ajax({
+                    url: "{{ route('buyer.chat.open') }}",
+                    type: "POST",
+                    data: {
+                        project_id: project
+                    },
+                    success: function(response) {
+                        $("#chatPopup").css("right", "20px");
+                        $("#conversationId").val(response.conversation_id);
+                        $("#chatUserName").text(response.seller.name);
+                        loadMessages(response.conversation_id);
+                        markAsSeen(response.conversation_id);
+                    }
+                });
+            });
+        });
+
+        function loadMessages(id) {
+
+            $.get("/buyer/chat/messages/" + id, function(response) {
+
+                let html = "";
+
+                let currentUser = {{ auth()->id() }};
+
+                $.each(response.messages, function(index, message) {
+
+                    let mine = message.sender_id == currentUser;
+                    let senderName = message.sender.username;
+                    let profileImage = "/admin/assets/images/avatar-4.jpg";
+
+                    if (message.sender.role == "buyer") {
+                        if (message.sender.buyer) {
+                            senderName = message.sender.buyer.full_name;
+                            if (message.sender.buyer.profile_image) {
+                                profileImage = "/storage/" + message.sender.buyer.profile_image;
+                            }
+                        }
+                    } else {
+                        if (message.sender.seller) {
+                            senderName = message.sender.seller.full_name;
+                            if (message.sender.seller.profile_image) {
+                                profileImage = "/storage/" + message.sender.seller.profile_image;
+                            }
+                        }
+                    }
+
+                    if (mine) {
+
+                        html += `
+
+                            <div class="d-flex justify-content-end mb-3">
+
+                                <div>
+
+                                    <div class="chat-bubble chat-me">
+
+                                        ${message.message}
+
+                                    </div>
+
+                                    <small class="text-muted d-block text-end">
+
+                                        ${message.chat_time}
+                                    </small>
+
+                                </div>
+
+                            </div>`;
+
+                    } else {
+
+                        html += `
+
+                        <div class="d-flex align-items-end mb-3">
+
+                            <img src="${profileImage}"
+
+                                class="rounded-circle me-2"
+
+                                style="width:38px;height:38px;object-fit:cover;">
+
+                            <div>
+
+                                <div class="small fw-bold text-muted mb-1">
+
+                                    ${senderName}
+
+                                </div>
+
+                                <div class="chat-bubble chat-other">
+                                    ${message.message}
+                                </div>
+
+                                <small class="text-muted">
+                                    ${message.chat_time}
+                                </small>
+
+                            </div>
+
+                        </div>`;
+                    }
+                });
+                $("#chatBody").html(html);
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+            });
+        }
+
+        $("#sendMessage").click(function() {
+            let formData = new FormData();
+            formData.append(
+                "conversation_id",
+                $("#conversationId").val()
+            );
+            formData.append(
+                "message",
+                $("#chatMessage").val()
+            );
+            if ($("#chatAttachment")[0].files.length) {
+                formData.append(
+                    "attachment",
+                    $("#chatAttachment")[0].files[0]
+                );
+            }
+
+            $.ajax({
+                url: "{{ route('buyer.chat.send') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+
+                success: function() {
+                    $("#chatMessage").val('');
+                    $("#chatAttachment").val('');
+                    loadMessages($("#conversationId").val());
+                }
+            });
+        });
+
+        function markAsSeen(id) {
+            $.post("{{ url('buyer/chat/seen') }}/" + id);
+        }
+    </script>
+@endpush
+<style>
+    .chat-bubble {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 20px;
+        max-width: 320px;
+        word-break: break-word;
+    }
+    .chat-me {
+        background: #4f46e5;
+        color: #fff;
+        border-bottom-right-radius: 6px;
+    }
+    .chat-other {
+        background: #f3f4f6;
+        color: #222;
+        border-bottom-left-radius: 6px;
+    }
+</style>

@@ -1,178 +1,130 @@
-@extends('seller.layouts.app')
+@extends('buyer.layouts.app')
 
 @section('content')
     <div class="container-fluid">
-
-        <div class="card">
-
+        <div class="card shadow-sm border-0">
             <div class="card-header d-flex justify-content-between align-items-center">
-
                 <div>
-
-                    <h4 class="mb-1">
-
-                        Notifications
-
-                    </h4>
-
+                    <h4 class="mb-1"> Notifications </h4>
                     <small class="text-muted">
-
-                        Stay updated with your orders, projects and messages.
-
+                        Stay updated with your orders, projects and seller activities.
                     </small>
-
                 </div>
 
                 <button class="btn btn-primary" id="markAllReadBtn">
-
-                    <i class="feather icon-check-circle"></i>
-
+                    <i class="ti-check"></i>
                     Mark All Read
-
                 </button>
-
             </div>
-
             <div class="card-body p-0">
-
                 @forelse($notifications as $notification)
                     @php
-
-                        $icon = 'icon-bell';
+                        $type = $notification->data['type'] ?? '';
+                        $icon = 'ti-bell';
                         $bg = 'bg-primary';
 
-                        switch ($notification->type) {
+                        switch ($type) {
                             case 'order':
-                                $icon = 'icon-shopping-cart';
+                                $icon = 'ti-shopping-cart';
                                 $bg = 'bg-success';
                                 break;
 
                             case 'project':
-                                $icon = 'icon-folder';
+                                $icon = 'ti-briefcase';
                                 $bg = 'bg-primary';
                                 break;
 
                             case 'chat':
-                                $icon = 'icon-message-circle';
+                                $icon = 'ti-comments';
                                 $bg = 'bg-info';
                                 break;
 
                             case 'delivery':
-                                $icon = 'icon-package';
+                                $icon = 'ti-package';
                                 $bg = 'bg-warning';
                                 break;
 
                             case 'payment':
-                                $icon = 'icon-dollar-sign';
+                                $icon = 'ti-wallet';
                                 $bg = 'bg-success';
                                 break;
 
                             case 'review':
-                                $icon = 'icon-star';
-                                $bg = 'bg-danger';
-                                break;
-
-                            case 'revision':
-                                $icon = 'icon-refresh-cw';
-                                $bg = 'bg-warning';
-                                break;
-
-                            case 'dispute':
-                                $icon = 'icon-alert-triangle';
+                                $icon = 'ti-star';
                                 $bg = 'bg-danger';
                                 break;
                         }
-
                     @endphp
 
-                    <a href="{{ route('seller.notifications.read', $notification->id) }}"
-                        class="text-decoration-none text-dark">
-
+                    <a href="javascript:void(0)" class="notification-item text-decoration-none text-dark"
+                        data-id="{{ $notification->id }}">
                         <div class="border-bottom p-3 {{ $notification->is_read ? '' : 'bg-light' }}">
-
                             <div class="d-flex">
-
                                 <div class="rounded-circle {{ $bg }} d-flex justify-content-center align-items-center"
                                     style="width:55px;height:55px;">
-
-                                    <i class="feather {{ $icon }} text-white"></i>
-
+                                    <i class="{{ $icon }} text-white"></i>
                                 </div>
 
                                 <div class="flex-grow-1 ms-3">
-
                                     <div class="d-flex justify-content-between">
-
-                                        <h6 class="mb-1">
-
-                                            {{ $notification->title }}
-
-                                        </h6>
-
-                                        @if (!$notification->is_read)
-                                            <span class="badge bg-danger">
-
-                                                New
-
-                                            </span>
+                                        <h6 class="mb-1"> {{ $notification->data['title'] ?? 'Notification' }} </h6>
+                                        @if (is_null($notification->is_read))
+                                            <span class="badge bg-danger"> New </span>
                                         @endif
-
                                     </div>
 
                                     <p class="mb-1 text-muted">
-
-                                        {{ $notification->message }}
-
+                                        {{ $notification->data['message'] ?? '' }}
                                     </p>
-
                                     <small class="text-muted">
-
-                                        <i class="feather icon-clock"></i>
-
+                                        <i class="ti-time"></i>
                                         {{ $notification->created_at->diffForHumans() }}
-
                                     </small>
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </a>
-
                 @empty
-
                     <div class="text-center py-5">
-
-                        <i class="feather icon-bell f-50 text-muted"></i>
-
-                        <h5 class="mt-3">
-
-                            No Notifications Found
-
-                        </h5>
-
-                        <p class="text-muted">
-
+                        <i class="ti-bell display-4 text-muted"></i>
+                        <h5 class="mt-3"> No Notifications </h5>
+                        <p class="text-muted mb-0">
                             You're all caught up.
-
                         </p>
-
                     </div>
                 @endforelse
-
             </div>
 
             @if ($notifications->count())
                 <div class="card-footer">
-
                     {{ $notifications->links() }}
-
                 </div>
             @endif
-
         </div>
-
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).on('click', '.notification-item', function() {
+            let id = $(this).data('id');
+            let url = $(this).data('url');
+            $.post('/buyer/notifications/read/' + id, function() {
+                if (url) {
+                    window.location.href = url;
+                } else {
+                    location.reload();
+                }
+            });
+        });
+
+        $('#markAllReadBtn').click(function() {
+            $.post('/buyer/notifications/read-all', function(res) {
+                toastr.success('All notifications marked as read.');
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            });
+        });
+    </script>
+@endpush

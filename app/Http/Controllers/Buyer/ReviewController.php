@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Buyer;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Review;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,13 +50,21 @@ class ReviewController extends Controller
             );
         }
 
-        Review::create([
+        $review = Review::create([
             'order_id'  => $order->id,
             'buyer_id'  => $buyer->id,
             'seller_id' => $order->seller_id,
             'rating'    => $request->rating,
             'review'    => $request->review,
         ]);
+
+        NotificationService::send(
+            $order->seller->user_id,
+            'New Review',
+            auth()->user()->buyer->full_name . ' left a review for your project.',
+            route('buyer.reviews.show', $review->id),
+            'review'
+        );
 
         return redirect()->route('buyer.reviews.index')->with('success', 'Review submitted successfully.');
     }

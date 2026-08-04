@@ -128,6 +128,7 @@ Route::prefix('chat')->name('chat.')->group(function () {
 
     Route::get('/{conversation}', [ChatController::class, 'show'])->name('show');
     Route::get('/{conversation}/messages', [ChatController::class, 'loadMessages'])->name('messages');
+    Route::post('/seen/{conversation}', [ChatController::class, 'markAsSeen'])->name('seen');
 
     /*
     |--------------------------------------------------------------------------

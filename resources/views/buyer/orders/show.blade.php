@@ -148,12 +148,12 @@
                     </a>
                 </div>
 
-                <div class="col-lg-4 mb-3">
+                {{-- <div class="col-lg-4 mb-3">
                     <button class="btn btn-success w-100" disabled>
                         <i class="ti-comments mr-1"></i>
                         Chat (Coming Soon)
                     </button>
-                </div>
+                </div> --}}
 
                 @if($order->status == 'completed' && !$order->review)
                     <div class="col-lg-4 mb-3">
