@@ -1,0 +1,150 @@
+/* ===========================
+   Navbar
+=========================== */
+
+.navbar{
+    position: sticky;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:9999;
+    background:rgba(255,255,255,.88);
+    transition:.35s ease;
+    border-bottom:1px solid #f1f5f9;
+    backdrop-filter:blur(18px);
+    overflow:hidden;
+}
+
+.navbar::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        90deg,
+        rgba(79,70,229,.08),
+        rgba(14,165,233,.08),
+        rgba(16,185,129,.08),
+        rgba(79,70,229,.08)
+    );
+    background-size:300% 300%;
+    animation:navbarGradient 12s linear infinite;
+    z-index:-1;
+}
+
+@keyframes navbarGradient{
+    0%{
+        background-position:0% 50%;
+    }
+    100%{
+        background-position:100% 50%;
+    }
+}
+
+.container{
+    max-width:1320px;
+    height:82px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 20px;
+}
+
+/* ===========================
+Logo
+=========================== */
+
+.logo{
+    font-size:30px;
+    font-weight:700;
+    color:#4F46E5;
+    cursor:pointer;
+}
+
+/* ===========================
+Menu
+=========================== */
+
+.nav-menu{
+    display:flex;
+    gap:35px;
+}
+
+.nav-menu a{
+    text-decoration:none;
+    color:#334155;
+    font-size:15px;
+    font-weight:500;
+    position:relative;
+    transition:.3s;
+}
+
+.nav-menu a:hover{
+    color:#4F46E5;
+}
+
+.nav-menu a.active{
+    color:#4F46E5;
+}
+
+.nav-menu a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width:0;
+    height:2px;
+    background:#4F46E5;
+    transition:.35s;
+}
+
+.nav-menu a:hover::after,
+.nav-menu a.active::after{
+    width:100%;
+}
+
+/* ===========================
+Buttons
+=========================== */
+
+.nav-actions{
+    display:flex;
+    gap:15px;
+}
+
+.btn-login{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    color:#334155;
+    transition:.3s;
+}
+
+.btn-login:hover{
+    color:#4F46E5;
+}
+
+
+
+.btn-register:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(79,70,229,.25);
+}
+
+.btn-register{
+    background:linear-gradient(
+        135deg,
+        #4F46E5,
+        #7C3AED
+    );
+    color:#fff;
+    border:none;
+    padding:13px 28px;
+    border-radius:50px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.35s;
+    box-shadow: 0 10px 25px rgba(79,70,229,.25);
+}
