@@ -1,0 +1,190 @@
+/* ===========================
+   Categories
+=========================== */
+
+.categories{
+    padding:100px 20px;
+    background:#fff;
+    position:relative;
+    overflow:hidden;
+}
+
+.categories::before{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    border-radius:50%;
+    background:rgba(79,70,229,.08);
+    filter:blur(120px);
+    top:-180px;
+    left:-180px;
+    z-index:0;
+}
+
+.categories .container{
+    position:relative;
+    z-index:2;
+}
+
+/* ===========================
+   Heading
+=========================== */
+
+.section-heading{
+    text-align:center;
+    margin-bottom:70px;
+}
+
+.section-heading span{
+    display:inline-block;
+    color:#4F46E5;
+    font-weight:600;
+    margin-bottom:12px;
+}
+
+.section-heading h2{
+    font-size:46px;
+    color:#0F172A;
+    margin-bottom:18px;
+}
+
+.section-heading p{
+    max-width:650px;
+    margin:auto;
+    color:#64748B;
+    line-height:1.8;
+}
+
+/* ===========================
+   Grid
+=========================== */
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+
+/* ===========================
+   Card
+=========================== */
+
+.category-card{
+    background:#fff;
+    border:1px solid #EEF2F7;
+    border-radius:24px;
+    padding:40px 30px;
+    text-align:center;
+    transition:.35s ease;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+.category-card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:4px;
+    background:linear-gradient(90deg, #4F46E5, #06B6D4);
+    transform:scaleX(0);
+    transition:.35s;
+}
+
+.category-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 25px 60px rgba(79,70,229,.12);
+}
+
+.category-card:hover::before{
+    transform:scaleX(1);
+}
+
+/* ===========================
+   Icon
+=========================== */
+
+.category-icon{
+    width:85px;
+    height:85px;
+    border-radius:22px;
+    background:#EEF2FF;
+    color:#4F46E5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:auto;
+    margin-bottom:25px;
+    transition:.35s;
+}
+
+.category-card:hover .category-icon{
+    background:#4F46E5;
+    color:#fff;
+    transform:rotate(-8deg) scale(1.08);
+}
+
+/* ===========================
+   Text
+=========================== */
+
+.category-card h3{
+    font-size:24px;
+    color:#0F172A;
+    margin-bottom:12px;
+}
+
+.category-card p{
+    color:#64748B;
+    margin-bottom:28px;
+}
+
+/* ===========================
+   Button
+=========================== */
+
+.category-card button{
+    border:none;
+    background:none;
+    color:#4F46E5;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.category-card button svg{
+    transition:.3s;
+}
+
+.category-card:hover button svg{
+    transform:translateX(6px);
+}
+
+.category-card:hover button{
+    color:#312E81;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+    .category-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .category-grid{
+        grid-template-columns:1fr;
+    }
+    .section-heading h2{
+        font-size:34px;
+    }
+}

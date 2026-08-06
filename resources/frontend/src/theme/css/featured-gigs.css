@@ -1,0 +1,293 @@
+/* ===========================
+   Featured Gigs
+=========================== */
+
+.featured-gigs{
+    padding:100px 20px;
+    background:#F8FAFC;
+    position:relative;
+}
+
+.gig-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:35px;
+
+    margin-top:60px;
+
+}
+
+/* ===========================
+   Gig Card
+=========================== */
+
+.gig-card{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    border:1px solid #EEF2F7;
+
+    transition:.35s;
+
+    cursor:pointer;
+
+    position:relative;
+
+}
+
+.gig-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 25px 60px rgba(79,70,229,.12);
+
+}
+
+/* ===========================
+   Image
+=========================== */
+
+.gig-image{
+
+    position:relative;
+
+    overflow:hidden;
+
+    height:240px;
+
+}
+
+.gig-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.5s;
+
+}
+
+.gig-card:hover .gig-image img{
+
+    transform:scale(1.08);
+
+}
+
+/* ===========================
+   Wishlist
+=========================== */
+
+.wishlist-btn{
+
+    position:absolute;
+
+    top:18px;
+
+    right:18px;
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.95);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.wishlist-btn:hover{
+
+    background:#EF4444;
+
+    color:#fff;
+
+}
+
+/* ===========================
+   Content
+=========================== */
+
+.gig-content{
+
+    padding:28px;
+
+}
+
+.gig-level{
+
+    display:inline-block;
+
+    padding:7px 14px;
+
+    border-radius:30px;
+
+    background:#EEF2FF;
+
+    color:#4F46E5;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+.gig-content h3{
+
+    font-size:22px;
+
+    color:#0F172A;
+
+    margin-bottom:18px;
+
+    line-height:1.4;
+
+    transition:.3s;
+
+}
+
+.gig-card:hover h3{
+
+    color:#4F46E5;
+
+}
+
+/* ===========================
+   Rating
+=========================== */
+
+.gig-rating{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-bottom:16px;
+
+}
+
+.gig-rating span{
+
+    font-weight:700;
+
+}
+
+.gig-rating small{
+
+    color:#64748B;
+
+}
+
+/* ===========================
+   Seller
+=========================== */
+
+.seller-name{
+
+    color:#64748B;
+
+    margin-bottom:24px;
+
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+.gig-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.gig-footer h4{
+
+    font-size:28px;
+
+    color:#4F46E5;
+
+}
+
+.gig-footer button{
+
+    border:none;
+
+    background:none;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#4F46E5;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.gig-footer button svg{
+
+    transition:.3s;
+
+}
+
+.gig-card:hover .gig-footer button svg{
+
+    transform:translateX(6px);
+
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+    .gig-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .gig-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

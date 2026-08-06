@@ -1,0 +1,214 @@
+/* ===========================
+   Why KhanVerse
+=========================== */
+
+.why-khanverse{
+    padding:100px 20px;
+    background:#fff;
+    position:relative;
+    clear: both;
+}
+
+.why-khanverse::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+
+    height:500px;
+
+    border-radius:50%;
+
+    background:rgba(79,70,229,.08);
+
+    filter:blur(140px);
+
+    right:-200px;
+
+    top:-150px;
+
+    z-index:0;
+
+}
+
+.why-khanverse .container{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+/* ===========================
+   Grid
+=========================== */
+
+.why-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+    margin-top:60px;
+
+}
+
+/* ===========================
+   Card
+=========================== */
+
+.why-card{
+
+    background:#fff;
+
+    border:1px solid #EEF2F7;
+
+    border-radius:24px;
+
+    padding:40px 35px;
+
+    transition:.35s;
+
+    cursor:pointer;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.why-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    top:0;
+
+    width:100%;
+
+    height:4px;
+
+    background:linear-gradient(
+        90deg,
+        #4F46E5,
+        #06B6D4
+    );
+
+    transform:scaleX(0);
+
+    transition:.35s;
+
+}
+
+.why-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 25px 60px rgba(79,70,229,.12);
+
+}
+
+.why-card:hover::before{
+
+    transform:scaleX(1);
+
+}
+
+/* ===========================
+   Icon
+=========================== */
+
+.why-icon{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:22px;
+
+    background:#EEF2FF;
+
+    color:#4F46E5;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    transition:.35s;
+
+}
+
+.why-card:hover .why-icon{
+
+    background:#4F46E5;
+
+    color:#fff;
+
+    transform:rotate(-8deg) scale(1.08);
+
+}
+
+/* ===========================
+   Text
+=========================== */
+
+.why-card h3{
+
+    font-size:24px;
+
+    color:#0F172A;
+
+    margin-bottom:15px;
+
+    transition:.3s;
+
+}
+
+.why-card:hover h3{
+
+    color:#4F46E5;
+
+}
+
+.why-card p{
+
+    color:#64748B;
+
+    line-height:1.8;
+
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+    .why-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .why-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

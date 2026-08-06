@@ -1,14 +1,31 @@
+import Hero from "../../components/Hero/Hero";
+import TrustedCompanies from "../../components/TrustedCompanies/TrustedCompanies";
+import Categories from "../Category/Categories";
+import CTA from "../CTA/CTA";
+import FeaturedGigs from "../FeaturedGigs/FeaturedGigs";
+import Statistics from "../Statistics/Statistics";
+import Testimonials from "../Testimonials/Testimonials";
+import WhyKhanVerse from "../WhyKhanVerse/WhyKhanVerse";
+
 function Home() {
     return (
-        <main>
+        <>
+            <Hero />
 
-            <section>
+            <TrustedCompanies />
 
-                <h1>Hero Section</h1>
+            <Categories />
 
-            </section>
+            <FeaturedGigs />
 
-        </main>
+            <WhyKhanVerse />
+
+            <Statistics />
+
+            <Testimonials />
+
+            <CTA />
+        </>
     );
 }
 
