@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import "../../theme/css/navbar.css";
 
+
 function Navbar() {
     return (
         <header className="navbar">
