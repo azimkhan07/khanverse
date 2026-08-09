@@ -1,6 +1,6 @@
 import "../../theme/css/footer.css";
 
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Link } from "lucide-react";
 
 import {
     FaFacebookF,
@@ -8,6 +8,11 @@ import {
     FaLinkedinIn,
     FaXTwitter,
 } from "react-icons/fa6";
+import footer from "../../data/footer";
+
+const apiFooter = {};
+
+const footerData = Object.keys(apiFooter).length ? apiFooter : footer;
 
 function Footer() {
     return (
@@ -17,66 +22,51 @@ function Footer() {
                     {/* Logo */}
 
                     <div>
-                        <h2 className="footer-logo">KhanVerse</h2>
+                        <h2 className="footer-logo">
+                            {" "}
+                            {footerData.company.logo}{" "}
+                        </h2>
 
-                        <p>
-                            The next generation freelance marketplace powered by
-                            AI.
-                        </p>
+                        <p> {footerData.company.description} </p>
 
                         <div className="footer-social">
-                            <FaFacebookF />
-                            <FaInstagram />
-                            <FaLinkedinIn />
-                            <FaXTwitter />
+                            {footerData.company.social.map((social) => (
+                                <a href={social.url} key={social.id}>
+                                    {social.icon === "facebook" && (
+                                        <FaFacebookF />
+                                    )}
+
+                                    {social.icon === "instagram" && (
+                                        <FaInstagram />
+                                    )}
+
+                                    {social.icon === "linkedin" && (
+                                        <FaLinkedinIn />
+                                    )}
+
+                                    {social.icon === "twitter" && (
+                                        <FaXTwitter />
+                                    )}
+                                </a>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Company */}
+                    {footerData.sections.map((section) => (
+                        <div key={section.id}>
+                            <h3>{section.title}</h3>
 
-                    <div>
-                        <h3>Company</h3>
-
-                        <a href="#">About</a>
-
-                        <a href="#">Careers</a>
-
-                        <a href="#">Blog</a>
-
-                        <a href="#">Contact</a>
-                    </div>
-
-                    {/* Marketplace */}
-
-                    <div>
-                        <h3>Marketplace</h3>
-
-                        <a href="#">Find Services</a>
-
-                        <a href="#">Become Seller</a>
-
-                        <a href="#">Categories</a>
-
-                        <a href="#">Projects</a>
-                    </div>
-
-                    {/* Support */}
-
-                    <div>
-                        <h3>Support</h3>
-
-                        <a href="#">Help Center</a>
-
-                        <a href="#">Privacy Policy</a>
-
-                        <a href="#">Terms</a>
-
-                        <a href="#">FAQs</a>
-                    </div>
+                            {section.links.map((link, index) => (
+                                <Link key={index} to={link.url}>
+                                    {link.label}
+                                </Link>
+                            ))}
+                        </div>
+                    ))}
                 </div>
 
                 <div className="footer-bottom">
-                    <p>© 2026 KhanVerse. All Rights Reserved.</p>
+                    <p> {footerData.copyright} </p>
 
                     <button className="back-top">
                         <ArrowUp size={18} />

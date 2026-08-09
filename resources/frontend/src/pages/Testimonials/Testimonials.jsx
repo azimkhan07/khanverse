@@ -1,5 +1,5 @@
 import "../../theme/css/testimonials.css";
-import { testimonials } from "../../components/Testimonials/testimonialsData";
+import { testimonials } from "../../components/testimonials/testimonialsData";
 import { Star, Quote } from "lucide-react";
 
 function Testimonials() {

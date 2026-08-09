@@ -1,5 +1,5 @@
-import Hero from "../../components/Hero/Hero";
-import TrustedCompanies from "../../components/TrustedCompanies/TrustedCompanies";
+import Hero from "../../components/hero/Hero";
+import TrustedCompanies from "../../components/trustedCompanies/TrustedCompanies";
 import Categories from "../Category/Categories";
 import CTA from "../CTA/CTA";
 import FeaturedGigs from "../FeaturedGigs/FeaturedGigs";

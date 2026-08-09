@@ -1,7 +1,7 @@
 import "../../theme/css/featured-gigs.css";
 
 import GigCard from "../../components/Cards/GigCard";
-import { featuredGigs } from "../../components/FeaturedGigs/featuredGigsData";
+import { featuredGigs } from "../../components/featuredGigs/featuredGigsData";
 
 function FeaturedGigs() {
 

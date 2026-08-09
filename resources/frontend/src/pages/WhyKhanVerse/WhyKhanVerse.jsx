@@ -1,5 +1,5 @@
 import "../../theme/css/why-khanverse.css";
-import { whyData } from "../../components/WhyKhanVerse/whyData";
+import { whyData } from "../../components/whyKhanVerse/whyData";
 
 function WhyKhanVerse() {
     return (

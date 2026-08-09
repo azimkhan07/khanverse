@@ -1,0 +1,27 @@
+.policy-content{
+
+    max-width:900px;
+
+    margin:60px auto 0;
+
+}
+
+.policy-content h3{
+
+    font-size:28px;
+
+    margin:35px 0 15px;
+
+    color:#0F172A;
+
+}
+
+.policy-content p{
+
+    font-size:17px;
+
+    line-height:1.9;
+
+    color:#64748B;
+
+}
