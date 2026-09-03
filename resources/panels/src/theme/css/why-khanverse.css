@@ -1,0 +1,144 @@
+/* ==========================================
+   WHY KHANVERSE — Velora Feature Cards
+   ========================================== */
+
+@keyframes whyFadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes whyIconFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-3deg); }
+}
+
+.why-khanverse {
+  padding: 36px 24px;
+  position: relative;
+  z-index: 2;
+  background: var(--bg-body, #F8FAFC);
+  transition: background 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why-khanverse .container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* --- Card --- */
+.why-card {
+  padding: 20px 18px;
+  border-radius: 20px;
+  background: var(--bg-card, #FFFFFF);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color, rgba(226, 232, 240, 0.6));
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(79,70,229,0.04);
+  animation: whyFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.why-card:nth-child(1) { animation-delay: 0.05s; }
+.why-card:nth-child(2) { animation-delay: 0.1s; }
+.why-card:nth-child(3) { animation-delay: 0.15s; }
+.why-card:nth-child(4) { animation-delay: 0.2s; }
+
+.why-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED, #06B6D4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 16px 48px rgba(79,70,229,0.12),
+    0 0 0 1px rgba(79,70,229,0.10);
+  border-color: transparent;
+}
+
+.why-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* --- Icon --- */
+.why-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent-light, rgba(79,70,229,0.08)), rgba(124,58,237,0.05));
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why-card:hover .why-icon {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  transform: scale(1.12) rotate(-6deg);
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.30);
+  animation: whyIconFloat 3s ease-in-out infinite;
+}
+
+.why-card:hover .why-icon span {
+  filter: brightness(0) invert(1);
+}
+
+/* --- Text --- */
+.why-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary, #0F172A);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.why-card p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-muted, #64748B);
+  margin: 0;
+}
+
+.why-card:hover h3 {
+  color: var(--accent, #4F46E5);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1200px) {
+  .why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .why-card {
+    padding: 26px 20px;
+  }
+}

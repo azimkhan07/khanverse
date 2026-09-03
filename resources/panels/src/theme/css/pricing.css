@@ -1,0 +1,202 @@
+/* ==========================================
+   PRICING — Velora 3-Tier Glass Premium
+   ========================================== */
+
+@keyframes pricingFadeInUp {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pricingBadgePulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(79,70,229,0.30); }
+  50% { box-shadow: 0 4px 24px rgba(79,70,229,0.50); }
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.pricing-card {
+  background: var(--bg-card, #fff);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light, #EEF2F7);
+  border-radius: 24px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  box-shadow: 0 4px 24px rgba(79,70,229,0.04);
+  animation: pricingFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pricing-card:nth-child(1) { animation-delay: 0.05s; }
+.pricing-card:nth-child(2) { animation-delay: 0.15s; }
+.pricing-card:nth-child(3) { animation-delay: 0.25s; }
+
+.pricing-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 24px 64px var(--accent-glow, rgba(79, 70, 229, 0.12));
+  border-color: transparent;
+}
+
+/* --- Popular Card --- */
+.pricing-card.active {
+  border-color: var(--accent, #4F46E5);
+  box-shadow: 0 24px 72px rgba(79, 70, 229, 0.18);
+  transform: scale(1.05);
+  z-index: 2;
+  background: linear-gradient(180deg, var(--bg-card, #fff) 0%, rgba(79,70,229,0.02) 100%);
+}
+
+.pricing-card.active:hover {
+  transform: scale(1.05) translateY(-6px);
+}
+
+.pricing-card .badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 20px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  animation: pricingBadgePulse 2.5s ease-in-out infinite;
+}
+
+/* --- Plan Name --- */
+.pricing-card h3 {
+  font-size: 24px;
+  color: var(--text-primary, #0F172A);
+  margin-bottom: 14px;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+/* --- Price --- */
+.pricing-card .price {
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--accent, #4F46E5);
+  margin-bottom: 10px;
+  letter-spacing: -2px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pricing-card .price span {
+  font-size: 16px;
+  font-weight: 500;
+  -webkit-text-fill-color: var(--text-muted, #64748B);
+}
+
+.pricing-card > p {
+  color: var(--text-muted, #64748B);
+  font-size: 15px;
+  margin-bottom: 32px;
+  line-height: 1.65;
+  transition: color 0.3s ease;
+}
+
+/* --- Features --- */
+.pricing-card ul {
+  text-align: left;
+  margin-bottom: 36px;
+}
+
+.pricing-card li {
+  padding: 11px 0;
+  color: var(--text-secondary, #475569);
+  font-size: 15px;
+  border-bottom: 1px solid var(--border-light, #F1F5F9);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.pricing-card li:last-child {
+  border-bottom: none;
+}
+
+.pricing-card li svg {
+  color: var(--success, #10B981);
+  flex-shrink: 0;
+}
+
+.pricing-card li.disabled {
+  color: var(--text-light, #94A3B8);
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.pricing-card li.disabled svg {
+  color: var(--text-light, #94A3B8);
+}
+
+/* --- Button --- */
+.pricing-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 2px solid var(--border-color, #E2E8F0);
+  background: transparent;
+  color: var(--text-secondary, #475569);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: 'Inter', sans-serif;
+}
+
+.pricing-btn:hover {
+  border-color: var(--accent, #4F46E5);
+  color: var(--accent, #4F46E5);
+  background: var(--accent-light, rgba(79, 70, 229, 0.04));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79,70,229,0.10);
+}
+
+.pricing-card.active .pricing-btn {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.30);
+}
+
+.pricing-card.active .pricing-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(79, 70, 229, 0.45);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 992px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .pricing-card.active {
+    transform: none;
+  }
+
+  .pricing-card.active:hover {
+    transform: translateY(-10px);
+  }
+}

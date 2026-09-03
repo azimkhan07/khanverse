@@ -1,0 +1,258 @@
+/* ==========================================
+   CTA — Velora Dark Gradient Premium
+   ========================================== */
+
+@keyframes ctaFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-24px); }
+}
+
+@keyframes ctaFadeInUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ctaShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.cta {
+  padding: 36px 24px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.cta-box {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 40px;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(6, 182, 212, 0.16) 0%, transparent 50%),
+    linear-gradient(160deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+  border-radius: 28px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 32px 100px rgba(15, 23, 42, 0.30);
+}
+
+.cta-box::before {
+  content: "";
+  position: absolute;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.18), transparent 70%);
+  top: -280px;
+  left: -180px;
+  animation: ctaFloat 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cta-box::after {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.14), transparent 70%);
+  bottom: -230px;
+  right: -120px;
+  animation: ctaFloat 14s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+.cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 5;
+}
+
+.cta-aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cta-box h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 5;
+  letter-spacing: -1.5px;
+  line-height: 1.12;
+  animation: ctaFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cta-box p {
+  color: #94A3B8;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto 32px;
+  position: relative;
+  z-index: 5;
+  animation: ctaFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+.cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  position: relative;
+  z-index: 5;
+  flex-wrap: wrap;
+  animation: ctaFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.cta-actions .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 36px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(79, 70, 229, 0.30);
+}
+
+.cta-actions .btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cta-actions .btn-primary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(79, 70, 229, 0.45);
+}
+
+.cta-actions .btn-primary:hover::before {
+  opacity: 1;
+}
+
+.cta-actions .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 36px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Direct button classes used in JSX */
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.30);
+}
+
+.cta-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 44px rgba(79, 70, 229, 0.45);
+}
+
+.cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .cta-box {
+    padding: 48px 24px;
+    border-radius: 24px;
+  }
+
+  .cta-box p {
+    font-size: 15px;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-actions a,
+  .cta-actions button {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}

@@ -6,9 +6,10 @@
             </a>
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-        </div>
+        <h2 class="text-lg font-semibold">{{ setting('auth', 'forgot.heading', 'Forgot Password?') }}</h2>
+        <p class="mb-4 text-sm text-gray-600">
+            {{ setting('auth', 'forgot.subheading', 'No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        </p>
 
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -28,7 +29,7 @@
 
             <div class="flex items-center justify-end mt-4">
                 <x-button>
-                    {{ __('Email Password Reset Link') }}
+                    {{ setting('auth', 'forgot.button', 'Email Password Reset Link') }}
                 </x-button>
             </div>
         </form>

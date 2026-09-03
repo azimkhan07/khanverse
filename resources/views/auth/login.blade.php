@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Khanverse Login</title>
+    <title>{{ setting('auth', 'login.title', 'KhanVerse Login') }}</title>
 
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
@@ -44,17 +44,16 @@
                 </div>
 
                 <span class="mini-tag">
-                    FREELANCER MARKETPLACE
+                    {{ setting('auth', 'login.brand_tag', 'FREELANCER MARKETPLACE') }}
                 </span>
 
                 <h1>
-                    Hire Experts.<br>
-                    Grow Faster.
+                    {{ setting('auth', 'login.brand_heading_1', 'Hire Experts.') }}<br>
+                    {{ setting('auth', 'login.brand_heading_2', 'Grow Faster.') }}
                 </h1>
 
                 <p>
-                    Connect with talented freelancers, manage projects,
-                    and build your digital business with Khanverse.
+                    {{ setting('auth', 'login.brand_text', 'Connect with talented freelancers, manage projects, and build your digital business with Khanverse.') }}
                 </p>
 
                 <div class="feature-list">
@@ -103,11 +102,11 @@
                 <div class="login-header">
 
                     <h2>
-                        Welcome Back
+                        {{ setting('auth', 'login.heading', 'Welcome Back') }}
                     </h2>
 
                     <p>
-                        Login to continue your journey
+                        {{ setting('auth', 'login.subheading', 'Login to continue your journey') }}
                     </p>
 
                 </div>
@@ -164,13 +163,13 @@
                             <input type="checkbox" name="remember" id="remember">
 
                             <label for="remember">
-                                Remember Me
+                                {{ setting('auth', 'login.remember', 'Remember Me') }}
                             </label>
 
                         </div>
 
-                        <a href="#">
-                            Forgot Password?
+                        <a href="{{ route('password.request') }}">
+                            {{ setting('auth', 'login.forgot_link', 'Forgot Password?') }}
                         </a>
 
                     </div>
@@ -178,7 +177,7 @@
                     <button type="submit" class="login-btn" id="loginBtn">
 
                         <span id="btnText">
-                            Login Now
+                            {{ setting('auth', 'login.button', 'Login Now') }}
                         </span>
 
                         <span id="btnLoader" style="display:none;">
@@ -195,11 +194,11 @@
                 <div class="auth-footer">
 
                     <span>
-                        New to Khanverse?
+                        {{ setting('auth', 'login.new_here', 'New to Khanverse?') }}
                     </span>
 
-                    <a href="#">
-                        Create Account
+                    <a href="{{ route('register') }}">
+                        {{ setting('auth', 'login.create_account', 'Create Account') }}
                     </a>
 
                 </div>

@@ -1,0 +1,960 @@
+/* =====================================================================
+   KhanVerse · Velora Premium Design System (v2)
+   ---------------------------------------------------------------------
+   Layered ON TOP of dashboard.css. Scoped under `.kv-velora` applied to
+   the seller/buyer `.page-content`. Upgrades the existing shared markup
+   (stat-card, detail-box, data-table, form-input, btn, badge, sidebar,
+   top-nav) into an animated, colorful, premium experience — inspired by
+   velora.colorlib.com (aurora gradients, glassmorphism, bento cards,
+   generous motion, vibrant accents).
+
+   Design tokens
+   ---------------------------------------------------------------------
+   Accent family : indigo → violet → fuchsia/pink
+   Motion        : fadeUp entrance on page shell, hover lifts, shimmer
+   Surfaces      : glass + soft shadows, aurora background blobs
+   ===================================================================== */
+
+.kv-velora {
+    --kv-accent: #6366f1;
+    --kv-accent-2: #8b5cf6;
+    --kv-accent-3: #ec4899;
+    --kv-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    --kv-grad-soft: linear-gradient(135deg, rgba(99,102,241,.14), rgba(139,92,246,.14), rgba(236,72,153,.12));
+    --kv-border: rgba(100, 116, 139, .16);
+    --kv-radius: 22px;
+    --kv-radius-sm: 14px;
+    --kv-shadow: 0 14px 44px -14px rgba(2, 6, 23, .22);
+    --kv-shadow-hover: 0 22px 60px -16px rgba(99, 102, 241, .35);
+    --kv-page-bg: #f6f7fb;
+    --kv-ring: 0 0 0 4px rgba(99, 102, 241, .14);
+    --kv-glass: rgba(255, 255, 255, .74);
+    --kv-text-on-grad: #fff;
+}
+
+[data-theme="dark"] .kv-velora {
+    --kv-border: rgba(148, 163, 184, .15);
+    --kv-page-bg: #0b1220;
+    --kv-shadow: 0 16px 48px -16px rgba(0, 0, 0, .6);
+    --kv-glass: rgba(30, 41, 66, .66);
+}
+
+/* ---------------------------------------------------------------------
+   Tokens must also be available outside .kv-velora (sidebar + top-nav are
+   siblings of .page-content, NOT descendants), otherwise var(--kv-*) used
+   there fail to resolve (invisible active state, missing borders, etc.).
+   --------------------------------------------------------------------- */
+.dashboard-layout:has(.kv-velora) {
+    --kv-accent: #6366f1;
+    --kv-accent-2: #8b5cf6;
+    --kv-accent-3: #ec4899;
+    --kv-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    --kv-grad-soft: linear-gradient(135deg, rgba(99,102,241,.14), rgba(139,92,246,.14), rgba(236,72,153,.12));
+    --kv-border: rgba(100, 116, 139, .16);
+    --kv-glass: rgba(255, 255, 255, .74);
+    --kv-shadow: 0 14px 44px -14px rgba(2, 6, 23, .22);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) {
+    --kv-border: rgba(148, 163, 184, .15);
+    --kv-glass: rgba(30, 41, 66, .66);
+    --kv-shadow: 0 16px 48px -16px rgba(0, 0, 0, .6);
+}
+
+/* ---------------------------------------------------------------------
+   Aurora page background + animated blobs
+   --------------------------------------------------------------------- */
+.kv-velora {
+    position: relative;
+    min-height: 100vh;
+    background:
+        radial-gradient(48rem 48rem at 6% -10%, rgba(99, 102, 241, .16), transparent 60%),
+        radial-gradient(42rem 42rem at 100% 0%, rgba(139, 92, 246, .14), transparent 55%),
+        radial-gradient(46rem 46rem at 55% 125%, rgba(236, 72, 153, .12), transparent 55%),
+        var(--kv-page-bg);
+    overflow: hidden;
+}
+[data-theme="dark"] .kv-velora {
+    background:
+        radial-gradient(48rem 48rem at 6% -10%, rgba(99, 102, 241, .20), transparent 60%),
+        radial-gradient(42rem 42rem at 100% 0%, rgba(139, 92, 246, .16), transparent 55%),
+        radial-gradient(46rem 46rem at 55% 125%, rgba(236, 72, 153, .14), transparent 55%),
+        var(--kv-page-bg);
+}
+
+/* Animated aurora blobs drifting behind content */
+.kv-velora::before,
+.kv-velora::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .34;
+    pointer-events: none;
+    will-change: transform;
+}
+.kv-velora::before {
+    width: 34rem; height: 34rem;
+    left: -8rem; top: -6rem;
+    background: radial-gradient(circle, rgba(99,102,241,.55), transparent 68%);
+    animation: kv-drift-a 22s ease-in-out infinite;
+}
+.kv-velora::after {
+    width: 30rem; height: 30rem;
+    right: -7rem; bottom: -5rem;
+    background: radial-gradient(circle, rgba(236,72,153,.45), transparent 68%);
+    animation: kv-drift-b 26s ease-in-out infinite;
+}
+@keyframes kv-drift-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(6rem, 4rem) scale(1.12); }
+}
+@keyframes kv-drift-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-5rem, -4rem) scale(1.08); }
+}
+/* restore stacking: content above blobs */
+.kv-velora > * { position: relative; z-index: 1; }
+
+/* Entrance animation for the whole page shell (feels new every navigation) */
+@keyframes kv-fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+}
+.kv-velora > *:not(:empty) {
+    animation: kv-fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+}
+.kv-form-page {
+    animation: kv-fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* ---------------------------------------------------------------------
+   Glass surfaces
+   --------------------------------------------------------------------- */
+.kv-glass {
+    background: rgba(255, 255, 255, .74);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid var(--kv-border);
+}
+[data-theme="dark"] .kv-glass {
+    background: rgba(30, 41, 66, .66);
+}
+
+/* ---------------------------------------------------------------------
+   Premium sidebar (shares canvas with page-content)
+   --------------------------------------------------------------------- */
+.kv-velora + .sidebar, .kv-velora ~ .sidebar,
+.sidebar:has(+ .main-content .kv-velora),
+.dashboard-layout:has(.kv-velora) .sidebar {
+    border-right: 1px solid var(--kv-border);
+    background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,248,253,.94));
+    backdrop-filter: blur(18px);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .sidebar {
+    background: linear-gradient(180deg, rgba(15,23,42,.88), rgba(11,18,32,.94));
+}
+.dashboard-layout:has(.kv-velora) .sidebar-logo {
+    font-size: 22px; font-weight: 800;
+    letter-spacing: -.4px;
+    color: #6366f1;
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .sidebar-logo {
+    color: #a5b4fc;
+}
+.dashboard-layout:has(.kv-velora) .sidebar-logo-link {
+    background: linear-gradient(120deg, #6366f1 0%, #8b5cf6 55%, #ec4899 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #6366f1;
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .sidebar-logo-link {
+    background: linear-gradient(120deg, #818cf8 0%, #c084fc 55%, #f472b6 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #a5b4fc;
+}
+.dashboard-layout:has(.kv-velora) .sidebar-section-title {
+    color: #94a3b8; font-weight: 700;
+}
+.dashboard-layout:has(.kv-velora) .sidebar-link {
+    position: relative; border-left: none; overflow: hidden;
+}
+.dashboard-layout:has(.kv-velora) .sidebar-link svg { color: #94a3b8; }
+.dashboard-layout:has(.kv-velora) .sidebar-link:hover {
+    color: var(--kv-accent); background: rgba(99,102,241,.08);
+}
+.dashboard-layout:has(.kv-velora) .sidebar-link:hover svg { color: var(--kv-accent); }
+.dashboard-layout:has(.kv-velora) .sidebar-link.active {
+    color: #fff; font-weight: 700;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+    box-shadow: 0 10px 24px -8px rgba(99,102,241,.6);
+    border-radius: 14px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .sidebar-link.active {
+    background: var(--kv-grad);
+    text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+.dashboard-layout:has(.kv-velora) .sidebar-link.active::after {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%);
+    animation: kv-shimmer 3.2s infinite;
+    pointer-events: none;
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .sidebar-link.active::after {
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.16) 50%, transparent 60%);
+}
+.dashboard-layout:has(.kv-velora) .sidebar-link.active svg { color: #fff; position: relative; z-index: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.dashboard-layout:has(.kv-velora) .sidebar-link.active .sidebar-label { position: relative; z-index: 1; color: #fff; }
+@keyframes kv-shimmer { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(100%); } }
+
+/* ---------------------------------------------------------------------
+   Premium top nav
+   --------------------------------------------------------------------- */
+.dashboard-layout:has(.kv-velora) .top-nav {
+    border-bottom: 1px solid var(--kv-border);
+    background: rgba(255,255,255,.6);
+    backdrop-filter: blur(20px) saturate(160%);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .top-nav {
+    background: rgba(11,18,32,.6);
+}
+.dashboard-layout:has(.kv-velora) .topnav-left h2 {
+    background: var(--kv-grad);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    font-weight: 800;
+}
+.dashboard-layout:has(.kv-velora) .bell-btn {
+    position: relative; width: 40px; height: 40px;
+    border-radius: 12px; border: 1px solid var(--kv-border);
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.7); color: var(--text-secondary);
+    cursor: pointer; transition: all .2s;
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .bell-btn {
+    background: rgba(255,255,255,.08);
+    border-color: var(--kv-border);
+    color: #e2e8f0;
+    box-shadow: inset 0 0 0 1px rgba(148,163,184,.1);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .bell-btn:hover {
+    background: rgba(99,102,241,.18); color: #fff;
+}
+.dashboard-layout:has(.kv-velora) .bell-btn svg {
+    display: block; width: 20px; height: 20px;
+    color: var(--kv-accent, #6366f1);
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .bell-btn svg {
+    color: #f1f5f9;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .bell-btn:hover svg { color: #fff; }
+.dashboard-layout:has(.kv-velora) .bell-btn:hover {
+    background: rgba(99,102,241,.1); color: var(--kv-accent);
+    transform: translateY(-1px);
+}
+.dashboard-layout:has(.kv-velora) .topnav-bell { position: relative; }
+.dashboard-layout:has(.kv-velora) .bell-dot {
+    position: absolute; top: -4px; right: -4px;
+    min-width: 18px; height: 18px; padding: 0 4px;
+    border-radius: 999px; background: var(--kv-grad);
+    color: #fff; font-size: 10px; font-weight: 800;
+    display: grid; place-items: center;
+}
+.dashboard-layout:has(.kv-velora) .bell-dropdown {
+    position: absolute; right: 0; top: 46px; width: 320px;
+    background: var(--bg-card, #fff); border: 1px solid var(--kv-border);
+    border-radius: 18px; box-shadow: var(--kv-shadow);
+    overflow: hidden; z-index: 200;
+    animation: kv-fadeUp .22s ease both;
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .bell-dropdown {
+    background: rgba(15,23,42,.95);
+    border-color: rgba(99,102,241,.15);
+}
+.dashboard-layout:has(.kv-velora) .bell-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--kv-border);
+}
+.dashboard-layout:has(.kv-velora) .bell-head strong {
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+}
+.dashboard-layout:has(.kv-velora) .bell-head .btn-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 0; border: none; background: none;
+    color: var(--kv-accent); font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: color .15s;
+}
+.dashboard-layout:has(.kv-velora) .bell-head .btn-link:hover { color: var(--kv-accent-deep, #4f46e5); }
+.dashboard-layout:has(.kv-velora) .bell-list {
+    max-height: 320px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--kv-accent) transparent;
+}
+.dashboard-layout:has(.kv-velora) .bell-list::-webkit-scrollbar { width: 5px; }
+.dashboard-layout:has(.kv-velora) .bell-list::-webkit-scrollbar-thumb { background: rgba(99,102,241,.3); border-radius: 8px; }
+.dashboard-layout:has(.kv-velora) .bell-item {
+    display: block; padding: 12px 18px;
+    border-bottom: 1px solid rgba(99,102,241,.06);
+    transition: background .12s;
+    text-decoration: none; color: inherit;
+}
+.dashboard-layout:has(.kv-velora) .bell-item:last-child { border-bottom: none; }
+.dashboard-layout:has(.kv-velora) .bell-item:hover { background: rgba(99,102,241,.06); }
+.dashboard-layout:has(.kv-velora) .bell-list .empty {
+    padding: 28px 18px; text-align: center;
+    font-size: 13px; color: var(--text-muted); font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------
+   Page hero heading
+   --------------------------------------------------------------------- */
+.kv-velora .page-heading h1 {
+    font-size: 32px; font-weight: 800; letter-spacing: -.7px;
+    background: linear-gradient(120deg, #4f46e5 0%, #9333ea 45%, #db2777 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+[data-theme="dark"] .kv-velora .page-heading h1 {
+    background: linear-gradient(120deg, #818cf8, #c084fc 50%, #f472b6);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.kv-velora .page-heading p { font-size: 14px; color: var(--text-muted); }
+
+/* ---------------------------------------------------------------------
+   Primary button (animated gradient)
+   --------------------------------------------------------------------- */
+.kv-velora .page-toolbar .btn-primary,
+.kv-velora .btn-primary {
+    background: linear-gradient(120deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
+    background-size: 160% 160%;
+    border: none; border-radius: 12px;
+    box-shadow: 0 12px 26px -10px rgba(99, 102, 241, .6);
+    transition: all .25s cubic-bezier(.22,1,.36,1);
+    position: relative;
+}
+.kv-velora .btn-primary:hover {
+    background-position: 100% 0;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 18px 36px -10px rgba(139, 92, 246, .7);
+    filter: saturate(1.1);
+}
+.kv-velora .btn-primary:active { transform: translateY(0) scale(.99); }
+.kv-velora .btn-secondary {
+    border-radius: 12px;
+    border: 1px solid var(--kv-border);
+    background: rgba(255,255,255,.6);
+    backdrop-filter: blur(8px);
+    transition: all .2s;
+}
+[data-theme="dark"] .kv-velora .btn-secondary { background: rgba(30,41,66,.6); }
+.kv-velora .btn-secondary:hover {
+    border-color: var(--kv-accent);
+    color: var(--kv-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -12px rgba(99,102,241,.5);
+}
+
+/* ---------------------------------------------------------------------
+   Stat cards — gradient accents + hover lift + shine
+   --------------------------------------------------------------------- */
+.kv-velora .stat-grid { gap: 20px; }
+.kv-velora .stat-card {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius);
+    padding: 24px;
+    position: relative; overflow: hidden;
+    box-shadow: var(--kv-shadow);
+    transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s, border-color .2s;
+}
+.kv-velora .stat-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3.5px;
+    background: var(--kv-grad);
+}
+.kv-velora .stat-card::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.38) 50%, transparent 60%);
+    transform: translateX(-110%);
+    transition: transform .7s ease;
+}
+.kv-velora .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--kv-shadow-hover);
+    border-color: rgba(99,102,241,.3);
+}
+.kv-velora .stat-card:hover::after { transform: translateX(110%); }
+.kv-velora .stat-card .stat-icon {
+    width: 50px; height: 50px; border-radius: 15px; margin-bottom: 18px;
+    background: var(--kv-grad-soft);
+    transition: transform .3s;
+}
+.kv-velora .stat-card:hover .stat-icon { transform: translateY(-2px) rotate(-4deg) scale(1.05); }
+.kv-velora .stat-card h3 {
+    font-size: 32px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 2px;
+    background: linear-gradient(120deg, #1e293b, #4f46e5);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+[data-theme="dark"] .kv-velora .stat-card h3 {
+    background: linear-gradient(120deg, #f1f5f9, #a5b4fc);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.kv-velora .stat-card p { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+
+/* ---------------------------------------------------------------------
+   Bento cards / detail boxes
+   --------------------------------------------------------------------- */
+.kv-velora .detail-box,
+.kv-velora .card,
+.kv-velora .admin-card,
+.kv-velora .form-card {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius);
+    box-shadow: var(--kv-shadow);
+    position: relative;
+    transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .2s;
+}
+.kv-velora .detail-box:hover { border-color: rgba(99,102,241,.28); }
+.kv-velora .detail-box h3,
+.kv-velora .card-header h3 {
+    font-size: 17px; font-weight: 800; letter-spacing: -.2px;
+}
+.kv-velora .card-header { padding-bottom: 14px; border-bottom: 1px dashed var(--kv-border); }
+
+/* ---------------------------------------------------------------------
+   Data tables — premium glass
+   --------------------------------------------------------------------- */
+.kv-velora .data-table {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius);
+    box-shadow: var(--kv-shadow);
+    overflow: hidden;
+}
+.kv-velora .data-table-scroll { scrollbar-width: thin; scrollbar-color: var(--kv-accent) transparent; }
+.kv-velora .data-table-scroll::-webkit-scrollbar { height: 8px; }
+.kv-velora .data-table-scroll::-webkit-scrollbar-thumb { background: rgba(99,102,241,.4); border-radius: 8px; }
+.kv-velora .data-table th {
+    background: linear-gradient(120deg, rgba(99,102,241,.08), rgba(236,72,153,.05));
+    text-transform: uppercase; letter-spacing: .7px; font-size: 11px;
+    color: var(--text-muted); font-weight: 800;
+    border-bottom: 1px solid var(--kv-border);
+}
+[data-theme="dark"] .kv-velora .data-table th {
+    background: linear-gradient(120deg, rgba(99,102,241,.14), rgba(236,72,153,.08));
+}
+.kv-velora .data-table tbody tr { transition: background .15s, transform .15s; }
+.kv-velora .data-table tbody tr:hover td {
+    background: linear-gradient(120deg, rgba(99,102,241,.05), rgba(236,72,153,.04));
+}
+[data-theme="dark"] .kv-velora .data-table tbody tr:hover td {
+    background: linear-gradient(120deg, rgba(99,102,241,.1), rgba(236,72,153,.06));
+}
+.kv-velora .data-table td {
+    border-bottom: 1px solid var(--kv-border);
+    background: var(--kv-glass);
+}
+[data-theme="dark"] .kv-velora .data-table td {
+    background: rgba(30, 41, 66, .4);
+}
+
+/* ---------------------------------------------------------------------
+   Forms — soft premium inputs
+   --------------------------------------------------------------------- */
+.kv-velora .form-input,
+.kv-velora .form-control,
+.kv-velora .form-select,
+.kv-velora input, .kv-velora select, .kv-velora textarea {
+    border-radius: 13px; padding: 11px 15px;
+    border: 1px solid var(--kv-border);
+    background: rgba(255,255,255,.82);
+    transition: box-shadow .18s, border-color .18s, transform .12s;
+}
+[data-theme="dark"] .kv-velora .form-input,
+[data-theme="dark"] .kv-velora .form-control,
+[data-theme="dark"] .kv-velora .form-select,
+[data-theme="dark"] .kv-velora input,
+[data-theme="dark"] .kv-velora select,
+[data-theme="dark"] .kv-velora textarea { background: rgba(30,41,66,.72); }
+.kv-velora .form-input:focus,
+.kv-velora .form-control:focus,
+.kv-velora .form-select:focus {
+    border-color: var(--kv-accent);
+    box-shadow: var(--kv-ring);
+    outline: none;
+}
+
+/* ---------------------------------------------------------------------
+   Premium filter dropdown
+   --------------------------------------------------------------------- */
+.kv-velora .kv-filter {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 13px;
+    cursor: pointer;
+}
+.kv-velora .kv-filter-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    min-width: 150px;
+    border-radius: 13px;
+    border: 1px solid var(--kv-border);
+    background: var(--bg-card, #fff);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: box-shadow .18s, border-color .18s, transform .12s;
+    font: inherit;
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .kv-velora .kv-filter-trigger { background: rgba(30,41,66,.72); }
+.kv-velora .kv-filter-trigger:hover {
+    border-color: rgba(99,102,241,.45);
+    box-shadow: 0 6px 16px -6px rgba(99,102,241,.35);
+}
+.kv-velora .kv-filter-trigger:focus {
+    border-color: var(--kv-accent);
+    box-shadow: var(--kv-ring);
+    outline: none;
+}
+.kv-velora .kv-filter-icon { color: var(--kv-accent, #6366f1); flex-shrink: 0; pointer-events: none; }
+.kv-velora .kv-filter-label {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    pointer-events: none;
+}
+.kv-velora .kv-filter-chevron {
+    flex-shrink: 0;
+    color: var(--text-light, #94a3b8);
+    pointer-events: none;
+    transition: transform .2s;
+}
+.kv-velora .kv-filter-chevron.open { transform: rotate(180deg); }
+
+/* Custom dropdown panel */
+.kv-velora .kv-filter-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 100%;
+    width: max-content;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--kv-border);
+    border-radius: 14px;
+    box-shadow: var(--kv-shadow);
+    padding: 6px;
+    z-index: 200;
+    animation: kv-fadeUp .2s ease both;
+}
+[data-theme="dark"] .kv-velora .kv-filter-dropdown {
+    background: rgba(15,23,42,.95);
+    border-color: rgba(99,102,241,.15);
+}
+.kv-velora .kv-filter-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+    white-space: nowrap;
+    text-align: left;
+    font: inherit;
+}
+.kv-velora .kv-filter-option:hover {
+    background: rgba(99,102,241,.08);
+    color: var(--kv-accent);
+}
+.kv-velora .kv-filter-option.active {
+    background: rgba(99,102,241,.12);
+    color: var(--kv-accent);
+    font-weight: 600;
+}
+[data-theme="dark"] .kv-velora .kv-filter-option:hover { background: rgba(99,102,241,.18); }
+[data-theme="dark"] .kv-velora .kv-filter-option.active { background: rgba(99,102,241,.22); color: #a5b4fc; }
+
+/* ---------------------------------------------------------------------
+   Badges — vibrant pills
+   --------------------------------------------------------------------- */
+.kv-velora .badge {
+    border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 11.5px;
+}
+.kv-velora .badge-primary { background: rgba(99,102,241,.12); color: #6366f1; box-shadow: inset 0 0 0 1px rgba(99,102,241,.25); }
+.kv-velora .badge-success { background: rgba(16,185,129,.12); color: #059669; box-shadow: inset 0 0 0 1px rgba(16,185,129,.28); }
+.kv-velora .badge-warning { background: rgba(245,158,11,.14); color: #d97706; box-shadow: inset 0 0 0 1px rgba(245,158,11,.3); }
+.kv-velora .badge-danger { background: rgba(239,68,68,.12); color: #dc2626; box-shadow: inset 0 0 0 1px rgba(239,68,68,.28); }
+.kv-velora .badge-info { background: rgba(6,182,212,.12); color: #0891b2; box-shadow: inset 0 0 0 1px rgba(6,182,212,.28); }
+
+/* ---------------------------------------------------------------------
+   Detail rows / meta
+   --------------------------------------------------------------------- */
+.kv-velora .detail-row { padding: 13px 0; border-bottom: 1px solid var(--kv-border); }
+.kv-velora .detail-row .label { font-size: 13px; }
+.kv-velora .detail-row .value { font-weight: 800; }
+
+/* ---------------------------------------------------------------------
+   Progress bars
+   --------------------------------------------------------------------- */
+.kv-velora .progress-bar { height: 11px; border-radius: 999px; background: rgba(99,102,241,.12); }
+.kv-velora .progress-fill {
+    background: linear-gradient(120deg, #6366f1, #8b5cf6 50%, #ec4899);
+    background-size: 160% 160%;
+    animation: kv-grad-move 3s linear infinite;
+}
+@keyframes kv-grad-move { 0% { background-position: 0% 50%; } 100% { background-position: 160% 50%; } }
+
+/* ---------------------------------------------------------------------
+   Profile cover — premium hero
+   --------------------------------------------------------------------- */
+.kv-velora .profile-cover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6 55%, #ec4899);
+    border-radius: var(--kv-radius);
+    box-shadow: 0 24px 60px -18px rgba(99,102,241,.55);
+}
+
+/* ---------------------------------------------------------------------
+   Tabs — animated underline
+   --------------------------------------------------------------------- */
+.kv-velora .tab-btn.active {
+    color: var(--kv-accent);
+    border-bottom-color: var(--kv-accent);
+}
+
+/* ---------------------------------------------------------------------
+   Timeline
+   --------------------------------------------------------------------- */
+.kv-velora .timeline::before { background: linear-gradient(180deg, #6366f1, #ec4899); }
+.kv-velora .timeline-item::before {
+    background: var(--kv-grad);
+    border: 2px solid var(--kv-page-bg);
+    box-shadow: 0 0 0 4px rgba(99,102,241,.15);
+}
+
+/* ---------------------------------------------------------------------
+   File items / notif items / review cards
+   --------------------------------------------------------------------- */
+.kv-velora .file-item,
+.kv-velora .notif-item,
+.kv-velora .review-card {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius-sm);
+    box-shadow: var(--kv-shadow);
+    transition: transform .22s, box-shadow .22s, border-color .2s;
+}
+.kv-velora .file-item:hover,
+.kv-velora .notif-item:hover,
+.kv-velora .review-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(99,102,241,.28);
+    box-shadow: var(--kv-shadow-hover);
+}
+.kv-velora .notif-icon { border-radius: 13px; background: var(--kv-grad) !important; }
+
+/* ---------------------------------------------------------------------
+   Chips
+   --------------------------------------------------------------------- */
+.kv-velora .chip {
+    background: var(--kv-grad-soft);
+    color: var(--kv-accent);
+    font-weight: 700;
+}
+
+/* =====================================================================
+   Form-as-Page layout (modal → direct page)
+   ===================================================================== */
+.kv-form-page { max-width: 800px; margin: 0 auto; }
+.kv-form-hero {
+    padding: 30px 32px;
+    border-radius: var(--kv-radius);
+    margin-bottom: 24px;
+    position: relative; overflow: hidden; color: #fff;
+    background: linear-gradient(120deg, #6366f1, #8b5cf6 50%, #ec4899);
+    box-shadow: 0 22px 50px -16px rgba(99,102,241,.65);
+}
+.kv-form-hero::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(18rem 12rem at 90% 0%, rgba(255,255,255,.25), transparent 60%);
+}
+.kv-form-hero h2 { position: relative; z-index: 1; font-size: 24px; font-weight: 800; letter-spacing: -.3px; color: #fff; }
+.kv-form-hero p { position: relative; z-index: 1; color: rgba(255,255,255,.88); font-size: 13.5px; margin-top: 5px; }
+.kv-form-card {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius);
+    padding: 32px;
+    box-shadow: var(--kv-shadow);
+    animation: kv-fadeUp .45s cubic-bezier(.22,1,.36,1) both;
+}
+.kv-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.kv-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.kv-field label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+.kv-field .hint { font-size: 12px; color: var(--text-muted); }
+.kv-field.full { grid-column: 1 / -1; }
+.kv-form-actions {
+    display: flex; gap: 12px; margin-top: 30px; padding-top: 24px;
+    border-top: 1px solid var(--kv-border);
+}
+@media (max-width: 640px) { .kv-form-grid { grid-template-columns: 1fr; } }
+
+.kv-velora .status-form { gap: 12px; }
+
+/* =====================================================================
+   Loading Skeleton
+   ===================================================================== */
+@keyframes kv-skeleton-pulse {
+    0%, 100% { opacity: .55; }
+    50% { opacity: .25; }
+}
+.kv-skeleton {
+    border-radius: var(--kv-radius-sm);
+    background: linear-gradient(110deg, rgba(99,102,241,.1) 30%, rgba(236,72,153,.08) 50%, rgba(99,102,241,.1) 70%);
+    background-size: 300% 100%;
+    animation: kv-skeleton-shimmer 1.6s ease-in-out infinite, kv-skeleton-pulse 2s ease-in-out infinite;
+}
+@keyframes kv-skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -100% 0; }
+}
+.kv-skeleton-line { height: 14px; border-radius: 7px; margin-bottom: 10px; }
+.kv-skeleton-line.w60 { width: 60%; }
+.kv-skeleton-line.w80 { width: 80%; }
+.kv-skeleton-line.w40 { width: 40%; }
+.kv-skeleton-circle { border-radius: 50%; }
+
+/* =====================================================================
+   Empty state — premium
+   ===================================================================== */
+.kv-velora .empty-state {
+    padding: 60px 24px; text-align: center;
+}
+.kv-velora .empty-state svg { color: #c4b5fd; margin-bottom: 12px; }
+.kv-velora .empty-state p {
+    color: var(--text-muted); font-size: 15px; font-weight: 500;
+    background: var(--kv-grad); -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* =====================================================================
+   Page transition wrapper
+   ===================================================================== */
+.kv-page-enter { animation: kv-fadeUp .45s cubic-bezier(.22,1,.36,1) both; }
+.kv-stagger-1 { animation-delay: .05s; }
+.kv-stagger-2 { animation-delay: .10s; }
+.kv-stagger-3 { animation-delay: .15s; }
+.kv-stagger-4 { animation-delay: .20s; }
+.kv-stagger-5 { animation-delay: .25s; }
+
+/* =====================================================================
+   Notification dot (buyer)
+   ===================================================================== */
+.notif-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    background: var(--kv-grad);
+    box-shadow: 0 0 8px rgba(99,102,241,.6);
+    animation: kv-dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes kv-dot-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.35); opacity: .7; }
+}
+.notif-body { flex: 1; min-width: 0; }
+.notif-body strong { font-size: 14px; display: block; }
+.notif-body p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* =====================================================================
+   Settings switch-row (buyer)
+   ===================================================================== */
+.switch-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--kv-border);
+}
+.switch-row:last-of-type { border-bottom: none; }
+.switch-row strong { font-size: 14px; }
+
+/* =====================================================================
+   Chat enhancements
+   ===================================================================== */
+.kv-velora .chat-box {
+    border: 1px solid var(--kv-border);
+    border-radius: var(--kv-radius);
+    box-shadow: var(--kv-shadow);
+    background: var(--kv-glass);
+}
+.kv-velora .chat-input {
+    border-top: 1px solid var(--kv-border);
+    background: rgba(255,255,255,.6);
+}
+[data-theme="dark"] .kv-velora .chat-input {
+    background: rgba(30,41,66,.5);
+}
+.kv-velora .chat-bubble.self {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 6px 20px -6px rgba(99,102,241,.5);
+}
+.kv-velora .chat-bubble.other {
+    background: rgba(255,255,255,.8);
+    border: 1px solid var(--kv-border);
+}
+
+/* =====================================================================
+   Avatar small (chat sidebar)
+   ===================================================================== */
+.avatar-sm {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: var(--kv-grad); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 14px; overflow: hidden;
+}
+
+/* =====================================================================
+   Alert premium
+   ===================================================================== */
+.kv-velora .alert-success {
+    background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(6,182,212,.08));
+    border: 1px solid rgba(16,185,129,.25);
+    border-radius: var(--kv-radius-sm);
+    box-shadow: 0 8px 24px -8px rgba(16,185,129,.25);
+}
+.kv-velora .alert-error {
+    background: linear-gradient(135deg, rgba(239,68,68,.1), rgba(245,158,11,.08));
+    border: 1px solid rgba(239,68,68,.25);
+    border-radius: var(--kv-radius-sm);
+    box-shadow: 0 8px 24px -8px rgba(239,68,68,.25);
+}
+
+/* =====================================================================
+   Confirm dialog premium
+   ===================================================================== */
+.confirm-overlay { backdrop-filter: blur(8px) !important; }
+.confirm-box {
+    border-radius: 22px !important;
+    border: 1px solid var(--kv-border) !important;
+    box-shadow: 0 25px 70px -12px rgba(0,0,0,.35) !important;
+}
+.confirm-icon { background: var(--kv-grad-soft) !important; }
+.confirm-actions .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899) !important;
+    box-shadow: 0 8px 20px -6px rgba(99,102,241,.6) !important;
+}
+
+/* =====================================================================
+   File item premium hover
+   ===================================================================== */
+.kv-velora .file-item {
+    transition: all .25s cubic-bezier(.22,1,.36,1);
+}
+.kv-velora .file-item:hover {
+    transform: translateX(4px);
+}
+
+/* =====================================================================
+   Review card premium
+   ===================================================================== */
+.kv-velora .review-card {
+    border-radius: var(--kv-radius) !important;
+    padding: 28px !important;
+}
+.kv-velora .review-stars svg {
+    filter: drop-shadow(0 2px 4px rgba(245,158,11,.3));
+}
+
+/* =====================================================================
+   Badge glow on hover
+   ===================================================================== */
+.kv-velora .badge {
+    transition: all .2s;
+}
+.kv-velora .badge:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* =====================================================================
+   Settings menu premium
+   ===================================================================== */
+.kv-velora .settings-menu button {
+    border-radius: 12px !important;
+    transition: all .2s;
+}
+.kv-velora .settings-menu button:hover {
+    transform: translateX(4px);
+}
+.kv-velora .settings-menu button.active {
+    background: var(--kv-grad) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px -6px rgba(99,102,241,.5);
+}
+
+/* =====================================================================
+   Profile cover premium
+   ===================================================================== */
+.kv-velora .profile-cover {
+    position: relative;
+    overflow: hidden;
+}
+.kv-velora .profile-cover::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(20rem 14rem at 85% 10%, rgba(255,255,255,.2), transparent 60%);
+    z-index: 1;
+}
+
+/* =====================================================================
+   TopNav premium avatar
+   ===================================================================== */
+.kv-velora ~ .top-nav .topnav-user img,
+.dashboard-layout:has(.kv-velora) .topnav-user img {
+    border: 2px solid rgba(99,102,241,.3);
+    box-shadow: 0 4px 12px -2px rgba(99,102,241,.3);
+    transition: all .2s;
+}
+.kv-velora ~ .top-nav .topnav-user img:hover,
+.dashboard-layout:has(.kv-velora) .topnav-user img:hover {
+    transform: scale(1.08);
+    border-color: var(--kv-accent);
+}
+
+/* =====================================================================
+   Responsive tune
+    --------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .kv-velora .page-heading h1 { font-size: 26px; }
+    .kv-velora .stat-card h3 { font-size: 26px; }
+}
+
+/* =====================================================================
+   Premium user dropdown (scoped to panel apps using velora)
+   ===================================================================== */
+.dashboard-layout:has(.kv-velora) .user-dropdown {
+    background: var(--kv-glass);
+    border: 1px solid var(--kv-border);
+    box-shadow: var(--kv-shadow);
+    backdrop-filter: blur(18px) saturate(160%);
+}
+.dashboard-layout:has(.kv-velora) .user-dropdown-head {
+    border-bottom: 1px solid var(--kv-border);
+    background: linear-gradient(120deg, rgba(99,102,241,.08), rgba(236,72,153,.06));
+}
+[data-theme="dark"] .dashboard-layout:has(.kv-velora) .user-dropdown {
+    background: rgba(11,18,32,.85);
+}

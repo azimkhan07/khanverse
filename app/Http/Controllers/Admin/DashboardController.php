@@ -123,18 +123,6 @@ class DashboardController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.dashboard.index', compact(
-
-            'totalSellers',
-            'totalBuyers',
-            'totalServices',
-            'totalOrders',
-            'totalProjects',
-            'totalRevenue',
-            'pendingOrders',
-            'completedOrders',
-
-            'recentOrders', 'recentSellers', 'recentBuyers', 'activities'
-        ));
+        return view('admin.dashboard.react');
     }
 }

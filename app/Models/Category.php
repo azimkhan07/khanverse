@@ -14,4 +14,9 @@ class Category extends Model
         'icon',
         'status'
     ];
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

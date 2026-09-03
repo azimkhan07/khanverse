@@ -32,6 +32,6 @@ class DashboardController extends Controller
         $reviews = Review::with(['seller.user', 'order',])->where('buyer_id', $buyer->id)->latest()->take(5)->get();
         $projects = Project::with(['seller.user', 'service'])->where('buyer_id', $buyer->id)->latest()->take(5)->get();
 
-        return view('buyer.dashboard.index', compact('totalOrders', 'activeProjects', 'projects', 'completedProjects', 'wallet', 'recentOrders', 'reviews'));
+        return view('buyer.dashboard.react');
     }
 }

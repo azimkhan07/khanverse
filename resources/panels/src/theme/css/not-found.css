@@ -1,0 +1,66 @@
+/* ==========================================
+   NOT FOUND (404)
+========================================== */
+
+.not-found {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-body, #F8FAFC);
+    transition: background 0.3s ease;
+}
+
+.not-found .container {
+    text-align: center;
+}
+
+.not-found-content h1 {
+    font-size: clamp(80px, 15vw, 160px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED, #06B6D4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: -4px;
+}
+
+.not-found-content h2 {
+    font-size: clamp(24px, 3vw, 36px);
+    color: var(--text-primary, #0F172A);
+    margin-bottom: 14px;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.not-found-content p {
+    color: var(--text-muted, #64748B);
+    font-size: 17px;
+    margin-bottom: 36px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+    transition: color 0.3s ease;
+}
+
+.not-found-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 36px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.not-found-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(79, 70, 229, 0.3);
+}

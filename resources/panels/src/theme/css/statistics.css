@@ -1,0 +1,215 @@
+/* ==========================================
+   STATISTICS — Velora Dark Glass Premium
+   ========================================== */
+
+@keyframes statAuroraFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(24px) scale(1.06); }
+}
+
+@keyframes statCardFadeIn {
+  from { opacity: 0; transform: translateY(32px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes statGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(79,70,229,0.10); }
+  50% { box-shadow: 0 0 40px rgba(79,70,229,0.25); }
+}
+
+@keyframes statCounterPulse {
+  0%, 100% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: 0 0 30px rgba(129,140,248,0.3); }
+}
+
+.statistics {
+  padding: 36px 24px;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse at 25% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 60%, rgba(6, 182, 212, 0.10) 0%, transparent 50%),
+    linear-gradient(160deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+  color: #fff;
+}
+
+.statistics .container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* --- Aurora blob --- */
+.statistics::before {
+  content: "";
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.12), transparent 70%);
+  top: -320px;
+  right: -220px;
+  animation: statAuroraFloat 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.statistics::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08), transparent 70%);
+  bottom: -260px;
+  left: -180px;
+  animation: statAuroraFloat 14s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+/* --- Heading on dark --- */
+.statistics .section-heading-dark span {
+  color: #818CF8;
+}
+
+.statistics .section-heading-dark h2 {
+  color: #FFFFFF;
+  font-size: clamp(28px, 3.5vw, 40px);
+}
+
+.statistics .section-heading-dark p {
+  color: #94A3B8;
+  font-size: 15px;
+}
+
+/* --- Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Card --- */
+.stat-card {
+  text-align: center;
+  padding: 20px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+  animation: statCardFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-8px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(129,140,248,0.15);
+  border-color: rgba(129,140,248,0.2);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #818CF8, #06B6D4, transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+/* --- Icon --- */
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.22), rgba(124, 58, 237, 0.18));
+  color: #818CF8;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stat-card:hover .stat-icon {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.35);
+}
+
+/* --- Number --- */
+.stat-number {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #fff, #94A3B8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card:hover .stat-number {
+  animation: statCounterPulse 2s ease-in-out infinite;
+}
+
+.stat-label {
+  color: #94A3B8;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .stat-card {
+    padding: 24px 14px;
+  }
+
+  .stat-number {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}

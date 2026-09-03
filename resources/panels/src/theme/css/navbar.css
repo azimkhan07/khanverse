@@ -1,0 +1,290 @@
+/* ==========================================
+   NAVBAR — Velora Glass Sticky Nav
+   ========================================== */
+
+@keyframes navFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar.scrolled,
+.navbar.navbar-scrolled {
+  background: var(--bg-topnav, rgba(255, 255, 255, 0.78));
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border-color, rgba(226, 232, 240, 0.4));
+  box-shadow: 0 1px 24px rgba(79,70,229,0.06);
+}
+
+.navbar-inner {
+  max-width: 1320px;
+  height: 68px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+/* --- Logo --- */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-svg {
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-logo:hover .logo-text {
+  opacity: 0.85;
+}
+
+/* --- Menu --- */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: var(--text-secondary, #475569);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.navbar-link:hover {
+  color: var(--accent, #4F46E5);
+  background: var(--accent-light, rgba(79, 70, 229, 0.06));
+}
+
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-link:hover::after,
+.navbar-link.active::after {
+  transform: scaleX(1);
+}
+
+.navbar-link.active {
+  color: var(--accent, #4F46E5);
+  background: var(--accent-light, rgba(79, 70, 229, 0.08));
+  font-weight: 600;
+}
+
+/* --- Actions --- */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.nav-btn-ghost {
+  color: var(--text-secondary, #475569);
+  background: transparent;
+}
+
+.nav-btn-ghost:hover {
+  color: var(--accent, #4F46E5);
+  background: var(--accent-light, rgba(79, 70, 229, 0.06));
+}
+
+.nav-btn-primary {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.28);
+}
+
+.nav-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.40);
+}
+
+/* --- Hamburger --- */
+.navbar-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary, #0F172A);
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-hamburger:hover {
+  background: var(--bg-hover, #F1F5F9);
+}
+
+/* --- Mobile overlay --- */
+.navbar-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-mobile-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* --- Mobile menu --- */
+.navbar-mobile {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 340px;
+  max-width: 85vw;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-card, #FFFFFF);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 10001;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.12);
+}
+
+.navbar-mobile.open {
+  transform: translateX(0);
+}
+
+.mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-color, #E2E8F0);
+}
+
+.mobile-nav {
+  flex: 1;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.mobile-link {
+  text-decoration: none;
+  color: var(--text-secondary, #475569);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 18px;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mobile-link:hover,
+.mobile-link.active {
+  color: var(--accent, #4F46E5);
+  background: var(--accent-light, rgba(79, 70, 229, 0.08));
+  font-weight: 600;
+}
+
+.mobile-actions {
+  padding: 18px 24px;
+  border-top: 1px solid var(--border-color, #E2E8F0);
+  display: flex;
+  gap: 12px;
+}
+
+.mobile-btn {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  padding: 14px;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 900px) {
+  .navbar-menu,
+  .navbar-actions {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-inner {
+    padding: 0 16px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+}

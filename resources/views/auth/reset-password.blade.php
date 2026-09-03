@@ -6,6 +6,11 @@
             </a>
         </x-slot>
 
+        <h2 class="text-lg font-semibold">{{ setting('auth', 'reset.heading', 'Reset Password') }}</h2>
+        <p class="mb-4 text-sm text-gray-600">
+            {{ setting('auth', 'reset.subheading', 'Choose a new password for your account.') }}
+        </p>
+
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
@@ -40,7 +45,7 @@
 
             <div class="flex items-center justify-end mt-4">
                 <x-button>
-                    {{ __('Reset Password') }}
+                    {{ setting('auth', 'reset.button', 'Reset Password') }}
                 </x-button>
             </div>
         </form>

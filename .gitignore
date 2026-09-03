@@ -13,3 +13,8 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# Design reference / scratch material (not part of the app)
+/Velora UI
+/React- Dashboard
+/_transform_confirm.cjs

@@ -14,6 +14,7 @@ class Service extends Model
         'description',
         'price',
         'delivery_days',
+        'delivery_method',
         'revisions',
         'thumbnail',
         'status',
@@ -29,5 +30,10 @@ class Service extends Model
     public function images()
     {
         return $this->hasMany(ServiceImage::class);
+    }
+
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class);
     }
 }

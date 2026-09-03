@@ -1,0 +1,179 @@
+/* ==========================================
+   POLICIES — Velora Legal Pages Premium
+   ========================================== */
+
+@keyframes policyFadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes policyIconFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(-2deg); }
+}
+
+.policy-content {
+  max-width: 820px;
+  margin: 0 auto;
+  animation: policyFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.policy-content p {
+  color: var(--text-secondary, #475569);
+  font-size: 16px;
+  line-height: 1.95;
+  margin-bottom: 24px;
+  transition: color 0.3s ease;
+}
+
+.policy-content h3 {
+  font-size: 24px;
+  color: var(--text-primary, #0F172A);
+  margin: 40px 0 16px;
+  font-weight: 700;
+  transition: color 0.3s ease;
+  letter-spacing: -0.3px;
+}
+
+.policy-content ul {
+  margin: 14px 0 24px 20px;
+}
+
+.policy-content li {
+  color: var(--text-secondary, #475569);
+  font-size: 15px;
+  line-height: 1.85;
+  padding: 7px 0;
+  padding-left: 18px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.policy-content li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent, #4F46E5), #7C3AED);
+}
+
+/* ==========================================
+   POLICY SECTION CARDS
+   ========================================== */
+
+.policy-sections {
+  margin-top: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.policy-section-card {
+  background: var(--bg-card, #FFFFFF);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light, #EEF2F7);
+  border-radius: 24px;
+  padding: 40px 36px;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 24px rgba(79,70,229,0.04);
+}
+
+.policy-section-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px var(--accent-glow, rgba(79, 70, 229, 0.10));
+  border-color: var(--accent-light, rgba(79, 70, 229, 0.15));
+}
+
+.policy-section-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.policy-section-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent-light, rgba(79,70,229,0.08)), rgba(124,58,237,0.05));
+  color: var(--accent, #4F46E5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.policy-section-card:hover .policy-section-icon {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  transform: rotate(-5deg) scale(1.08);
+  box-shadow: 0 8px 24px rgba(79,70,229,0.30);
+  animation: policyIconFloat 3s ease-in-out infinite;
+}
+
+.policy-section-header h3 {
+  font-size: 22px;
+  color: var(--text-primary, #0F172A);
+  font-weight: 700;
+  margin-bottom: 0;
+  transition: color 0.3s ease;
+}
+
+.policy-section-card:hover .policy-section-header h3 {
+  color: var(--accent, #4F46E5);
+}
+
+.policy-section-card > p {
+  color: var(--text-muted, #64748B);
+  font-size: 15px;
+  line-height: 1.75;
+  margin-bottom: 16px;
+  transition: color 0.3s ease;
+}
+
+/* ==========================================
+   POLICY FOOTER NOTE
+   ========================================== */
+
+.policy-footer-note {
+  margin-top: 52px;
+  padding: 32px 36px;
+  background: var(--bg-body, #F8FAFC);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid var(--border-light, #EEF2F7);
+}
+
+.policy-footer-note p {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.policy-footer-note p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .policy-section-card {
+    padding: 28px 24px;
+  }
+
+  .policy-section-header h3 {
+    font-size: 19px;
+  }
+
+  .policy-section-icon {
+    width: 44px;
+    height: 44px;
+  }
+}

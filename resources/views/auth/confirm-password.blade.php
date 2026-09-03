@@ -6,9 +6,10 @@
             </a>
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
-        </div>
+        <h2 class="text-lg font-semibold">{{ setting('auth', 'confirm.heading', 'Confirm Password') }}</h2>
+        <p class="mb-4 text-sm text-gray-600">
+            {{ setting('auth', 'confirm.subheading', 'This is a secure area of the application. Please confirm your password before continuing.') }}
+        </p>
 
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
@@ -28,7 +29,7 @@
 
             <div class="flex justify-end mt-4">
                 <x-button>
-                    {{ __('Confirm') }}
+                    {{ setting('auth', 'confirm.button', 'Confirm') }}
                 </x-button>
             </div>
         </form>

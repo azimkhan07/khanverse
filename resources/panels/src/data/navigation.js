@@ -1,0 +1,60 @@
+const navigation = [
+    {
+        id: 1,
+        title: "Home",
+        url: "/",
+        visible: true,
+        order: 1,
+        icon: null,
+    },
+    {
+        id: 2,
+        title: "About",
+        url: "/about",
+        visible: true,
+        order: 2,
+        icon: null,
+    },
+    {
+        id: 3,
+        title: "Pricing",
+        url: "/pricing",
+        visible: true,
+        order: 3,
+        icon: null,
+    },
+    {
+        id: 4,
+        title: "FAQ",
+        url: "/faq",
+        visible: true,
+        order: 4,
+        icon: null,
+    },
+    {
+        id: 5,
+        title: "Contact",
+        url: "/contact",
+        visible: true,
+        order: 5,
+        icon: null,
+    },
+    {
+        id: 6,
+        title: "Blog",
+        url: "/blog",
+        visible: true,
+        order: 6,
+        icon: null,
+    },
+    {
+        id: 7,
+        title: "Careers",
+        url: "/careers",
+        visible: true,
+        order: 7,
+        icon: null,
+    },
+];
+
+export default navigation;

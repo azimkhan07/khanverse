@@ -1,0 +1,365 @@
+/* ==========================================
+   GLOBAL RESET & BASE
+========================================== */
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    overflow-x: clip;
+    background: var(--bg-body);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--text-primary, #0F172A);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   GLOBAL CONTAINER
+========================================== */
+
+.container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.container-narrow {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==========================================
+   GLOBAL TYPOGRAPHY
+========================================== */
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.25s ease;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button {
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+input, textarea, select {
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+}
+
+::selection {
+    background: var(--accent, #4F46E5);
+    color: #fff;
+}
+
+/* ==========================================
+   PAGE HERO (shared inner page hero)
+   Always dark — aurora gradient background
+========================================== */
+
+.page-hero {
+    position: relative;
+    padding: 96px 24px 64px;
+    background-color: var(--bg-body, #F8FAFC);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    text-align: center;
+    transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page-hero .page-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        radial-gradient(ellipse at 70% 30%, rgba(124, 58, 237, 0.22) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 80%, rgba(79, 70, 229, 0.18) 0%, transparent 55%),
+        linear-gradient(
+            100deg,
+            rgba(15, 23, 42, 0.82) 20%,
+            rgba(30, 27, 75, 0.62) 50%,
+            rgba(15, 23, 42, 0.78) 100%
+        );
+    transition: background 0.4s ease;
+}
+
+[data-theme="dark"] .page-hero .page-overlay {
+    background:
+        radial-gradient(ellipse at 70% 30%, rgba(124, 58, 237, 0.26) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 80%, rgba(79, 70, 229, 0.2) 0%, transparent 55%),
+        linear-gradient(
+            100deg,
+            #0F172A 20%,
+            rgba(30, 27, 75, 0.8) 50%,
+            #0F172A 100%
+        );
+}
+
+.page-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(79,70,229,0.25), rgba(124,58,237,0.15));
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    backdrop-filter: blur(8px);
+}
+
+.page-hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.25), transparent 70%);
+    top: -200px;
+    right: -100px;
+    animation: pageHeroFloat 10s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.page-hero::after {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.15), transparent 70%);
+    bottom: -200px;
+    left: -100px;
+    animation: pageHeroFloat 12s ease-in-out infinite reverse;
+    pointer-events: none;
+}
+
+@keyframes pageHeroFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.page-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.page-hero h1 {
+    font-size: clamp(34px, 5vw, 54px);
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(15, 23, 42, 0.4);
+}
+
+.page-hero p {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+    text-shadow: 0 1px 12px rgba(15, 23, 42, 0.4);
+}
+
+/* ==========================================
+   PAGE SECTION (shared page content wrapper)
+========================================== */
+
+.page-section {
+    padding: 36px 24px;
+    transition: background 0.3s ease;
+}
+
+/* ==========================================
+   SECTION HEADING (shared across all sections)
+========================================== */
+
+.section-heading {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.section-heading .section-tag {
+    display: inline-block;
+    color: var(--accent, #4F46E5);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.section-heading span {
+    display: inline-block;
+    color: var(--accent, #4F46E5);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.section-heading h2 {
+    font-size: clamp(30px, 4vw, 44px);
+    color: var(--text-primary, #0F172A);
+    margin-bottom: 14px;
+    letter-spacing: -0.8px;
+    font-weight: 800;
+    transition: color 0.3s ease;
+}
+
+.section-heading p {
+    max-width: 580px;
+    margin: 0 auto;
+    color: var(--text-muted, #64748B);
+    line-height: 1.7;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+/* ==========================================
+   BADGE (shared)
+========================================== */
+
+.badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-primary {
+    background: var(--accent-light, rgba(79, 70, 229, 0.1));
+    color: var(--accent, #4F46E5);
+}
+
+/* ==========================================
+   BUTTONS (shared)
+========================================== */
+
+.btn-primary {
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+.btn-secondary {
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-color, #E2E8F0);
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary, #475569);
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent, #4F46E5);
+    color: var(--accent, #4F46E5);
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   SCROLLBAR — hidden (premium clean look)
+========================================== */
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 20px;
+}
+
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* ==========================================
+   SMOOTH SCROLL REVEAL (mindsuite-style)
+========================================== */
+
+@keyframes auroraDrift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(6%, -4%) scale(1.05); }
+    66% { transform: translate(-5%, 3%) scale(0.96); }
+}
+
+@keyframes shineSweep {
+    0% { transform: translateX(-120%) skewX(-18deg); }
+    60%, 100% { transform: translateX(220%) skewX(-18deg); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+}

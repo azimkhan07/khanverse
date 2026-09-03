@@ -2,53 +2,67 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes (Public React SPA)
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+| Routes below with /admin, /seller, /buyer prefixes are injected by the
+| RouteServiceProvider from routes/admin.php, routes/seller.php, routes/buyer.php.
+| All public GET routes fall through to the React SPA mount (app.blade.php).
 */
 
-require __DIR__ . '/admin.php';
-require __DIR__ . '/seller.php';
-require __DIR__ . '/buyer.php';
-require __DIR__ . '/auth.php';
-
-Route::get('/', function () {
-    return view('frontend.home');
-});
-
 Route::post('/logout', function () {
-
     Auth::logout();
-
     request()->session()->invalidate();
-
     request()->session()->regenerateToken();
-
-    return redirect('/login');
+    return redirect('/');
 })->name('logout');
 
 Route::get('/redirect-user', function () {
-
     $user = Auth::user();
-
     if ($user->role == 'admin') {
         return redirect()->route('admin.dashboard');
     }
-
     if ($user->role == 'seller') {
         return redirect()->route('seller.dashboard');
     }
-
     if ($user->role == 'buyer') {
         return redirect()->route('buyer.dashboard');
     }
-
     abort(403);
 })->middleware('auth');
+
+// Panel index redirects - authenticated users go to their dashboard, guests to login
+foreach (['admin', 'seller', 'buyer'] as $panel) {
+    Route::get('/'.$panel, function () use ($panel) {
+        if (Auth::check()) {
+            $role = Auth::user()->role;
+            if ($role == $panel) {
+                return redirect()->route($panel . '.dashboard');
+            }
+            if (in_array($role, ['admin', 'seller', 'buyer'])) {
+                return redirect()->route($role . '.dashboard');
+            }
+        }
+        return redirect()->route('login');
+    });
+}
+
+// Public React SPA - serve the app for all non-panel public routes
+Route::get('/login', function () {
+    return view('app');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('app');
+})->name('register');
+
+// Public invoice access (scannable barcode opens / downloads the PDF without login)
+Route::get('/invoice/{token}', [InvoiceController::class, 'view'])->name('invoice.view');
+Route::get('/invoice/{token}/download', [InvoiceController::class, 'download'])->name('invoice.download');
+
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '^(?!admin|seller|buyer).*');

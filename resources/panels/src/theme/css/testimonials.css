@@ -1,0 +1,280 @@
+/* ==========================================
+   TESTIMONIALS — Velora Glass Premium
+   ========================================== */
+
+@keyframes testFadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes testStarGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50% { filter: drop-shadow(0 0 4px rgba(245,158,11,0.4)); }
+}
+
+.testimonials {
+  padding: 36px 24px;
+  position: relative;
+  z-index: 2;
+  background: var(--bg-body, #F8FAFC);
+  transition: background 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.testimonials .container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+/* --- Marquee carousel --- */
+@keyframes testimonialMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.testimonials-marquee {
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 28px;
+  padding: 8px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.testimonials-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: testimonialMarquee 46s linear infinite;
+}
+
+.testimonials-track:hover {
+  animation-play-state: paused;
+}
+
+.testimonials-track .testimonial-card {
+  width: 340px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+/* --- Card --- */
+.testimonial-card {
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--bg-card, #FFFFFF);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color, rgba(226, 232, 240, 0.6));
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  box-shadow: 0 4px 24px rgba(79,70,229,0.04);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 56px rgba(79,70,229,0.10),
+    0 0 0 1px rgba(79,70,229,0.08);
+  border-color: transparent;
+}
+
+/* --- Quote Icon --- */
+.quote-icon {
+  color: var(--accent, #4F46E5);
+  opacity: 0.18;
+  margin-bottom: 10px;
+  transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover .quote-icon {
+  opacity: 0.35;
+}
+
+/* --- Stars --- */
+.testimonial-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.testimonial-stars svg {
+  color: var(--warning, #F59E0B);
+  transition: all 0.3s ease;
+}
+
+.testimonial-card:hover .testimonial-stars svg {
+  animation: testStarGlow 1.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.1s);
+}
+
+/* --- Text --- */
+.testimonial-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-secondary, #475569);
+  margin-bottom: 22px;
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+/* --- Author --- */
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.testimonial-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent-light, rgba(79,70,229,0.08)), rgba(124,58,237,0.05));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.testimonial-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.testimonial-card:hover .testimonial-avatar::before {
+  opacity: 1;
+}
+
+.testimonial-info h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #0F172A);
+  transition: color 0.3s ease;
+}
+
+.testimonial-card:hover .testimonial-info h4 {
+  color: var(--accent, #4F46E5);
+}
+
+.testimonial-info span {
+  font-size: 13px;
+  color: var(--text-muted, #64748B);
+  margin-top: 2px;
+  display: block;
+}
+
+/* ==========================================
+   TRUSTED STATS
+   ========================================== */
+
+.trusted-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color, rgba(226, 232, 240, 0.6));
+}
+
+.trusted-stat {
+  text-align: center;
+  padding: 16px 12px;
+  border-radius: 18px;
+  background: var(--bg-card, #FFFFFF);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color, rgba(226, 232, 240, 0.6));
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trusted-stat:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(79,70,229,0.08);
+  border-color: transparent;
+}
+
+.trusted-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent-light, rgba(79,70,229,0.08)), rgba(124,58,237,0.05));
+  color: var(--accent, #4F46E5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trusted-stat:hover .trusted-stat-icon {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 8px 28px rgba(79,70,229,0.30);
+}
+
+.trusted-stat h3 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary, #0F172A);
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+.trusted-stat p {
+  font-size: 14px;
+  color: var(--text-muted, #64748B);
+  font-weight: 500;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trusted-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto 36px;
+  }
+
+  .testimonial-card {
+    padding: 26px;
+  }
+
+  .trusted-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trusted-stats {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}

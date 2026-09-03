@@ -6,6 +6,11 @@
             </a>
         </x-slot>
 
+        <h2 class="text-lg font-semibold">{{ setting('auth', 'register.heading', 'Create Account') }}</h2>
+        <p class="mb-4 text-sm text-gray-600">
+            {{ setting('auth', 'register.subheading', 'Join Khanverse today and start hiring or selling.') }}
+        </p>
+
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
@@ -51,7 +56,7 @@
                 </a>
 
                 <x-button class="ml-4">
-                    {{ __('Register') }}
+                    {{ setting('auth', 'register.button', 'Register') }}
                 </x-button>
             </div>
         </form>

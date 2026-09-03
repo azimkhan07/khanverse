@@ -6,9 +6,10 @@
             </a>
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-        </div>
+        <h2 class="text-lg font-semibold">{{ setting('auth', 'verify.heading', 'Verify Your Email') }}</h2>
+        <p class="mb-4 text-sm text-gray-600">
+            {{ setting('auth', 'verify.subheading', 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        </p>
 
         @if (session('status') == 'verification-link-sent')
             <div class="mb-4 font-medium text-sm text-green-600">
@@ -22,7 +23,7 @@
 
                 <div>
                     <x-button>
-                        {{ __('Resend Verification Email') }}
+                        {{ setting('auth', 'verify.button', 'Resend Verification Email') }}
                     </x-button>
                 </div>
             </form>
