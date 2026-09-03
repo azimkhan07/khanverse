@@ -91,6 +91,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 */
 Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+    Route::post('/lock/verify', [AuthController::class, 'verifyLock'])->name('api.lock.verify');
     Route::get('/user', [AuthController::class, 'user'])->name('api.user');
     Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('api.verification.send');
 

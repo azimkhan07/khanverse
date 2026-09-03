@@ -15,12 +15,12 @@
     "file": "assets/Dialog-Bxx9HFww.css",
     "src": "_Dialog-Bxx9HFww.css"
   },
-  "_dashboard-Bc5KBe3V.css": {
-    "file": "assets/dashboard-Bc5KBe3V.css",
-    "src": "_dashboard-Bc5KBe3V.css"
+  "_dashboard-ChtEXLv0.css": {
+    "file": "assets/dashboard-ChtEXLv0.css",
+    "src": "_dashboard-ChtEXLv0.css"
   },
-  "_dashboard-hUcbRFnJ.js": {
-    "file": "assets/dashboard-hUcbRFnJ.js",
+  "_dashboard-DmZtukr7.js": {
+    "file": "assets/dashboard-DmZtukr7.js",
     "name": "dashboard",
     "imports": [
       "_rolldown-runtime-B0Z9INg1.js",
@@ -29,7 +29,7 @@
       "_useTheme-CSycKAvj.js"
     ],
     "css": [
-      "assets/dashboard-Bc5KBe3V.css"
+      "assets/dashboard-ChtEXLv0.css"
     ]
   },
   "_rolldown-runtime-B0Z9INg1.js": {
@@ -52,14 +52,14 @@
     "file": "assets/useTheme-DuhEjjtp.css",
     "src": "_useTheme-DuhEjjtp.css"
   },
-  "_velora-BWQI0Lov.js": {
-    "file": "assets/velora-BWQI0Lov.js",
+  "_velora-Cp2-bOqe.js": {
+    "file": "assets/velora-Cp2-bOqe.js",
     "name": "velora",
     "imports": [
       "_rolldown-runtime-B0Z9INg1.js",
       "_vendor-gJ0iUnqS.js",
       "_vendor-react-D1CMsoD1.js",
-      "_dashboard-hUcbRFnJ.js"
+      "_dashboard-DmZtukr7.js"
     ],
     "css": [
       "assets/velora-Kij2gnjH.css"
@@ -93,7 +93,7 @@
     ]
   },
   "src/admin/main.jsx": {
-    "file": "assets/admin-BJkQpyl8.js",
+    "file": "assets/admin-EiMGUREK.js",
     "name": "admin",
     "src": "src/admin/main.jsx",
     "isEntry": true,
@@ -103,14 +103,14 @@
       "_vendor-react-dom-ehxs8hW8.js",
       "_vendor-react-D1CMsoD1.js",
       "_useTheme-CSycKAvj.js",
-      "_dashboard-hUcbRFnJ.js"
+      "_dashboard-DmZtukr7.js"
     ],
     "css": [
       "assets/admin-CFcmT2V6.css"
     ]
   },
   "src/buyer/main.jsx": {
-    "file": "assets/buyer-BnxzfJcf.js",
+    "file": "assets/buyer-B1n6aI2w.js",
     "name": "buyer",
     "src": "src/buyer/main.jsx",
     "isEntry": true,
@@ -121,12 +121,12 @@
       "_vendor-react-D1CMsoD1.js",
       "_useTheme-CSycKAvj.js",
       "_Dialog-B2n08KH0.js",
-      "_dashboard-hUcbRFnJ.js",
-      "_velora-BWQI0Lov.js"
+      "_dashboard-DmZtukr7.js",
+      "_velora-Cp2-bOqe.js"
     ]
   },
   "src/main.jsx": {
-    "file": "assets/main-BbTWmx6N.js",
+    "file": "assets/main-CgifKB7W.js",
     "name": "main",
     "src": "src/main.jsx",
     "isEntry": true,
@@ -148,7 +148,7 @@
     ]
   },
   "src/seller/main.jsx": {
-    "file": "assets/seller-C5f5XOMy.js",
+    "file": "assets/seller-DYhl12Sj.js",
     "name": "seller",
     "src": "src/seller/main.jsx",
     "isEntry": true,
@@ -159,8 +159,8 @@
       "_vendor-react-D1CMsoD1.js",
       "_useTheme-CSycKAvj.js",
       "_Dialog-B2n08KH0.js",
-      "_dashboard-hUcbRFnJ.js",
-      "_velora-BWQI0Lov.js"
+      "_dashboard-DmZtukr7.js",
+      "_velora-Cp2-bOqe.js"
     ]
   },
   "src/theme/images/2.jpg": {

@@ -20,106 +20,12 @@ import "../../theme/css/pricing.css";
 import "../../theme/css/faq.css";
 import "../../theme/css/section-heading.css";
 
-import GigCard from "../../components/Cards/GigCard";
+import GigCard from "../../components/cards/GigCard";
 import { ScrollReveal, ScrollRevealGroup } from "../../shared/components/ScrollReveal";
 import frontendApi from "../../shared/frontendApi";
 import { useAuth } from "../../contexts/AuthContext";
 import Modal from "../../shared/components/Modal";
 import { showDialog } from "../../shared/components/Dialog";
-
-const fallbackService = {
-    id: 1,
-    title: "Modern Business Website Development",
-    description:
-        "I will design and develop a stunning, fully responsive business website that reflects your brand and converts visitors into customers. The service includes clean UI/UX, mobile optimization, SEO-ready structure and a content management system so you can easily update your site.",
-    thumbnail: "https://placehold.co/900x560",
-    images: ["https://placehold.co/900x560", "https://placehold.co/900x560", "https://placehold.co/900x560"],
-    price: 15000,
-    rating: 4.9,
-    reviews_count: 125,
-    delivery_days: 3,
-    revisions: 3,
-    category: { name: "Web Development", slug: "web-development" },
-    seller: {
-        full_name: "John Smith",
-        experience_level: "Top Rated",
-        avatar: null,
-        rating: 4.9,
-        total_orders: 320,
-    },
-    packages: {
-        basic: { name: "Basic", price: 15000, delivery_days: 3, revisions: 1, features: ["Up to 5 pages", "Responsive design", "Basic SEO", "1 revision"] },
-        standard: { name: "Standard", price: 25000, delivery_days: 5, revisions: 3, features: ["Up to 10 pages", "Advanced animations", "On-page SEO", "Blog setup", "3 revisions"] },
-        premium: { name: "Premium", price: 40000, delivery_days: 10, revisions: 5, features: ["Up to 20 pages", "Custom features", "E-commerce support", "Performance optimization", "Priority support"] },
-    },
-    faqs: [
-        { question: "How many rounds of revisions are included?", answer: "Each package includes a specific number of revisions as listed. Additional revision rounds can be purchased separately." },
-        { question: "What if I need changes after the project is delivered?", answer: "You are covered by the included revisions. For anything beyond that, we can arrange a follow-up milestone." },
-    ],
-};
-
-const fallbackSimilar = [
-    {
-        id: 11,
-        title: "Professional Logo Design & Branding",
-        seller: "Sarah Khan",
-        level: "Level 2",
-        rating: 4.8,
-        reviews: 98,
-        price: 2500,
-        delivery: "2 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 12,
-        title: "Responsive E-commerce Store Setup",
-        seller: "Priya Sharma",
-        level: "Top Rated",
-        rating: 4.7,
-        reviews: 210,
-        price: 25000,
-        delivery: "7 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 13,
-        title: "Speed & Performance Optimization",
-        seller: "Daniel Lee",
-        level: "New Seller",
-        rating: 4.6,
-        reviews: 32,
-        price: 3200,
-        delivery: "2 Days",
-        image: "https://placehold.co/600x400",
-    },
-];
-
-const defaultReviews = [
-    {
-        id: 1,
-        rating: 5,
-        reviewer: "Rahul Verma",
-        title: "Excellent work!",
-        comment: "Absolutely delighted with the final result. Communication was smooth and the delivery was on time.",
-        created_at: "2 weeks ago",
-    },
-    {
-        id: 2,
-        rating: 5,
-        reviewer: "Emily Watson",
-        title: "Highly recommended",
-        comment: "The seller went above and beyond. The website looks fantastic and performs great on mobile.",
-        created_at: "1 month ago",
-    },
-    {
-        id: 3,
-        rating: 4,
-        reviewer: "Marcus Chen",
-        title: "Great quality",
-        comment: "Very professional. A couple of minor tweaks but the seller handled them quickly.",
-        created_at: "2 months ago",
-    },
-];
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -127,6 +33,7 @@ function ServiceDetail() {
 
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [notFound, setNotFound] = useState(false);
     const [activeImage, setActiveImage] = useState(0);
     const [activePackage, setActivePackage] = useState("standard");
     const [openFaq, setOpenFaq] = useState(null);
@@ -144,7 +51,7 @@ function ServiceDetail() {
         const apply = (data) => {
             setService(data);
             setActiveImage(0);
-            setSimilar(data.similar_services && data.similar_services.length ? data.similar_services : fallbackSimilar);
+            setSimilar(data.similar_services && data.similar_services.length ? data.similar_services : []);
             setActivePackage(data.packages ? "standard" : "basic");
             setLoading(false);
         };
@@ -157,7 +64,8 @@ function ServiceDetail() {
             })
             .catch(() => {
                 if (!active) return;
-                apply(fallbackService);
+                setNotFound(true);
+                setLoading(false);
             });
 
         return () => {
@@ -197,8 +105,8 @@ function ServiceDetail() {
         ).filter(Boolean);
     }, [service]);
 
-    const reviews = service?.reviews && service.reviews.length ? service.reviews : defaultReviews;
-    const gFaqs = service?.faqs?.length ? service.faqs : fallbackService.faqs;
+    const reviews = service?.reviews || [];
+    const gFaqs = service?.faqs || [];
 
     const sellerName = service?.seller?.full_name || service?.seller?.user?.name || service?.seller?.name || "Unknown Seller";
     const sellerLevel = service?.seller?.experience_level || service?.seller_level || "New Seller";
@@ -249,6 +157,21 @@ function ServiceDetail() {
             setOrdering(false);
         }
     };
+
+    if (notFound) {
+        return (
+            <div style={{ background: "var(--bg-body, #F8FAFC)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 24px" }}>
+                <div style={{ textAlign: "center", maxWidth: 440 }}>
+                    <div style={{ fontSize: 64, marginBottom: 16 }}>🔍</div>
+                    <h1 style={{ fontSize: 26, fontWeight: 800, color: "var(--text-primary, #0F172A)", marginBottom: 10 }}>Service not found</h1>
+                    <p style={{ color: "var(--text-muted, #64748B)", lineHeight: 1.6, marginBottom: 24 }}>
+                        The service you are looking for doesn&apos;t exist, was removed, or is no longer available.
+                    </p>
+                    <a href="/" className="btn btn-primary" style={{ textDecoration: "none", padding: "12px 28px", borderRadius: 12 }}>Browse Services</a>
+                </div>
+            </div>
+        );
+    }
 
     if (loading || !service) {
         return (
@@ -496,7 +419,7 @@ function ServiceDetail() {
 
                         <div className="sd-description">
                             <h3>About this service</h3>
-                            <p>{(service.description || fallbackService.description).slice(0, 260)}{(service.description || fallbackService.description).length > 260 ? "..." : ""}</p>
+                            <p>{(service.description || "").slice(0, 260)}{(service.description || "").length > 260 ? "..." : ""}</p>
                         </div>
 
                         {packages.length > 0 && (

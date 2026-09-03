@@ -66,11 +66,37 @@ function NotificationBell({ base }) {
 
 function LockScreen({ user }) {
     const [leaving, setLeaving] = useState(false);
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
+    const inputRef = useRef(null);
     const name = user?.name || 'User';
 
-    const unlock = () => {
-        setLeaving(true);
-        setTimeout(() => window.location.reload(), 350);
+    useEffect(() => {
+        if (inputRef.current) inputRef.current.focus();
+    }, []);
+
+    const unlock = async () => {
+        if (!password || busy) return;
+        setBusy(true);
+        setError('');
+        try {
+            const { data } = await api.post('/lock/verify', { password });
+            if (data.status) {
+                setLeaving(true);
+                setTimeout(() => window.location.reload(), 320);
+            } else {
+                setError(data.message || 'Incorrect password.');
+                setPassword('');
+                if (inputRef.current) inputRef.current.focus();
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Unable to verify. Try again.');
+            setPassword('');
+            if (inputRef.current) inputRef.current.focus();
+        } finally {
+            setBusy(false);
+        }
     };
 
     return (
@@ -101,9 +127,22 @@ function LockScreen({ user }) {
                     alt={name}
                 />
                 <h2>{name}</h2>
-                <p>Your workspace is locked. Click unlock to continue.</p>
-                <button className="btn btn-primary" onClick={unlock} disabled={leaving}>
-                    {leaving ? 'Unlocking...' : 'Unlock'}
+                <p>Your workspace is locked. Enter your password to continue.</p>
+                <div className="lock-input">
+                    <input
+                        ref={inputRef}
+                        type="password"
+                        className="form-input"
+                        placeholder="Password"
+                        value={password}
+                        disabled={leaving}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && unlock()}
+                    />
+                </div>
+                {error && <div className="lock-error">{error}</div>}
+                <button className="btn btn-primary" onClick={unlock} disabled={leaving || busy}>
+                    {leaving ? 'Unlocking...' : busy ? 'Verifying...' : 'Unlock'}
                 </button>
             </div>
         </div>

@@ -23,7 +23,7 @@ import "../../theme/css/featured-gigs.css";
 import "../../theme/css/categories.css";
 import "../../theme/css/section-heading.css";
 
-import GigCard from "../../components/Cards/GigCard";
+import GigCard from "../../components/cards/GigCard";
 import { ScrollReveal, ScrollRevealGroup } from "../../shared/components/ScrollReveal";
 import frontendApi from "../../shared/frontendApi";
 import { useAuth } from "../../contexts/AuthContext";
@@ -43,75 +43,6 @@ const iconMap = {
     "data-science": BarChart3,
     "devops": Server,
 };
-
-const fallbackServices = [
-    {
-        id: 1,
-        title: "Modern Business Website Development",
-        seller: "John Smith",
-        level: "Top Rated",
-        rating: 4.9,
-        reviews: 125,
-        price: 15000,
-        delivery: "3 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 2,
-        title: "Professional Logo Design & Branding",
-        seller: "Sarah Khan",
-        level: "Level 2",
-        rating: 4.8,
-        reviews: 98,
-        price: 2500,
-        delivery: "2 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 3,
-        title: "Responsive Landing Page Redesign",
-        seller: "Alex Morgan",
-        level: "Top Rated",
-        rating: 5,
-        reviews: 46,
-        price: 6500,
-        delivery: "4 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 4,
-        title: "Full E-commerce Store Setup",
-        seller: "Priya Sharma",
-        level: "Level 1",
-        rating: 4.7,
-        reviews: 210,
-        price: 25000,
-        delivery: "7 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 5,
-        title: "Speed & Performance Optimization",
-        seller: "Daniel Lee",
-        level: "New Seller",
-        rating: 4.6,
-        reviews: 32,
-        price: 3200,
-        delivery: "2 Days",
-        image: "https://placehold.co/600x400",
-    },
-    {
-        id: 6,
-        title: "Custom Web Application Development",
-        seller: "Aisha Patel",
-        level: "Level 2",
-        rating: 4.9,
-        reviews: 76,
-        price: 48000,
-        delivery: "10 Days",
-        image: "https://placehold.co/600x400",
-    },
-];
 
 const sortOptions = [
     { value: "best-selling", label: "Best Selling" },
@@ -152,11 +83,7 @@ function ServiceListing() {
                 const data = res.data || {};
                 setCategory(data.category || { name: target, slug: target });
                 const items = data.services || data.services_data || data.services_list || [];
-                if (Array.isArray(items) && items.length > 0) {
-                    setServices(items);
-                } else {
-                    setServices(fallbackServices);
-                }
+                setServices(Array.isArray(items) ? items : []);
                 setLoading(false);
             })
             .catch(() => {
@@ -167,7 +94,7 @@ function ServiceListing() {
                     slug: target,
                     services_count: 0,
                 });
-                setServices(fallbackServices);
+                setServices([]);
                 setLoading(false);
             });
 

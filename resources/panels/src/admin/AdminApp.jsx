@@ -201,7 +201,7 @@ function AdminLayout({ user, isDark, toggleTheme }) {
             <Sidebar logo="KhanVerse Admin" menus={menuSections} role="" hidden={hidden} onToggle={toggleSidebar} />
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={hidden} onToggleSidebar={toggleSidebar} />
-                <div className="page-content">
+                <div className="page-content kv-velora">
                     <Routes>
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/dashboard" element={<Navigate to="/" replace />} />
