@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Api\RoleApiController as AdminRoleApiController;
 use App\Http\Controllers\Admin\Api\SettingApiController as AdminSettingApiController;
 use App\Http\Controllers\Admin\Api\MenuApiController as AdminMenuApiController;
 use App\Http\Controllers\Admin\Api\ModuleApiController as AdminModuleApiController;
+use App\Http\Controllers\Admin\Api\TutorialApiController as AdminTutorialApiController;
 use App\Http\Controllers\Admin\Api\PermissionApiController as AdminPermissionApiController;
 use App\Http\Controllers\Admin\Api\DeviceApiController as AdminDeviceApiController;
 use App\Http\Controllers\Admin\Api\SuspiciousApiController as AdminSuspiciousApiController;
@@ -66,6 +67,8 @@ Route::prefix('frontend')->name('frontend.')->group(function () {
     Route::get('/categories', [FrontendApiController::class, 'categories'])->name('categories');
     Route::get('/faqs', [FrontendApiController::class, 'faqs'])->name('faqs');
     Route::get('/testimonials', [FrontendApiController::class, 'testimonials'])->name('testimonials');
+    Route::get('/tutorials', [FrontendApiController::class, 'tutorials'])->name('tutorials');
+    Route::get('/app-settings', [FrontendApiController::class, 'appSettings'])->name('app.settings');
     Route::get('/navigation', [FrontendApiController::class, 'navigation'])->name('navigation');
     Route::get('/footer', [FrontendApiController::class, 'footer'])->name('footer');
     Route::get('/categories/{slug}', [FrontendApiController::class, 'categoryServices'])->name('category.services')->where('slug', '[a-z0-9\-]+');
@@ -82,6 +85,8 @@ Route::middleware(['web', 'guest'])->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('api.register');
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('api.password.email');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('api.password.reset');
+    Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('api.otp.send');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('api.otp.verify');
 });
 
 /*
@@ -187,6 +192,15 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::put('/{id}', [AdminModuleApiController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdminModuleApiController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/status', [AdminModuleApiController::class, 'toggleStatus'])->name('status');
+    });
+
+    Route::prefix('tutorials')->name('tutorials.')->group(function () {
+        Route::get('/', [AdminTutorialApiController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminTutorialApiController::class, 'show'])->name('show');
+        Route::post('/', [AdminTutorialApiController::class, 'store'])->name('store');
+        Route::put('/{id}', [AdminTutorialApiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminTutorialApiController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [AdminTutorialApiController::class, 'toggleStatus'])->name('status');
     });
 
     Route::prefix('permissions')->name('permissions.')->group(function () {

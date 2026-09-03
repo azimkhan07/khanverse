@@ -11,6 +11,7 @@ use App\Models\Banner;
 use App\Models\Service;
 use App\Models\ServiceImage;
 use App\Models\Setting;
+use App\Models\Tutorial;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -39,7 +40,7 @@ class FrontendApiController extends Controller
             });
 
         $topServices = Service::with(['seller', 'category', 'images'])
-            ->where('status', true)
+            ->where('status', 'active')
             ->latest()
             ->take(8)
             ->get()
@@ -96,8 +97,10 @@ class FrontendApiController extends Controller
             ['id' => 4, 'title' => 'Pricing',  'url' => '/pricing',        'visible' => true, 'order' => 4, 'icon' => null],
             ['id' => 5, 'title' => 'Blog',     'url' => '/blog',           'visible' => true, 'order' => 5, 'icon' => null],
             ['id' => 6, 'title' => 'FAQ',      'url' => '/faq',            'visible' => true, 'order' => 6, 'icon' => null],
-            ['id' => 7, 'title' => 'Contact',  'url' => '/contact',        'visible' => true, 'order' => 7, 'icon' => null],
-            ['id' => 8, 'title' => 'Careers',  'url' => '/careers',        'visible' => true, 'order' => 8, 'icon' => null],
+            ['id' => 7, 'title' => 'Tutorials', 'url' => '/tutorials',     'visible' => true, 'order' => 7, 'icon' => null],
+            ['id' => 8, 'title' => 'Contact',  'url' => '/contact',        'visible' => true, 'order' => 8, 'icon' => null],
+            ['id' => 9, 'title' => 'Careers',  'url' => '/careers',        'visible' => true, 'order' => 9, 'icon' => null],
+            ['id' => 10, 'title' => 'App',     'url' => '/app',            'visible' => true, 'order' => 10, 'icon' => null],
         ];
     }
 
@@ -204,6 +207,31 @@ class FrontendApiController extends Controller
     }
 
     /* ------------------------------------------------------------------ */
+    /* Tutorials (public)                                                 */
+    /* ------------------------------------------------------------------ */
+    public function tutorials(): JsonResponse
+    {
+        $tutorials = Tutorial::where('status', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        return response()->json($tutorials);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* App download settings (public)                                     */
+    /* ------------------------------------------------------------------ */
+    public function appSettings(): JsonResponse
+    {
+        $downloadUrl = Setting::where('group', 'app')->where('key', 'download_url')->value('value');
+
+        return response()->json([
+            'download_url' => $downloadUrl ?: '/app/khanverse.apk',
+        ]);
+    }
+
+    /* ------------------------------------------------------------------ */
     /* Category -> services listing                                       */
     /* ------------------------------------------------------------------ */
     public function categoryServices(string $slug): JsonResponse
@@ -222,7 +250,7 @@ class FrontendApiController extends Controller
 
         $services = $category->services()
             ->with(['seller', 'category', 'images'])
-            ->where('status', true)
+            ->where('status', 'active')
             ->latest()
             ->get()
             ->map(fn($s) => $this->serializeServiceCard($s));
@@ -244,7 +272,7 @@ class FrontendApiController extends Controller
     public function service(int $id): JsonResponse
     {
         $service = Service::with(['seller.user', 'category', 'images'])
-            ->where('status', true)
+            ->where('status', 'active')
             ->find($id);
 
         if (!$service) {
@@ -252,7 +280,7 @@ class FrontendApiController extends Controller
         }
 
         $similar = Service::with(['seller', 'category', 'images'])
-            ->where('status', true)
+            ->where('status', 'active')
             ->where('category_id', $service->category_id)
             ->where('id', '!=', $service->id)
             ->latest()

@@ -13,9 +13,11 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
+            ServiceSeeder::class,
             SettingSeeder::class,
             MenuSeeder::class,
             ContentSeeder::class,
+            EmailTemplateSeeder::class,
         ]);
     }
 }

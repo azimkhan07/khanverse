@@ -13,6 +13,7 @@ const iconMap = {
     "ai-services": BrainCircuit,
     "video-editing": Video,
     "app-development": Smartphone,
+    "mobile-app-development": Smartphone,
     "ui-ux-design": PenTool,
     "content-writing": FileText,
     "seo": Search,

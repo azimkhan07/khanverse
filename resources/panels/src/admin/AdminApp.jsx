@@ -14,7 +14,6 @@ import {
     UserCheck,
     ShieldCheck,
     Sliders,
-    CircleUserRound,
     Menu as MenuIcon,
     Boxes,
     KeyRound,
@@ -28,6 +27,7 @@ import {
     Mail,
     CreditCard,
     Banknote,
+    PlayCircle,
 } from 'lucide-react';
 
 import Dashboard from './pages/Dashboard';
@@ -46,6 +46,8 @@ import Roles from './pages/Roles';
 import SettingsPage from './pages/Settings';
 import Menus from './pages/Menus';
 import Modules from './pages/Modules';
+import Tutorials from './pages/Tutorials';
+import TutorialsForm from './pages/TutorialsForm';
 import Permissions from './pages/Permissions';
 import Devices from './pages/Devices';
 import Suspicious from './pages/Suspicious';
@@ -76,12 +78,6 @@ const menuSections = [
         title: 'Overview',
         items: [
             { path: '/', label: 'Dashboard', icon: <LayoutDashboard size={15} />, exact: true },
-        ],
-    },
-    {
-        title: 'Account',
-        items: [
-            { path: '/profile', label: 'My Profile', icon: <CircleUserRound size={15} /> },
         ],
     },
     {
@@ -142,6 +138,7 @@ const menuSections = [
             { path: '/website/testimonials', label: 'Testimonials', icon: <ShieldCheck size={15} /> },
             { path: '/website/seo', label: 'SEO', icon: <Globe size={15} /> },
             { path: '/website/maintenance', label: 'Maintenance', icon: <Sliders size={15} /> },
+            { path: '/tutorials', label: 'Tutorial Videos', icon: <PlayCircle size={15} /> },
         ],
     },
 ];
@@ -243,6 +240,9 @@ function AdminLayout({ user, isDark, toggleTheme }) {
                         <Route path="/website/seo/new" element={<WebsiteSeoForm />} />
                         <Route path="/website/seo/:id" element={<WebsiteSeoForm />} />
                         <Route path="/website/maintenance" element={<WebsiteMaintenance />} />
+                        <Route path="/tutorials" element={<Tutorials />} />
+                        <Route path="/tutorials/new" element={<TutorialsForm />} />
+                        <Route path="/tutorials/:id" element={<TutorialsForm />} />
                         <Route path="/notifications" element={<Notifications />} />
                         <Route path="/invoices" element={<InvoiceDesigns />} />
                         <Route path="/invoices/settings" element={<InvoiceSettings />} />

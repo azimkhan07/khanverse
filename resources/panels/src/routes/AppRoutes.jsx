@@ -23,6 +23,8 @@ import Contact from "../pages/Contact/Contact";
 import Pricing from "../pages/Pricing/Pricing";
 import ServiceListing from "../pages/Category/ServiceListing";
 import ServiceDetail from "../pages/Category/ServiceDetail";
+import Tutorials from "../pages/Tutorials/Tutorials";
+import AppDownload from "../pages/AppDownload/AppDownload";
 
 function AppRoutes() {
     return (
@@ -43,6 +45,8 @@ function AppRoutes() {
                     <Route path="/cookie-policy" element={<CookiePolicy />} />
                     <Route path="/category/:slug" element={<ServiceListing />} />
                     <Route path="/service/:id" element={<ServiceDetail />} />
+                    <Route path="/tutorials" element={<Tutorials />} />
+                    <Route path="/app" element={<AppDownload />} />
                 </Route>
                 <Route element={<GuestLayout />}>
                     <Route path="/login" element={<Login />} />

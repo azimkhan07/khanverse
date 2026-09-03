@@ -11,7 +11,6 @@ import {
     FolderKanban,
     Wallet,
     Star,
-    User,
     Settings,
     Bell,
 } from 'lucide-react';
@@ -59,7 +58,6 @@ const menuSections = [
     {
         title: 'Account',
         items: [
-            { path: '/profile', label: 'Profile', icon: <User /> },
             { path: '/settings', label: 'Settings', icon: <Settings /> },
             { path: '/notifications', label: 'Notifications', icon: <Bell /> },
         ],

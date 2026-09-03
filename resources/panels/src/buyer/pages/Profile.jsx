@@ -54,7 +54,7 @@ function Profile({ user }) {
 
             {message && <motion.div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'}`} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>{message.text}</motion.div>}
 
-            <div className="settings-wrap">
+            <div className="settings-wrap profile-page">
                 <motion.div
                     className="profile-cover"
                     initial={{ opacity: 0, y: 16 }}
@@ -76,7 +76,7 @@ function Profile({ user }) {
                     </label>
                 </motion.div>
 
-                <motion.form onSubmit={submit} style={{ marginTop: 16 }} variants={container} initial="hidden" animate="show">
+                <motion.form className="profile-form" onSubmit={submit} style={{ marginTop: 0 }} variants={container} initial="hidden" animate="show">
                     <motion.div className="form-row" variants={fadeUp}>
                         <div className="form-group">
                             <label>Full Name</label>

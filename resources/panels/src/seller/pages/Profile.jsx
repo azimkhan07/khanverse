@@ -71,7 +71,7 @@ function Profile({ user }) {
                 </motion.div>
             )}
 
-            <motion.div className="settings-wrap" variants={stagger} initial="hidden" animate="show">
+            <motion.div className="settings-wrap profile-page" variants={stagger} initial="hidden" animate="show">
                 <motion.div className="profile-cover" variants={fadeUp}>
                     <motion.img
                         className="profile-avatar"
@@ -86,7 +86,7 @@ function Profile({ user }) {
                     </label>
                 </motion.div>
 
-                <motion.form onSubmit={submit} style={{ marginTop: 16 }} variants={fadeUp}>
+                <motion.form className="profile-form" onSubmit={submit} style={{ marginTop: 0 }} variants={fadeUp}>
                     <div className="form-row">
                         <div className="form-group">
                             <label>Full Name</label>

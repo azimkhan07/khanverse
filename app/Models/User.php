@@ -86,6 +86,11 @@ class User extends Authenticatable
         return $this->hasMany(UserDevice::class);
     }
 
+    public function loginHistories()
+    {
+        return $this->hasMany(LoginHistory::class)->latest('login_at');
+    }
+
     public function wallet()
     {
         return $this->hasOne(Wallet::class);

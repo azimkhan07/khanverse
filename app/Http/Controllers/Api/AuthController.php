@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Buyer;
 use App\Models\BuyerProfile;
+use App\Models\LoginHistory;
 use App\Models\Seller;
 use App\Models\SellerProfile;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\UserDevice;
+use App\Support\UserAgentParser;
 use App\Services\NotificationService;
+use App\Services\OtpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +32,8 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         $user = auth()->user();
+
+        $this->recordLoginSession($user, $request);
 
         return response()->json([
             'status' => true,
@@ -84,6 +90,8 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        $this->recordLoginSession($user, $request);
+
         NotificationService::send(
             $user->id,
             'Welcome to KhanVerse',
@@ -107,6 +115,15 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
+        $user = Auth::user();
+        if ($user) {
+            LoginHistory::where('user_id', $user->id)
+                ->whereNull('logout_at')
+                ->latest('login_at')
+                ->first()
+                ?->update(['logout_at' => now()]);
+        }
+
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -223,6 +240,60 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Verification link sent',
+        ]);
+    }
+
+    public function sendOtp(Request $request): JsonResponse
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No account found for this email.',
+            ], 422);
+        }
+
+        $debug = config('app.debug', false);
+        $otp = OtpService::send($user->id, $user->email, 'email', $debug);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP sent to your email.',
+            'debug_otp' => $debug ? $otp : null,
+        ]);
+    }
+
+    public function verifyOtp(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No account found for this email.',
+            ], 422);
+        }
+
+        if (! OtpService::verify($user->email, $request->otp)) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Invalid or expired OTP.',
+            ], 422);
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Email verified successfully.',
         ]);
     }
 
@@ -404,6 +475,57 @@ class AuthController extends Controller
             'record' => $record,
             'profile' => $profile,
         ]);
+    }
+
+    private function recordLoginSession(User $user, Request $request): void
+    {
+        try {
+            $ip       = $request->ip();
+            $userAgent = $request->userAgent();
+
+            $info = UserAgentParser::parse($userAgent);
+
+            LoginHistory::create([
+                'user_id'       => $user->id,
+                'ip_address'    => $ip,
+                'user_agent'    => $userAgent,
+                'browser'       => $info['browser'],
+                'device'        => $info['device'],
+                'platform'      => $info['platform'],
+                'login_at'      => now(),
+                'is_successful' => true,
+            ]);
+
+            $friendlyName = trim(($info['browser'] ?? 'Unknown') . ' on ' . ($info['platform'] ?? 'Unknown') . ' - ' . ($info['device'] ?? 'Device'));
+
+            $device = UserDevice::where('user_id', $user->id)
+                ->where('ip_address', $ip)
+                ->where('user_agent', $userAgent)
+                ->first();
+
+            if ($device) {
+                $device->update([
+                    'browser'           => $info['browser'],
+                    'platform'          => $info['platform'],
+                    'is_current_device' => true,
+                    'last_activity'     => now(),
+                ]);
+            } else {
+                UserDevice::where('user_id', $user->id)->update(['is_current_device' => false]);
+                UserDevice::create([
+                    'user_id'           => $user->id,
+                    'device_name'       => $friendlyName,
+                    'browser'           => $info['browser'],
+                    'platform'          => $info['platform'],
+                    'ip_address'        => $ip,
+                    'user_agent'        => $userAgent,
+                    'is_current_device' => true,
+                    'last_activity'     => now(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     private function createRoleRecord(User $user, string $role, Request $request): void
