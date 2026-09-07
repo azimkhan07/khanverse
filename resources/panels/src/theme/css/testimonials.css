@@ -49,6 +49,7 @@
 
 .testimonials-track {
   display: flex;
+  align-items: stretch;
   gap: 20px;
   width: max-content;
   animation: testimonialMarquee 46s linear infinite;
@@ -61,7 +62,10 @@
 .testimonials-track .testimonial-card {
   width: 340px;
   flex-shrink: 0;
-  height: 100%;
+  height: auto;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* --- Card --- */
@@ -122,6 +126,11 @@
   margin-bottom: 22px;
   font-style: italic;
   transition: color 0.3s ease;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* --- Author --- */
@@ -129,6 +138,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  margin-top: auto;
 }
 
 .testimonial-avatar {
