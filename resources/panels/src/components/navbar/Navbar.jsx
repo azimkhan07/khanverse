@@ -74,7 +74,7 @@ function Navbar() {
                                 </linearGradient>
                             </defs>
                         </svg>
-                        <span className="logo-text">KhanVerse</span>
+                        <span className="logo-text">SkillNest</span>
                     </Link>
 
                     <nav className="navbar-menu">
@@ -184,7 +184,7 @@ function Navbar() {
                                         </linearGradient>
                                     </defs>
                                 </svg>
-                                <span className="logo-text">KhanVerse</span>
+                                <span className="logo-text">SkillNest</span>
                             </Link>
                             <button className="navbar-hamburger" onClick={() => setMobileOpen(false)} aria-label="Close menu">
                                 <X size={24} />

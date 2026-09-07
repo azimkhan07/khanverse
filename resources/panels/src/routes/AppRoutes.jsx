@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 import ScrollToTop from "../shared/components/ScrollToTop";
 import PublicLayout from "../layouts/PublicLayout";
@@ -28,10 +29,48 @@ import AppDownload from "../pages/AppDownload/AppDownload";
 import Search from "../pages/Search/Search";
 import Compare from "../pages/Compare/Compare";
 
+function pageTitle(pathname) {
+    const titles = {
+        '/': 'Home',
+        '/about': 'About Us',
+        '/pricing': 'Pricing',
+        '/faq': 'FAQ',
+        '/contact': 'Contact',
+        '/blog': 'Blog',
+        '/careers': 'Careers',
+        '/privacy-policy': 'Privacy Policy',
+        '/terms-conditions': 'Terms & Conditions',
+        '/cookie-policy': 'Cookie Policy',
+        '/search': 'Search',
+        '/compare': 'Compare Services',
+        '/tutorials': 'Tutorials',
+        '/app': 'Download App',
+        '/login': 'Sign In',
+        '/register': 'Create Account',
+        '/forgot-password': 'Forgot Password',
+        '/verify-email': 'Verify Email',
+    };
+    if (titles[pathname]) return titles[pathname];
+    if (pathname.startsWith('/category/')) return 'Services';
+    if (pathname.startsWith('/service/')) return 'Service Details';
+    if (pathname.startsWith('/blog/')) return 'Blog';
+    if (pathname.startsWith('/reset-password/')) return 'Reset Password';
+    return 'SkillNest';
+}
+
+function PageTitles() {
+    const location = useLocation();
+    useEffect(() => {
+        document.title = `${pageTitle(location.pathname)} · SkillNest`;
+    }, [location.pathname]);
+    return null;
+}
+
 function AppRoutes() {
     return (
         <BrowserRouter>
             <ScrollToTop />
+            <PageTitles />
             <Routes>
                 <Route element={<PublicLayout />}>
                     <Route index element={<Home />} />

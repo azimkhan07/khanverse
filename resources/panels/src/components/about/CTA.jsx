@@ -44,14 +44,14 @@ function CTA() {
 
                     <motion.h2 variants={fadeUp}>
 
-                        Ready To Grow Your Business With KhanVerse?
+                        Ready To Grow Your Business With SkillNest?
 
                     </motion.h2>
 
                     <motion.p variants={fadeUp}>
 
                         Join thousands of businesses and freelancers
-                        who trust KhanVerse to build amazing digital
+                        who trust SkillNest to build amazing digital
                         products and long-term partnerships.
 
                     </motion.p>

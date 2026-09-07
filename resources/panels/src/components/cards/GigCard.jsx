@@ -117,7 +117,7 @@ function GigCard({ gig, onOrder }) {
                         </div>
                         <p className="gig-detail-desc">
                             {gig.description || gig.short_description ||
-                                "This service is provided by a top-rated freelancer on KhanVerse. Click Order Now to place your order and share your requirements."}
+                                "This service is provided by a top-rated freelancer on SkillNest. Click Order Now to place your order and share your requirements."}
                         </p>
                         <div className="gig-detail-price">
                             <span>Starting at</span>

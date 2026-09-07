@@ -30,7 +30,7 @@ class OtpService
         $sent = MailService::sendTemplate('otp_send', $email, [
             'otp'       => $otp,
             'user_name' => $name,
-            'app_name'  => config('app.name', 'KhanVerse'),
+            'app_name'  => config('app.name', 'SkillNest'),
             'expiry'    => '10 minutes',
         ]);
 

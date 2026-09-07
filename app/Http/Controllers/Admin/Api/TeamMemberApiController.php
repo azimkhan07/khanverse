@@ -12,6 +12,7 @@ class TeamMemberApiController extends Controller
     {
         $members = TeamMember::query()
             ->when($request->search, fn($q) => $q->where('name', 'like', "%$request->search%"))
+            ->when($request->filled('status'), fn($q) => $q->where('status', $request->boolean('status')))
             ->orderBy('sort_order')
             ->orderBy('id')
             ->paginate($request->per_page ?? 10);

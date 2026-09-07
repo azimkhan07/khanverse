@@ -11,24 +11,24 @@ class AuthSettingsSeeder extends Seeder
     {
         // Website-level settings used by auth pages
         $website = [
-            ['group' => 'website', 'key' => 'site.name',    'value' => 'KhanVerse',  'type' => 'text'],
+            ['group' => 'website', 'key' => 'site.name',    'value' => 'SkillNest',  'type' => 'text'],
             ['group' => 'website', 'key' => 'site.logo',    'value' => null,          'type' => 'image'],
         ];
 
         $auth = [
-            ['group' => 'auth', 'key' => 'auth.name',      'value' => 'KhanVerse', 'type' => 'text'],
+            ['group' => 'auth', 'key' => 'auth.name',      'value' => 'SkillNest', 'type' => 'text'],
             ['group' => 'auth', 'key' => 'auth.logo',      'value' => null,         'type' => 'image'],
-            ['group' => 'auth', 'key' => 'login.title',    'value' => 'KhanVerse Login',   'type' => 'text'],
+            ['group' => 'auth', 'key' => 'login.title',    'value' => 'SkillNest Login',   'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.heading',  'value' => 'Welcome Back',       'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.subheading','value' => 'Login to continue your journey', 'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.button',   'value' => 'Login Now',          'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.remember', 'value' => 'Remember Me',        'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.forgot_link','value' => 'Forgot Password?',  'type' => 'text'],
-            ['group' => 'auth', 'key' => 'login.new_here', 'value' => 'New to Khanverse?',  'type' => 'text'],
+            ['group' => 'auth', 'key' => 'login.new_here', 'value' => 'New to Skillnest?',  'type' => 'text'],
             ['group' => 'auth', 'key' => 'login.create_account','value' => 'Create Account','type' => 'text'],
             ['group' => 'auth', 'key' => 'register.title',   'value' => 'Create Account',           'type' => 'text'],
             ['group' => 'auth', 'key' => 'register.heading', 'value' => 'Create Account',           'type' => 'text'],
-            ['group' => 'auth', 'key' => 'register.subheading','value' => 'Join Khanverse today and start hiring or selling.','type' => 'text'],
+            ['group' => 'auth', 'key' => 'register.subheading','value' => 'Join Skillnest today and start hiring or selling.','type' => 'text'],
             ['group' => 'auth', 'key' => 'register.button',  'value' => 'Create Account',           'type' => 'text'],
             ['group' => 'auth', 'key' => 'forgot.title',     'value' => 'Forgot Password',          'type' => 'text'],
             ['group' => 'auth', 'key' => 'forgot.heading',   'value' => 'Forgot Password?',         'type' => 'text'],

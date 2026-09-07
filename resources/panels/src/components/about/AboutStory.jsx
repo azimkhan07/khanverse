@@ -44,7 +44,7 @@ function AboutStory() {
 
                         <p>
 
-                            KhanVerse was created with a simple vision —
+                            SkillNest was created with a simple vision —
                             making freelancing easier, faster and more
                             transparent for everyone.
 
@@ -53,7 +53,7 @@ function AboutStory() {
                         <p>
 
                             Whether you're a startup, business or freelancer,
-                            KhanVerse provides everything needed to build
+                            SkillNest provides everything needed to build
                             successful digital partnerships.
 
                         </p>

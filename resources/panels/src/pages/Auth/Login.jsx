@@ -53,7 +53,7 @@ function Login() {
             <div className="auth-container">
                 <div className="auth-left">
                     <div className="auth-overlay">
-                        <span className="auth-badge">{authText(s, "login.badge", "Welcome to KhanVerse")}</span>
+                        <span className="auth-badge">{authText(s, "login.badge", "Welcome to SkillNest")}</span>
                         <h1>{authText(s, "login.hero_heading", "Work. Hire. Grow.")}</h1>
                         <p>{authText(s, "login.hero_text", "Join thousands of freelancers and businesses building the future together.")}</p>
                     </div>

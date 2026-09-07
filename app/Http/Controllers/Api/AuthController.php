@@ -75,7 +75,7 @@ class AuthController extends Controller
 
         NotificationService::send(
             $user->id,
-            'Welcome to KhanVerse',
+            'Welcome to SkillNest',
             'Your ' . $role . ' account was created successfully. Complete your profile to get started.',
             'auth',
             route($role . '.dashboard'),

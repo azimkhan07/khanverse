@@ -4,7 +4,7 @@ export const testimonials = [
         name: "Sarah Johnson",
         role: "Business Owner",
         rating: 5,
-        review: "KhanVerse helped me hire an amazing developer within a day.",
+        review: "SkillNest helped me hire an amazing developer within a day.",
         image: "https://placehold.co/120",
     },
 

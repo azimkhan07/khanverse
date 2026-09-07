@@ -105,7 +105,7 @@ function Statistics() {
                     <span className="section-tag">OUR ACHIEVEMENTS</span>
                     <h2>Our Achievements In Numbers</h2>
                     <p>
-                        Real numbers from real activity on the KhanVerse marketplace.
+                        Real numbers from real activity on the SkillNest marketplace.
                     </p>
                 </div>
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ setting('auth', 'login.title', 'KhanVerse Login') }}</title>
+    <title>{{ setting('auth', 'login.title', 'SkillNest Login') }}</title>
     <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -19,9 +19,9 @@
         <div class="auth-card-header">
             <div class="logo-box">
                 @if(setting('auth', 'auth.logo'))
-                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'SkillNest') }}">
                 @else
-                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                    <span>{{ setting('auth', 'auth.name', 'SkillNest') }}</span>
                 @endif
             </div>
             <h2>{{ setting('auth', 'login.heading', 'Welcome Back') }}</h2>
@@ -86,7 +86,7 @@
         </a>
 
         <div class="auth-footer auth-form">
-            <span style="font-size: 12px; margin-top: 2px; color: #888a8a;">{{ setting('auth', 'login.new_here', 'New to KhanVerse?') }}</span>
+            <span style="font-size: 12px; margin-top: 2px; color: #888a8a;">{{ setting('auth', 'login.new_here', 'New to SkillNest?') }}</span>
             <a style="font-size: 13px;" href="{{ route('register') }}">{{ setting('auth', 'login.create_account', 'Create Account') }}</a>
         </div>
 

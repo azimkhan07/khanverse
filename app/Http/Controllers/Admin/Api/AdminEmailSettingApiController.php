@@ -38,7 +38,7 @@ class AdminEmailSettingApiController extends Controller
         $template = EmailTemplate::findOrFail($id);
 
         $sample = [
-            'app_name' => config('app.name', 'KhanVerse'),
+            'app_name' => config('app.name', 'SkillNest'),
             'user_name' => 'John Doe',
             'customer_name' => 'John Doe',
             'buyer_name' => 'John Doe',
@@ -176,7 +176,7 @@ class AdminEmailSettingApiController extends Controller
             'username' => setting('smtp', 'username', ''),
             'password' => setting('smtp', 'password', '') !== '' ? '••••••••' : '',
             'from_address' => setting('smtp', 'from_address', ''),
-            'from_name' => setting('smtp', 'from_name', config('app.name', 'KhanVerse')),
+            'from_name' => setting('smtp', 'from_name', config('app.name', 'SkillNest')),
             'enabled' => (bool) setting('smtp', 'enabled', false),
         ]);
     }

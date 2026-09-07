@@ -1,5 +1,5 @@
 const contact = {
-    email: "support@khanverse.com",
+    email: "support@skillnest.com",
     phone: "+91 9876543210",
     address: "Mumbai, Maharashtra, India",
 

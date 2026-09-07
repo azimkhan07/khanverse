@@ -58,7 +58,7 @@ class MailService
             'username' => setting('smtp', 'username', ''),
             'password' => setting('smtp', 'password', ''),
             'from_address' => setting('smtp', 'from_address', ''),
-            'from_name' => setting('smtp', 'from_name', config('app.name', 'KhanVerse')),
+            'from_name' => setting('smtp', 'from_name', config('app.name', 'SkillNest')),
             'enabled' => true,
         ];
     }
@@ -85,7 +85,7 @@ class MailService
             ? '<img src="'.e($template->logo_url).'" alt="" style="max-height:64px; max-width:260px; width:auto; display:inline-block;" />'
             : '<span style="font-size:22px; font-weight:800; color:#ffffff; letter-spacing:.4px;">'.e($template->name).'</span>';
 
-        $footer = '&copy; '.date('Y').' '.e(config('app.name', 'KhanVerse'));
+        $footer = '&copy; '.date('Y').' '.e(config('app.name', 'SkillNest'));
         if ($template->description) {
             $footer .= ' &middot; '.e($template->description);
         }

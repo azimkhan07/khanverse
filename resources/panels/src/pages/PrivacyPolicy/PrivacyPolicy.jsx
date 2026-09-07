@@ -40,7 +40,7 @@ const sections = [
         icon: Eye,
         title: "How We Use Your Information",
         content:
-            "We use the information we collect to operate, improve and personalize your experience on KhanVerse.",
+            "We use the information we collect to operate, improve and personalize your experience on SkillNest.",
         items: [
             "To provide, maintain and improve our marketplace services and features",
             "To process transactions and send related information including invoices and confirmations",
@@ -58,7 +58,7 @@ const sections = [
         items: [
             "With other users as needed to facilitate projects (e.g. profile information visible to potential clients)",
             "With trusted service providers who assist in operating our platform under strict data protection agreements",
-            "When required by law, legal process or to protect the rights and safety of KhanVerse and its users",
+            "When required by law, legal process or to protect the rights and safety of SkillNest and its users",
             "In connection with a merger, acquisition or sale of assets, with prior notice to users",
         ],
     },
@@ -117,7 +117,7 @@ const sections = [
         icon: Shield,
         title: "Children's Privacy",
         content:
-            "KhanVerse is not intended for users under the age of 18. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will take steps to delete such information promptly.",
+            "SkillNest is not intended for users under the age of 18. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will take steps to delete such information promptly.",
         items: [],
     },
 ];
@@ -143,10 +143,10 @@ function PrivacyPolicy() {
                     </motion.p>
 
                     <motion.p {...fadeInUp} style={{ marginTop: "12px" }}>
-                        At KhanVerse, we are committed to protecting your privacy and
+                        At SkillNest, we are committed to protecting your privacy and
                         ensuring the security of your personal information. This Privacy
                         Policy explains how we collect, use, disclose and safeguard your
-                        data when you use our platform and services. By using KhanVerse,
+                        data when you use our platform and services. By using SkillNest,
                         you agree to the collection and use of information in accordance
                         with this policy.
                     </motion.p>
@@ -191,7 +191,7 @@ function PrivacyPolicy() {
                         <p>
                             If you have any questions about this Privacy Policy or our data
                             practices, please contact us at{" "}
-                            <strong>privacy@khanverse.com</strong>.
+                            <strong>privacy@skillnest.com</strong>.
                         </p>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import "../../theme/css/why-khanverse.css";
-import { whyData } from "../../components/whyKhanVerse/whyData";
+import "../../theme/css/why-skillnest.css";
+import { whyData } from "../../components/whySkillNest/whyData";
 
 const containerVariants = {
     hidden: {},
@@ -21,9 +21,9 @@ const cardVariants = {
     },
 };
 
-function WhyKhanVerse() {
+function WhySkillNest() {
     return (
-        <section className="why-khanverse">
+        <section className="why-skillnest">
             <div className="container">
                 <motion.div
                     className="section-heading"
@@ -32,7 +32,7 @@ function WhyKhanVerse() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <span>Why KhanVerse</span>
+                    <span>Why SkillNest</span>
                     <h2>Built for the Future of Freelancing</h2>
                     <p>Everything you need to hire, work and grow securely.</p>
                 </motion.div>
@@ -71,4 +71,4 @@ function WhyKhanVerse() {
     );
 }
 
-export default WhyKhanVerse;
+export default WhySkillNest;

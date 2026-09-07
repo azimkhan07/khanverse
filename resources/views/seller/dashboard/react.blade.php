@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Seller - KhanVerse</title>
+    <title>SkillNest Seller</title>
     <script>
         (function () {
             try {
                 var u = {{ auth()->check() ? auth()->user()->id : 'null' }};
-                var k = u ? 'khanverse-theme-seller-' + u : 'khanverse-theme-seller';
+                var k = u ? 'skillnest-theme-seller-' + u : 'skillnest-theme-seller';
                 if (localStorage.getItem(k) === 'dark') {
                     document.documentElement.setAttribute('data-theme', 'dark');
                 }

@@ -4,9 +4,9 @@ import frontendApi from "../../shared/frontendApi";
 const avatarColors = ["linear-gradient(135deg,#4F46E5,#7C3AED)", "linear-gradient(135deg,#06B6D4,#4F46E5)", "linear-gradient(135deg,#EC4899,#7C3AED)"];
 
 const FALLBACK_TEAM = [
-    { id: 1, name: "Azim Khan", role: "Founder of KhanVerse", tagline: "Brand Partner with AMTech", image: null },
-    { id: 2, name: "Nadeem Mansuri", role: "Co-Founder of KhanVerse", tagline: null, image: null },
-    { id: 3, name: "Sayed Mujeeb", role: "Brand Partner with KhanVerse", tagline: "Director of AMTech", image: null },
+    { id: 1, name: "Azim Khan", role: "Founder of SkillNest", tagline: "Brand Partner with Amtech", image: null },
+    { id: 2, name: "Nadeem Mansuri", role: "Co-Founder of SkillNest", tagline: null, image: null },
+    { id: 3, name: "Sayed Mujeeb", role: "Brand Partner with SkillNest", tagline: "Director of Amtech", image: null },
 ];
 
 function initials(name) {
@@ -55,7 +55,7 @@ function Team() {
                 <div className="section-heading">
                     <span className="section-tag">OUR TEAM</span>
                     <h2>Meet Our Awesome Team</h2>
-                    <p>The people behind KhanVerse building the future of freelancing.</p>
+                    <p>The people behind SkillNest building the future of freelancing.</p>
                 </div>
 
                 <div className="team-grid">

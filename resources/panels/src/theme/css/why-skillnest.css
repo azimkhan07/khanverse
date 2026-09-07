@@ -1,5 +1,5 @@
 /* ==========================================
-   WHY KHANVERSE — Velora Feature Cards
+   WHY SKILLNEST — Velora Feature Cards
    ========================================== */
 
 @keyframes whyFadeInUp {
@@ -12,7 +12,7 @@
   50% { transform: translateY(-4px) rotate(-3deg); }
 }
 
-.why-khanverse {
+.why-skillnest {
   padding: 36px 24px;
   position: relative;
   z-index: 2;
@@ -20,7 +20,7 @@
   transition: background 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.why-khanverse .container {
+.why-skillnest .container {
   max-width: 1320px;
   margin: 0 auto;
 }
@@ -132,8 +132,8 @@
 }
 
 @media (max-width: 768px) {
-  .why-khanverse { padding-left: 0; padding-right: 0; }
-  .why-khanverse .container { padding: 0 16px; }
+  .why-skillnest { padding-left: 0; padding-right: 0; }
+  .why-skillnest .container { padding: 0 16px; }
   .why-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: none;

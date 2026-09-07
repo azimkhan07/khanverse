@@ -43,6 +43,22 @@ const pageTitles = {
     '/notifications': 'Notifications',
 };
 
+function sellerPageTitle(pathname) {
+    let title = pageTitles[pathname] || 'Seller Dashboard';
+    if (pathname === '/services/new') title = 'Add Service';
+    else if (pathname.endsWith('/edit')) title = 'Edit Service';
+    else if (pathname.includes('/deliver')) title = 'Submit Delivery';
+    else if (pathname.startsWith('/services/')) title = 'Service Details';
+    else if (pathname.startsWith('/orders/')) title = 'Order Details';
+    else if (pathname.startsWith('/projects/')) title = 'Project Details';
+    else if (pathname.startsWith('/reviews/')) title = 'Review Details';
+    else if (pathname.startsWith('/wallet/transactions')) title = 'Transactions';
+    else if (pathname.startsWith('/wallet/transaction/')) title = 'Transaction Details';
+    else if (pathname.startsWith('/wallet/withdraw-history')) title = 'Withdraw History';
+    else if (pathname === '/wallet/withdraw') title = 'Withdraw Request';
+    return title;
+}
+
 function AnimatedRoutes({ user }) {
     const location = useLocation();
     return (
@@ -81,6 +97,10 @@ function SellerLayout({ user, isDark, toggleTheme }) {
     const [mobileNav, setMobileNav] = useState(false);
     const location = useLocation();
 
+    useEffect(() => {
+        document.title = `${sellerPageTitle(location.pathname)} · SkillNest`;
+    }, [location.pathname]);
+
     useEffect(() => { setMobileNav(false); }, [location.pathname]);
 
     const renderIcon = (iconName) => {
@@ -103,22 +123,11 @@ function SellerLayout({ user, isDark, toggleTheme }) {
             .catch(() => {});
     }, []);
 
-    let title = pageTitles[location.pathname] || 'Seller Dashboard';
-    if (location.pathname === '/services/new') title = 'Add Service';
-    else if (location.pathname.endsWith('/edit')) title = 'Edit Service';
-    else if (location.pathname.includes('/deliver')) title = 'Submit Delivery';
-    else if (location.pathname.startsWith('/services/')) title = 'Service Details';
-    else if (location.pathname.startsWith('/orders/')) title = 'Order Details';
-    else if (location.pathname.startsWith('/projects/')) title = 'Project Details';
-    else if (location.pathname.startsWith('/reviews/')) title = 'Review Details';
-    else if (location.pathname.startsWith('/wallet/transactions')) title = 'Transactions';
-    else if (location.pathname.startsWith('/wallet/transaction/')) title = 'Transaction Details';
-    else if (location.pathname.startsWith('/wallet/withdraw-history')) title = 'Withdraw History';
-    else if (location.pathname === '/wallet/withdraw') title = 'Withdraw Request';
+    let title = sellerPageTitle(location.pathname);
 
     return (
         <div className="dashboard-layout">
-            <Sidebar logo="KhanVerse" menus={menuSections} role="seller" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
+            <Sidebar logo="SkillNest" menus={menuSections} role="seller" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
             <div className={`sidebar-backdrop ${mobileNav ? 'show' : ''}`} onClick={() => setMobileNav(false)} />
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />

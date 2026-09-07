@@ -90,7 +90,7 @@ function Testimonials() {
                 >
                     <span>Testimonials</span>
                     <h2>What Our Clients Say</h2>
-                    <p>Real feedback from real clients who hired freelancers on KhanVerse.</p>
+                    <p>Real feedback from real clients who hired freelancers on SkillNest.</p>
                 </motion.div>
 
                 <div className="testimonials-marquee">

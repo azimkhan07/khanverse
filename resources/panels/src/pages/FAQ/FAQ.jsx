@@ -19,7 +19,7 @@ const categories = [
 const categorizedFaq = [
     {
         id: 1,
-        question: "How do I create an account on KhanVerse?",
+        question: "How do I create an account on SkillNest?",
         answer:
             "Click on the Register button, fill in your details including your name, email and password. You'll receive a verification email — click the link to activate your account. You can then choose to sign up as a freelancer or a buyer.",
         category: "account",
@@ -33,7 +33,7 @@ const categorizedFaq = [
     },
     {
         id: 3,
-        question: "Is KhanVerse secure?",
+        question: "Is SkillNest secure?",
         answer:
             "Yes, we use industry-standard SSL encryption, secure authentication with two-factor verification and protected payment gateways. All transactions are escrow-protected to ensure both buyers and freelancers are safe.",
         category: "general",
@@ -42,21 +42,21 @@ const categorizedFaq = [
         id: 4,
         question: "Can I hire international freelancers?",
         answer:
-            "Absolutely. KhanVerse connects businesses with talented freelancers from over 120 countries. Our platform supports multiple currencies and time zones, making global collaboration seamless.",
+            "Absolutely. SkillNest connects businesses with talented freelancers from over 120 countries. Our platform supports multiple currencies and time zones, making global collaboration seamless.",
         category: "projects",
     },
     {
         id: 5,
         question: "How do I contact support?",
         answer:
-            "You can reach our support team through the Contact page, by emailing support@khanverse.com, or via the in-app chat. Our team is available Monday to Friday from 9 AM to 6 PM IST, with limited Saturday support.",
+            "You can reach our support team through the Contact page, by emailing support@skillnest.com, or via the in-app chat. Our team is available Monday to Friday from 9 AM to 6 PM IST, with limited Saturday support.",
         category: "general",
     },
     {
         id: 6,
-        question: "What fees does KhanVerse charge?",
+        question: "What fees does SkillNest charge?",
         answer:
-            "KhanVerse charges a small service fee on each completed transaction. Freelancers pay a 10% platform fee on earnings. There are no upfront costs for buyers. Check our Pricing page for detailed plan information.",
+            "SkillNest charges a small service fee on each completed transaction. Freelancers pay a 10% platform fee on earnings. There are no upfront costs for buyers. Check our Pricing page for detailed plan information.",
         category: "account",
     },
     {
@@ -77,7 +77,7 @@ const categorizedFaq = [
         id: 9,
         question: "What skills can I offer as a freelancer?",
         answer:
-            "KhanVerse supports a wide range of categories including web development, mobile app development, UI/UX design, writing, digital marketing, video editing, AI/ML, and many more. You can list multiple services under your profile.",
+            "SkillNest supports a wide range of categories including web development, mobile app development, UI/UX design, writing, digital marketing, video editing, AI/ML, and many more. You can list multiple services under your profile.",
         category: "freelancers",
     },
     {
@@ -128,7 +128,7 @@ function FAQ() {
         <>
             <PageHero
                 title="Frequently Asked Questions"
-                subtitle="Find answers to the most common questions about KhanVerse."
+                subtitle="Find answers to the most common questions about SkillNest."
             />
 
             <section className="faq-section">

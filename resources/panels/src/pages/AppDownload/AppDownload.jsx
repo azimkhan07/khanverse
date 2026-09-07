@@ -4,8 +4,8 @@ import { Smartphone, Download, ExternalLink, CheckCircle2, XCircle } from "lucid
 import { Link } from "react-router-dom";
 import frontendApi from "../../shared/frontendApi";
 
-const DEEP_LINK_SCHEME = "khanverse://";
-const DOWNLOAD_URL = "/app/khanverse.apk";
+const DEEP_LINK_SCHEME = "skillnest://";
+const DOWNLOAD_URL = "/app/skillnest.apk";
 
 function AppDownload() {
     const [appUrl, setAppUrl] = useState(DOWNLOAD_URL);
@@ -54,7 +54,7 @@ function AppDownload() {
                     <Smartphone size={44} />
                 </div>
                 <h1 style={{ fontSize: "clamp(30px,5vw,44px)", fontWeight: 800, color: "var(--text-primary, #0F172A)", letterSpacing: "-1px" }}>
-                    KhanVerse App
+                    SkillNest App
                 </h1>
                 <p style={{ color: "var(--text-muted, #64748B)", marginTop: 12, lineHeight: 1.7, maxWidth: 460, marginLeft: "auto", marginRight: "auto" }}>
                     Take the marketplace with you. Fast, secure and always in sync with your web dashboard.
@@ -68,7 +68,7 @@ function AppDownload() {
                         <ExternalLink size={18} /> Open in App
                     </button>
 
-                    {status === "opening" && <p style={{ marginTop: 14, color: "var(--text-muted, #64748B)" }}>Opening KhanVerse…</p>}
+                    {status === "opening" && <p style={{ marginTop: 14, color: "var(--text-muted, #64748B)" }}>Opening SkillNest…</p>}
                     {status === "not-installed" && (
                         <div style={{ marginTop: 14 }}>
                             <p style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, color: "#d97706", marginBottom: 12 }}>

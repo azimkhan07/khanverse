@@ -64,13 +64,60 @@ function NotFound() {
     );
 }
 
+const adminPageTitles = {
+    '/': 'Dashboard', '/orders': 'Orders', '/projects': 'Projects',
+    '/services': 'Services', '/categories': 'Categories', '/buyers': 'Buyers',
+    '/sellers': 'Sellers', '/roles': 'Roles', '/settings': 'Settings',
+    '/menus': 'Menus', '/permissions': 'Permissions',
+    '/profile': 'My Profile',
+    '/devices': 'Login Devices', '/suspicious': 'Suspicious Users',
+    '/login-history': 'Login History',
+    '/website/banners': 'Banners', '/website/homepage': 'Homepage',
+    '/website/pages': 'Pages', '/website/faqs': 'FAQs',
+    '/website/testimonials': 'Testimonials', '/website/seo': 'SEO',
+    '/website/maintenance': 'Maintenance', '/notifications': 'Notifications',
+    '/brand-partners': 'Brand Partners',
+    '/team-members': 'Team Members',
+    '/app-builds': 'App Builds',
+    '/invoices': 'Invoice Designs', '/invoices/settings': 'Invoice Settings',
+    '/email-settings': 'Email Settings',
+    '/payment-gateways': 'Payment Gateways',
+    '/settlements': 'Settlements',
+};
+
+function adminPageTitle(pathname) {
+    let title = adminPageTitles[pathname] || 'Admin';
+    if (pathname.startsWith('/orders/')) title = 'Order Details';
+    else if (pathname.startsWith('/projects/')) title = 'Project Details';
+    else if (pathname.startsWith('/services/')) title = 'Service Details';
+    else if (pathname.startsWith('/buyers/')) title = 'Buyer Details';
+    else if (pathname.startsWith('/sellers/')) title = 'Seller Details';
+    else if (pathname.startsWith('/website/banners/new')) title = 'Add Banner';
+    else if (pathname.startsWith('/website/banners/')) title = 'Edit Banner';
+    else if (pathname.startsWith('/website/homepage/new')) title = 'Add Section';
+    else if (pathname.startsWith('/website/homepage/')) title = 'Edit Homepage Section';
+    else if (pathname.startsWith('/website/pages/new')) title = 'Add Page';
+    else if (pathname.startsWith('/website/pages/')) title = 'Edit Page';
+    else if (pathname.startsWith('/website/faqs/new')) title = 'Add FAQ';
+    else if (pathname.startsWith('/website/faqs/')) title = 'Edit FAQ';
+    else if (pathname.startsWith('/website/testimonials/new')) title = 'Add Testimonial';
+    else if (pathname.startsWith('/website/testimonials/')) title = 'Edit Testimonial';
+    else if (pathname.startsWith('/website/seo/new')) title = 'Add SEO Setting';
+    else if (pathname.startsWith('/website/seo/')) title = 'Edit SEO Setting';
+    return title;
+}
+
 function AdminLayout({ user, isDark, toggleTheme }) {
     const [menuSections, setMenuSections] = useState([]);
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
     const [hidden, setHidden] = useState(() => {
-        try { return localStorage.getItem('khanverse-admin-sidebar') === 'hidden'; } catch { return false; }
+        try { return localStorage.getItem('skillnest-admin-sidebar') === 'hidden'; } catch { return false; }
     });
     const location = useLocation();
+
+    useEffect(() => {
+        document.title = `${adminPageTitle(location.pathname)} · SkillNest`;
+    }, [location.pathname]);
 
     useEffect(() => {
         const onResize = () => setIsMobile(window.innerWidth < 768);
@@ -106,54 +153,16 @@ function AdminLayout({ user, isDark, toggleTheme }) {
     const toggleSidebar = () => {
         setHidden((h) => {
             const next = !h;
-            try { localStorage.setItem('khanverse-admin-sidebar', next ? 'hidden' : 'shown'); } catch { /* ignore storage errors */ }
+            try { localStorage.setItem('skillnest-admin-sidebar', next ? 'hidden' : 'shown'); } catch { /* ignore storage errors */ }
             return next;
         });
     };
 
-    const map = {
-        '/': 'Dashboard', '/orders': 'Orders', '/projects': 'Projects',
-        '/services': 'Services', '/categories': 'Categories', '/buyers': 'Buyers',
-        '/sellers': 'Sellers', '/roles': 'Roles', '/settings': 'Settings',
-        '/menus': 'Menus', '/permissions': 'Permissions',
-        '/profile': 'My Profile',
-        '/devices': 'Login Devices', '/suspicious': 'Suspicious Users',
-        '/login-history': 'Login History',
-        '/website/banners': 'Banners', '/website/homepage': 'Homepage',
-        '/website/pages': 'Pages', '/website/faqs': 'FAQs',
-        '/website/testimonials': 'Testimonials', '/website/seo': 'SEO',
-        '/website/maintenance': 'Maintenance', '/notifications': 'Notifications',
-        '/brand-partners': 'Brand Partners',
-        '/team-members': 'Team Members',
-        '/app-builds': 'App Builds',
-        '/invoices': 'Invoice Designs', '/invoices/settings': 'Invoice Settings',
-        '/email-settings': 'Email Settings',
-        '/payment-gateways': 'Payment Gateways',
-        '/settlements': 'Settlements',
-    };
-
-    let title = map[location.pathname] || 'Admin';
-    if (location.pathname.startsWith('/orders/')) title = 'Order Details';
-    else if (location.pathname.startsWith('/projects/')) title = 'Project Details';
-    else if (location.pathname.startsWith('/services/')) title = 'Service Details';
-    else if (location.pathname.startsWith('/buyers/')) title = 'Buyer Details';
-    else if (location.pathname.startsWith('/sellers/')) title = 'Seller Details';
-    else if (location.pathname.startsWith('/website/banners/new')) title = 'Add Banner';
-    else if (location.pathname.startsWith('/website/banners/')) title = 'Edit Banner';
-    else if (location.pathname.startsWith('/website/homepage/new')) title = 'Add Section';
-    else if (location.pathname.startsWith('/website/homepage/')) title = 'Edit Homepage Section';
-    else if (location.pathname.startsWith('/website/pages/new')) title = 'Add Page';
-    else if (location.pathname.startsWith('/website/pages/')) title = 'Edit Page';
-    else if (location.pathname.startsWith('/website/faqs/new')) title = 'Add FAQ';
-    else if (location.pathname.startsWith('/website/faqs/')) title = 'Edit FAQ';
-    else if (location.pathname.startsWith('/website/testimonials/new')) title = 'Add Testimonial';
-    else if (location.pathname.startsWith('/website/testimonials/')) title = 'Edit Testimonial';
-    else if (location.pathname.startsWith('/website/seo/new')) title = 'Add SEO Setting';
-    else if (location.pathname.startsWith('/website/seo/')) title = 'Edit SEO Setting';
+    let title = adminPageTitle(location.pathname);
 
     return (
         <div className={`dashboard-layout admin-app ${hidden ? 'sidebar-hidden' : ''}`}>
-            <Sidebar logo="KhanVerse Admin" menus={menuSections} role="" hidden={hidden} onToggle={toggleSidebar} />
+            <Sidebar logo="SkillNest Admin" menus={menuSections} role="" hidden={hidden} onToggle={toggleSidebar} />
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={hidden} onToggleSidebar={toggleSidebar} />
                 <div className="page-content kv-velora">

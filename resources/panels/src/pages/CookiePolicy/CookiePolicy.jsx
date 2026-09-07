@@ -22,7 +22,7 @@ function CookiePolicy() {
 
             <PageHero
                 title="Cookie Policy"
-                subtitle="Learn how KhanVerse uses cookies to improve your experience."
+                subtitle="Learn how SkillNest uses cookies to improve your experience."
             />
 
             <PageContainer>

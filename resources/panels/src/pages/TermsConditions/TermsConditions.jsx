@@ -27,9 +27,9 @@ const sections = [
         icon: FileText,
         title: "Acceptance of Terms",
         content:
-            "By accessing or using KhanVerse, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, please do not use our platform.",
+            "By accessing or using SkillNest, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, please do not use our platform.",
         items: [
-            "These terms constitute a legally binding agreement between you and KhanVerse",
+            "These terms constitute a legally binding agreement between you and SkillNest",
             "We reserve the right to modify these terms at any time with reasonable notice",
             "Continued use of the platform after changes constitutes acceptance of updated terms",
             "You must be at least 18 years of age to create an account and use our services",
@@ -43,7 +43,7 @@ const sections = [
         items: [
             "Maintain the confidentiality of your account credentials and enable two-factor authentication",
             "Provide accurate, current and complete information during registration and profile setup",
-            "Immediately notify KhanVerse of any unauthorized use of your account",
+            "Immediately notify SkillNest of any unauthorized use of your account",
             "You are solely responsible for all activity that occurs under your account",
             "Keep your profile, portfolio and credentials up to date for accurate matching",
             "Comply with all applicable local, national and international laws and regulations",
@@ -53,27 +53,27 @@ const sections = [
         icon: CreditCard,
         title: "Payments & Fees",
         content:
-            "All financial transactions on KhanVerse are processed through our secure payment system. Understanding our fee structure is important for all users.",
+            "All financial transactions on SkillNest are processed through our secure payment system. Understanding our fee structure is important for all users.",
         items: [
             "Freelancers are charged a 10% platform service fee on all earnings from completed projects",
             "Buyers may be charged a small processing fee on payments made through the platform",
             "All prices are displayed in USD unless otherwise specified; currency conversion may apply",
             "Escrow payments are held securely until project deliverables are approved by the buyer",
             "Withdrawals are processed within 3-5 business days depending on the chosen payment method",
-            "KhanVerse reserves the right to adjust fees with 30 days advance notice to users",
+            "SkillNest reserves the right to adjust fees with 30 days advance notice to users",
         ],
     },
     {
         icon: Ban,
         title: "Prohibited Activities",
         content:
-            "To maintain a safe and trusted marketplace, the following activities are strictly prohibited on KhanVerse.",
+            "To maintain a safe and trusted marketplace, the following activities are strictly prohibited on SkillNest.",
         items: [
             "Fraud, identity misrepresentation or creating fake accounts to deceive other users",
             "Spam, unsolicited messages or mass automated communication to other users",
             "Copyright infringement, plagiarism or unauthorized use of intellectual property",
             "Sharing or distributing malware, viruses or any harmful code through the platform",
-            "Circumventing platform fees by conducting transactions outside of KhanVerse",
+            "Circumventing platform fees by conducting transactions outside of SkillNest",
             "Harassment, hate speech, discrimination or threatening behavior toward other users",
             "Attempting to gain unauthorized access to other accounts, systems or data",
             "Manipulating reviews, ratings or project outcomes through artificial means",
@@ -87,7 +87,7 @@ const sections = [
         items: [
             "Disputes should first be attempted to be resolved directly between the parties involved",
             "If direct resolution fails, either party may escalate the dispute through our Resolution Center",
-            "KhanVerse will review all evidence including project details, communications and deliverables",
+            "SkillNest will review all evidence including project details, communications and deliverables",
             "Most disputes are resolved within 48 hours with a binding decision from our resolution team",
             "Refunds may be issued in full or partial amounts depending on the circumstances",
             "Repeated disputes or abuse of the resolution system may result in account restrictions",
@@ -102,15 +102,15 @@ const sections = [
             "Freelancers retain ownership of their pre-existing intellectual property and portfolio",
             "Upon full payment, buyers receive full ownership rights to project deliverables",
             "Freelancers may showcase completed work in their portfolio unless an NDA is in place",
-            "KhanVerse retains the right to use platform content for marketing and promotional purposes",
-            "All platform code, design and content is the intellectual property of KhanVerse",
+            "SkillNest retains the right to use platform content for marketing and promotional purposes",
+            "All platform code, design and content is the intellectual property of SkillNest",
         ],
     },
     {
         icon: RefreshCw,
         title: "Refund Policy",
         content:
-            "We want you to be satisfied with every transaction on KhanVerse. Our refund policy is as follows.",
+            "We want you to be satisfied with every transaction on SkillNest. Our refund policy is as follows.",
         items: [
             "Full refunds are issued if no work has been started or delivered on a project",
             "Partial refunds may be granted based on the amount of work completed and quality",
@@ -124,9 +124,9 @@ const sections = [
         icon: FileText,
         title: "Limitation of Liability",
         content:
-            "KhanVerse provides the platform on an 'as is' basis. We strive for reliability but cannot guarantee uninterrupted service.",
+            "SkillNest provides the platform on an 'as is' basis. We strive for reliability but cannot guarantee uninterrupted service.",
         items: [
-            "KhanVerse is not liable for indirect, incidental or consequential damages arising from platform use",
+            "SkillNest is not liable for indirect, incidental or consequential damages arising from platform use",
             "Our total liability to any user shall not exceed the fees paid by that user in the past 12 months",
             "We do not guarantee specific outcomes, earnings or results from using our platform",
             "Users are responsible for ensuring their use of the platform complies with local laws",
@@ -139,7 +139,7 @@ function TermsConditions() {
         <>
             <PageHero
                 title="Terms & Conditions"
-                subtitle="Please read these terms before using KhanVerse."
+                subtitle="Please read these terms before using SkillNest."
             />
 
             <PageContainer>
@@ -155,8 +155,8 @@ function TermsConditions() {
                     </motion.p>
 
                     <motion.p {...fadeInUp} style={{ marginTop: "12px" }}>
-                        Welcome to KhanVerse. These Terms & Conditions outline the rules
-                        and regulations for the use of our platform. By using KhanVerse,
+                        Welcome to SkillNest. These Terms & Conditions outline the rules
+                        and regulations for the use of our platform. By using SkillNest,
                         you accept these terms in full. Please read them carefully before
                         creating an account or using any of our services. These terms apply
                         to all users including freelancers, buyers and visitors.
@@ -201,7 +201,7 @@ function TermsConditions() {
                         </p>
                         <p>
                             If you have any questions about these Terms & Conditions, please
-                            contact us at <strong>legal@khanverse.com</strong>.
+                            contact us at <strong>legal@skillnest.com</strong>.
                         </p>
                     </div>
                 </div>

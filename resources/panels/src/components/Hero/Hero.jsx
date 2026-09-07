@@ -175,7 +175,7 @@ function Hero() {
                     <div className="hero-card">
                         <motion.img
                             src={heroImg}
-                            alt="KhanVerse Platform"
+                            alt="SkillNest Platform"
                             initial={{ opacity: 0, scale: 1.05 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.4 }}

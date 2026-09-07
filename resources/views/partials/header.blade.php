@@ -1,6 +1,6 @@
 <head>
 
-    <title>Khanverse Admin Panel</title>
+    <title>Skillnest Admin Panel</title>
 
     <!-- Meta -->
     <meta charset="utf-8">
@@ -11,11 +11,11 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <meta name="description" content="Khanverse Freelancer Marketplace Admin Dashboard" />
+    <meta name="description" content="Skillnest Freelancer Marketplace Admin Dashboard" />
 
-    <meta name="keywords" content="khanverse, freelancer, marketplace, admin dashboard" />
+    <meta name="keywords" content="skillnest, freelancer, marketplace, admin dashboard" />
 
-    <meta name="author" content="Khanverse" />
+    <meta name="author" content="Skillnest" />
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('admin/assets/images/favicon.ico') }}" type="image/x-icon">

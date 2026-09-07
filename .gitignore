@@ -22,3 +22,4 @@ yarn-error.log
 # Scratch / personal uploads (not part of the app)
 /public/demo
 /public/Screenshot*.png
+/public/hostinger*.png

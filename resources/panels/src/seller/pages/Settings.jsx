@@ -51,7 +51,7 @@ function SettingsPage() {
         showDialog({
             type: 'info',
             title: 'Seller Help',
-            message: 'Need help getting started? Contact our support team, check the FAQ section, or open a chat with us. We are here to help you succeed on KhanVerse.',
+            message: 'Need help getting started? Contact our support team, check the FAQ section, or open a chat with us. We are here to help you succeed on SkillNest.',
         });
     };
 

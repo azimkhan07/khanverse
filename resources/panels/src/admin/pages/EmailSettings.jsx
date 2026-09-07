@@ -43,7 +43,7 @@ const emptySmtp = {
     test_email: '',
 };
 
-const TAB_KEY = 'khanverse-email-tab';
+const TAB_KEY = 'skillnest-email-tab';
 
 function EmailSettings() {
     const [tab, setTab] = useState(() => {
@@ -434,7 +434,7 @@ function EmailSettings() {
                                 </div>
                                 <div className="form-group">
                                     <label>From Name</label>
-                                    <input className="form-control" value={smtp.from_name} onChange={(e) => setSmtp({ ...smtp, from_name: e.target.value })} placeholder="KhanVerse" />
+                                    <input className="form-control" value={smtp.from_name} onChange={(e) => setSmtp({ ...smtp, from_name: e.target.value })} placeholder="SkillNest" />
                                 </div>
                             </div>
 

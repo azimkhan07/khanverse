@@ -52,10 +52,10 @@ class AdminInvoiceSettingApiController extends Controller
             'suffix' => setting('invoices', 'suffix', ''),
             'seq_padding' => (int) setting('invoices', 'seq_padding', 4),
             'platform_fee_pct' => (float) setting('invoice', 'platform_fee_pct', 12),
-            'company_name' => setting('invoice', 'company_name', 'KhanVerse'),
-            'logo_text' => setting('invoice', 'logo_text', 'KhanVerse'),
+            'company_name' => setting('invoice', 'company_name', 'SkillNest'),
+            'logo_text' => setting('invoice', 'logo_text', 'SkillNest'),
             'logo_url' => setting('invoice', 'logo_url', ''),
-            'footer_line' => setting('invoice', 'footer_line', 'Powered by KhanVerse'),
+            'footer_line' => setting('invoice', 'footer_line', 'Powered by SkillNest'),
             'about_line' => setting('invoice', 'about_line', ''),
         ]);
     }

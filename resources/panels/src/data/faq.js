@@ -13,7 +13,7 @@ const faq = [
     },
     {
         id: 3,
-        question: "Is KhanVerse secure?",
+        question: "Is SkillNest secure?",
         answer:
             "Yes, we use secure authentication and protected payment methods."
     },

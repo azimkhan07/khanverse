@@ -82,7 +82,7 @@ function Footer() {
                                     </linearGradient>
                                 </defs>
                             </svg>
-                            <span className="footer-logo-text">KhanVerse</span>
+                            <span className="footer-logo-text">SkillNest</span>
                         </Link>
                         <p className="footer-desc">{footer.company.description}</p>
                         <div className="footer-social">
@@ -147,7 +147,7 @@ function Footer() {
                         <div className="subbrand-text">
                             <h4>{footer.sub_brand.tagline || `${footer.sub_brand.name} family`}</h4>
                             <p>
-                                KhanVerse is a product of {footer.sub_brand.name}
+                                SkillNest is a product of {footer.sub_brand.name}
                                 {footer.sub_brand.since ? ` — trusted since ${footer.sub_brand.since}` : ""}.
                                 {" "}{footer.sub_brand.description || ""}
                             </p>
@@ -169,7 +169,7 @@ function Footer() {
                 >
                     <div className="newsletter-text">
                         <h4>Stay updated</h4>
-                        <p>Get the latest news and updates from KhanVerse.</p>
+                        <p>Get the latest news and updates from SkillNest.</p>
                     </div>
                     <div className="newsletter-form">
                         <input type="email" placeholder="Enter your email" />

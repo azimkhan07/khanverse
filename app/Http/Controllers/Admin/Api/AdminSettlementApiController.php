@@ -78,7 +78,7 @@ class AdminSettlementApiController extends Controller
             }
 
             // Credit admin wallet (platform fee)
-            $adminUser = User::where('email', 'admin@khanverse.com')->first();
+            $adminUser = User::where('email', 'admin@skillnest.com')->first();
             if ($adminUser) {
                 $aw = Wallet::firstOrCreate(
                     ['user_id' => $adminUser->id],

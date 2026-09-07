@@ -1,5 +1,5 @@
-﻿"KHANVERSE API ENDPOINTS (for mobile app developers)"
-"All endpoints start with: BASE_URL (will be your live domain, e.g. https://khanverse.com)/api"
+"SKILLNEST API ENDPOINTS (for mobile app developers)"
+"All endpoints start with: BASE_URL (will be your live domain, e.g. https://skillnest.com)/api"
 "Host = localhost during local dev -> change to live domain after hosting"
 "Auth via session (web middleware). Mobile app should hit these over HTTP with cookies (same domain / session) OR expect JWT in phase 2."
 "Total routes: 233"

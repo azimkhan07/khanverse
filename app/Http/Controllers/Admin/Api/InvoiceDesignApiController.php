@@ -187,7 +187,7 @@ class InvoiceDesignApiController extends Controller
 
     private function renderShell(InvoiceDesign $design, array $d, string $body): string
     {
-        $company = $design->company_name ?: 'KhanVerse';
+        $company = $design->company_name ?: 'SkillNest';
         $logoText = $design->logo_text ?: $company;
         $footerLine = $design->footer_line ?: ('Powered by ' . $company);
         $aboutLine = $design->about_line ?: '';

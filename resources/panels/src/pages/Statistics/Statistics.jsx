@@ -129,7 +129,7 @@ function Statistics() {
                 >
                     <span>Our Achievements</span>
                     <h2>Trusted by Businesses Worldwide</h2>
-                    <p>Real numbers. Every count on KhanVerse reflects actual marketplace activity.</p>
+                    <p>Real numbers. Every count on SkillNest reflects actual marketplace activity.</p>
                 </motion.div>
 
                 <motion.div

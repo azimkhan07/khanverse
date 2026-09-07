@@ -17,11 +17,11 @@ class UserSeeder extends Seeder
         $buyerRole = Role::where('slug', 'buyer')->first();
 
         $sellerUser = User::firstOrCreate(
-            ['email' => 'seller@khanverse.com'],
+            ['email' => 'seller@skillnest.com'],
             [
                 'name' => 'Demo Seller',
                 'username' => 'demoseller',
-                'email' => 'seller@khanverse.com',
+                'email' => 'seller@skillnest.com',
                 'password' => Hash::make('password'),
                 'role' => 'seller',
                 'role_id' => $sellerRole?->id,
@@ -45,11 +45,11 @@ class UserSeeder extends Seeder
         );
 
         $buyerUser = User::firstOrCreate(
-            ['email' => 'buyer@khanverse.com'],
+            ['email' => 'buyer@skillnest.com'],
             [
                 'name' => 'Demo Buyer',
                 'username' => 'demobuyer',
-                'email' => 'buyer@khanverse.com',
+                'email' => 'buyer@skillnest.com',
                 'password' => Hash::make('password'),
                 'role' => 'buyer',
                 'role_id' => $buyerRole?->id,
@@ -69,11 +69,11 @@ class UserSeeder extends Seeder
         );
 
         $seller2User = User::firstOrCreate(
-            ['email' => 'seller2@khanverse.com'],
+            ['email' => 'seller2@skillnest.com'],
             [
                 'name' => 'Seller Two',
                 'username' => 'sellertwo',
-                'email' => 'seller2@khanverse.com',
+                'email' => 'seller2@skillnest.com',
                 'password' => Hash::make('password'),
                 'role' => 'seller',
                 'role_id' => $sellerRole?->id,
@@ -97,11 +97,11 @@ class UserSeeder extends Seeder
         );
 
         $buyer2User = User::firstOrCreate(
-            ['email' => 'buyer2@khanverse.com'],
+            ['email' => 'buyer2@skillnest.com'],
             [
                 'name' => 'Buyer Two',
                 'username' => 'buyertwo',
-                'email' => 'buyer2@khanverse.com',
+                'email' => 'buyer2@skillnest.com',
                 'password' => Hash::make('password'),
                 'role' => 'buyer',
                 'role_id' => $buyerRole?->id,

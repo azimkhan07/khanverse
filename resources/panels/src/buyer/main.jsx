@@ -4,10 +4,10 @@ import BuyerApp from './BuyerApp';
 import '../shared/styles/dashboard.css';
 import '../shared/styles/velora.css';
 
-const user = window.__BUYER_USER__ || { name: 'Buyer', email: 'buyer@khanverse.com' };
+const user = window.__BUYER_USER__ || { name: 'Buyer', email: 'buyer@skillnest.com' };
 window.__BUYER_USER__ = user;
 
-try { sessionStorage.removeItem("khanverse-install-dismissed-session"); } catch { /* ignore */ }
+try { sessionStorage.removeItem("skillnest-install-dismissed-session"); } catch { /* ignore */ }
 
 createRoot(document.getElementById('buyer-root')).render(
     <React.StrictMode>

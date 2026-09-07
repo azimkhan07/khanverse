@@ -71,20 +71,28 @@ function TeamMembers() {
     const [page, setPage] = useState(1);
     const [meta, setMeta] = useState({});
     const [search, setSearch] = useState('');
+    const [filterStatus, setFilterStatus] = useState('active');
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState(null);
     const [saving, setSaving] = useState(false);
     const [form, setForm] = useState({ name: '', role: '', tagline: '', image: '', sort_order: 0, status: true });
 
-    const load = (p, s) => {
-        api.get('/admin/team-members', { params: { page: p, per_page: 10, search: s || undefined } })
+    const load = (p, s, st) => {
+        const status = st === 'all' ? undefined : (st === 'active' ? '1' : '0');
+        api.get('/admin/team-members', { params: { page: p, per_page: 10, search: s || undefined, status } })
             .then((res) => { setData(res.data.data || []); setMeta(res.data); })
             .catch(() => {});
     };
 
-    useEffect(() => { load(page, search); }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => { load(page, search, filterStatus); }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const searchSubmit = (e) => { e.preventDefault(); setPage(1); load(1, search); };
+    const searchSubmit = (e) => { e.preventDefault(); setPage(1); load(1, search, filterStatus); };
+
+    const changeFilter = (st) => {
+        setFilterStatus(st);
+        setPage(1);
+        load(1, search, st);
+    };
 
     const openModal = (member = null) => {
         if (member) {
@@ -118,7 +126,7 @@ function TeamMembers() {
                 toastr.success('Team member created');
             }
             setShowModal(false);
-            load(page);
+            load(page, search, filterStatus);
         } catch (err) {
             toastr.danger(err.response?.data?.message || 'Failed to save team member');
         } finally {
@@ -135,7 +143,7 @@ function TeamMembers() {
         } catch (err) {
             toastr.danger(err.response?.data?.message || 'Failed to delete team member');
         }
-        load(page);
+        load(page, search, filterStatus);
     };
 
     const toggle = async (p) => {
@@ -149,7 +157,7 @@ function TeamMembers() {
         } catch (err) {
             toastr.danger(err.response?.data?.message || 'Failed to update status');
         }
-        load(page);
+        load(page, search, filterStatus);
     };
 
     return (
@@ -163,6 +171,23 @@ function TeamMembers() {
                 <input className="search-input" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search team members..." />
                 <button className="btn btn-primary btn-sm" type="submit">Search</button>
             </form>
+
+            <div className="filter-tabs" style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                {[
+                    { key: 'active', label: 'Active' },
+                    { key: 'inactive', label: 'Inactive' },
+                    { key: 'all', label: 'All' },
+                ].map((f) => (
+                    <button
+                        key={f.key}
+                        type="button"
+                        className={`btn btn-sm ${filterStatus === f.key ? 'btn-primary' : ''}`}
+                        onClick={() => changeFilter(f.key)}
+                    >
+                        {f.label}
+                    </button>
+                ))}
+            </div>
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
@@ -221,7 +246,7 @@ function TeamMembers() {
                     </div>
                     <div className="form-group">
                         <label>Role / Title <small>(optional)</small></label>
-                        <input className="form-control" value={form.role} onChange={(e) => change('role', e.target.value)} placeholder="e.g. Founder of KhanVerse" />
+                        <input className="form-control" value={form.role} onChange={(e) => change('role', e.target.value)} placeholder="e.g. Founder of SkillNest" />
                         <small style={{ opacity: 0.55 }}>Shown as the main headline under the name.</small>
                     </div>
                     <div className="form-group">

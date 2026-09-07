@@ -167,7 +167,7 @@ function UserMenu({ user, base }) {
         e.preventDefault();
         const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         const body = new URLSearchParams({ _token: csrf });
-        try { sessionStorage.removeItem("khanverse-install-dismissed-session"); } catch { /* ignore */ }
+        try { sessionStorage.removeItem("skillnest-install-dismissed-session"); } catch { /* ignore */ }
         fetch('/logout', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body, credentials: 'same-origin' })
             .finally(() => { window.location.href = '/'; });
     };

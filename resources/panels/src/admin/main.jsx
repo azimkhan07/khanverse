@@ -4,7 +4,7 @@ import AdminApp from './AdminApp';
 import '../shared/styles/dashboard.css';
 import './admin.css';
 
-const user = window.__ADMIN_USER__ || { name: 'Admin', email: 'admin@khanverse.com' };
+const user = window.__ADMIN_USER__ || { name: 'Admin', email: 'admin@skillnest.com' };
 window.__ADMIN_USER__ = user;
 
 createRoot(document.getElementById('admin-root')).render(

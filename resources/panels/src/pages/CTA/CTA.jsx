@@ -27,7 +27,7 @@ function CTA() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.2, duration: 0.4 }}
                     >
-                        🚀 Join KhanVerse Today
+                        🚀 Join SkillNest Today
                     </motion.span>
 
                     <motion.h2
@@ -46,7 +46,7 @@ function CTA() {
                         transition={{ delay: 0.4, duration: 0.5 }}
                     >
                         Hire talented freelancers, grow your business or start
-                        selling your skills on KhanVerse today.
+                        selling your skills on SkillNest today.
                     </motion.p>
 
                     <motion.div

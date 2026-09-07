@@ -251,14 +251,14 @@ class FrontendApiController extends Controller
 
         return response()->json([
             'company' => [
-                'logo'        => $settings->get('site_name') ?: 'KhanVerse',
+                'logo'        => $settings->get('site_name') ?: 'SkillNest',
                 'description' => $settings->get('footer_text')
                     ?: 'The next generation freelance marketplace powered by AI.',
                 'social'      => $socialDefaults,
             ],
             'sections'  => $sections,
             'sub_brand' => $this->subBrand($settings),
-            'copyright' => '© ' . date('Y') . ' ' . ($settings->get('site_name') ?: 'KhanVerse') . '. All Rights Reserved.',
+            'copyright' => '© ' . date('Y') . ' ' . ($settings->get('site_name') ?: 'SkillNest') . '. All Rights Reserved.',
         ]);
     }
 
@@ -267,12 +267,12 @@ class FrontendApiController extends Controller
         $settings = $settings ?: Setting::where('group', 'frontend')->pluck('value', 'key');
 
         return [
-            'name'         => $settings->get('sub_brand_name') ?: 'AMTech',
-            'since'        => $settings->get('sub_brand_since') ?: '2014',
-            'tagline'      => $settings->get('sub_brand_tagline') ?: 'Part of the AMTech family',
-            'description'  => $settings->get('sub_brand_text') ?: 'KhanVerse is a product of AMTech — a trusted technology company building digital solutions for over a decade.',
-            'badge'        => $settings->get('sub_brand_badge') ?: '12+ Years of Trust',
-            'url'          => $settings->get('sub_brand_url') ?: 'https://amtech.com',
+            'name'         => $settings->get('sub_brand_name') ?: 'Amtech',
+            'since'        => $settings->get('sub_brand_since') ?: '2008',
+            'tagline'      => $settings->get('sub_brand_tagline') ?: 'Part of the Amtech family',
+            'description'  => $settings->get('sub_brand_text') ?: 'SkillNest is a product of Amtech — a trusted technology company building digital solutions since 2008.',
+            'badge'        => $settings->get('sub_brand_badge') ?: '18+ Years of Trust',
+            'url'          => $settings->get('sub_brand_url') ?: 'https://amtechapps.com',
         ];
     }
 
@@ -325,7 +325,7 @@ class FrontendApiController extends Controller
         $downloadUrl = Setting::where('group', 'app')->where('key', 'download_url')->value('value');
 
         return response()->json([
-            'download_url' => $downloadUrl ?: '/app/khanverse.apk',
+            'download_url' => $downloadUrl ?: '/app/skillnest.apk',
         ]);
     }
 

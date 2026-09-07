@@ -14,7 +14,7 @@ const policies = {
         title: "Terms & Conditions",
 
         description:
-            "By using KhanVerse you agree to our terms of service, payment policies and community guidelines."
+            "By using SkillNest you agree to our terms of service, payment policies and community guidelines."
 
     },
 

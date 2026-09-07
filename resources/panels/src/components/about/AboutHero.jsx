@@ -48,7 +48,7 @@ function AboutHero() {
                 >
 
                     <motion.span className="about-badge" variants={fadeUp}>
-                        🚀 About KhanVerse
+                        🚀 About SkillNest
                     </motion.span>
 
                     <motion.h1 variants={fadeUp}>
@@ -57,7 +57,7 @@ function AboutHero() {
                     </motion.h1>
 
                     <motion.p variants={fadeUp}>
-                        KhanVerse is an AI-powered freelance marketplace
+                        SkillNest is an AI-powered freelance marketplace
                         connecting businesses with talented professionals
                         worldwide. Our goal is to make hiring faster,
                         safer and smarter.
@@ -97,7 +97,7 @@ function AboutHero() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <img src={heroImg} alt="About KhanVerse" />
+                    <img src={heroImg} alt="About SkillNest" />
                 </motion.div>
 
             </div>

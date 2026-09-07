@@ -2,7 +2,7 @@ const footer = {
 
     company: {
 
-        logo: "KhanVerse",
+        logo: "SkillNest",
 
         description:
             "The next generation freelance marketplace powered by AI.",
@@ -90,22 +90,22 @@ const footer = {
     ],
 
     copyright:
-        "© 2026 KhanVerse. All Rights Reserved.",
+        "© 2026 SkillNest. All Rights Reserved.",
 
     sub_brand: {
 
-        name: "AMTech",
+        name: "Amtech Software Solution",
 
-        since: "2014",
+        since: "2008",
 
-        tagline: "Part of the AMTech family",
+        tagline: "Part of the Amtech Software Solution family",
 
         description:
-            "KhanVerse is a product of AMTech — a trusted technology company building digital solutions for over a decade.",
+            "Building digital solutions since 2008.",
 
-        badge: "12+ Years of Trust",
+        badge: "18+ Years of Trust",
 
-        url: "https://amtech.com"
+        url: "https://amtechapps.com"
 
     }
 

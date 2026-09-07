@@ -5,7 +5,7 @@ import CTA from "../CTA/CTA";
 import FeaturedGigs from "../FeaturedGigs/FeaturedGigs";
 import Statistics from "../Statistics/Statistics";
 import Testimonials from "../Testimonials/Testimonials";
-import WhyKhanVerse from "../WhyKhanVerse/WhyKhanVerse";
+import WhySkillNest from "../WhySkillNest/WhySkillNest";
 import { SectionParallax } from "../../shared/components/SectionParallax";
 
 function Home() {
@@ -26,7 +26,7 @@ function Home() {
             </SectionParallax>
 
             <SectionParallax distance={60}>
-                <WhyKhanVerse />
+                <WhySkillNest />
             </SectionParallax>
 
             <SectionParallax distance={45}>

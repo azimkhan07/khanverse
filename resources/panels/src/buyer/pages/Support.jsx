@@ -12,7 +12,7 @@ function Support() {
         showDialog({
             type: 'info',
             title: 'Support & Help',
-            message: 'Live chat support is launching soon. For any query regarding your orders, projects or wallet, email us at support@khanverse.com and our team will get back to you within 24 hours.',
+            message: 'Live chat support is launching soon. For any query regarding your orders, projects or wallet, email us at support@skillnest.com and our team will get back to you within 24 hours.',
         });
     };
 
@@ -40,7 +40,7 @@ function Support() {
                 <p>Chat with our support team for any queries. This feature is coming soon.</p>
                 <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(109,40,217,0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
                     <Mail size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-                    <p style={{ margin: 0, color: 'var(--text-muted)' }}>For now, reach us at <strong>support@khanverse.com</strong></p>
+                    <p style={{ margin: 0, color: 'var(--text-muted)' }}>For now, reach us at <strong>support@skillnest.com</strong></p>
                 </div>
             </motion.div>
         </motion.div>

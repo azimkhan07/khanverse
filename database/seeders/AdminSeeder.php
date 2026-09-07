@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
 
             'username' => 'admin',
 
-            'email' => 'admin@khanverse.com',
+            'email' => 'admin@skillnest.com',
 
             'password' => Hash::make('admin123'),
 
@@ -38,7 +38,7 @@ class AdminSeeder extends Seeder
 
             'user_id' => $user->id,
 
-            'full_name' => 'Khanverse Super Admin'
+            'full_name' => 'Skillnest Super Admin'
 
         ]);
     }

@@ -37,7 +37,7 @@ function Careers() {
                 <SectionHeading
                     tag="CAREERS"
                     title="Current Openings"
-                    subtitle="Explore exciting career opportunities at KhanVerse."
+                    subtitle="Explore exciting career opportunities at SkillNest."
                 />
 
                 <motion.div

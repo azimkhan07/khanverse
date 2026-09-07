@@ -38,7 +38,7 @@ function Tutorials() {
                 <div style={{ maxWidth: 1080, margin: "0 auto" }}>
                     <SectionHeading
                         tag="GUIDES"
-                        title="How to use KhanVerse"
+                        title="How to use SkillNest"
                         subtitle="Step-by-step video guides for buyers, sellers and admin."
                     />
 

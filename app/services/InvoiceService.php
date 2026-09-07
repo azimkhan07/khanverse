@@ -185,7 +185,7 @@ class InvoiceService
 
     private static function pageShell(?InvoiceDesign $design, array $d, string $body): string
     {
-        $company = $design?->company_name ?: setting('invoice', 'company_name', 'KhanVerse');
+        $company = $design?->company_name ?: setting('invoice', 'company_name', 'SkillNest');
         $logoText = $design?->logo_text ?: setting('invoice', 'logo_text', $company);
         $logoUrl = $design?->logo_url ?: setting('invoice', 'logo_url', '');
         $footerLine = $design?->footer_line ?: setting('invoice', 'footer_line', 'Powered by ' . $company);

@@ -12,8 +12,8 @@ function CompareTray() {
 
     useEffect(() => {
         const refresh = () => setItems(getCompareItems());
-        window.addEventListener("khanverse-compare", refresh);
-        return () => window.removeEventListener("khanverse-compare", refresh);
+        window.addEventListener("skillnest-compare", refresh);
+        return () => window.removeEventListener("skillnest-compare", refresh);
     }, []);
 
     useEffect(() => {

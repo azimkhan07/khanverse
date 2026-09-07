@@ -12,22 +12,22 @@ class TeamMemberSeeder extends Seeder
         $members = [
             [
                 'name'  => 'Azim Khan',
-                'role'  => 'Founder of KhanVerse',
-                'tagline' => 'Brand Partner with AMTech',
+                'role'  => 'Founder of SkillNest',
+                'tagline' => 'Brand Partner with Amtech',
                 'sort_order' => 1,
                 'status' => true,
             ],
             [
                 'name'  => 'Nadeem Mansuri',
-                'role'  => 'Co-Founder of KhanVerse',
+                'role'  => 'Co-Founder of SkillNest',
                 'tagline' => null,
                 'sort_order' => 2,
                 'status' => true,
             ],
             [
                 'name'  => 'Sayed Mujeeb',
-                'role'  => 'Brand Partner with KhanVerse',
-                'tagline' => 'Director of AMTech',
+                'role'  => 'Brand Partner with SkillNest',
+                'tagline' => 'Director of Amtech',
                 'sort_order' => 3,
                 'status' => true,
             ],

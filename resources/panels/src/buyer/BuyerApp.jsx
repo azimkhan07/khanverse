@@ -51,11 +51,33 @@ function AnimatedRoutes({ user }) {
     );
 }
 
+function buyerPageTitle(pathname) {
+    let title = 'Buyer Dashboard';
+    if (pathname === '/orders') title = 'Orders';
+    else if (pathname.startsWith('/orders/')) title = 'Order Details';
+    else if (pathname === '/projects') title = 'Projects';
+    else if (pathname.startsWith('/projects/')) title = 'Project Details';
+    else if (pathname === '/reviews') title = 'Reviews';
+    else if (pathname.startsWith('/reviews/')) title = 'Review Details';
+    else if (pathname === '/wallet') title = 'Wallet';
+    else if (pathname === '/wallet/deposit') title = 'Deposit Funds';
+    else if (pathname === '/profile') title = 'My Profile';
+    else if (pathname === '/settings') title = 'Account Settings';
+    else if (pathname === '/notifications') title = 'Notifications';
+    else if (pathname.startsWith('/reviews/create')) title = 'Write a Review';
+    else if (pathname === '/support') title = 'Support';
+    return title;
+}
+
 function BuyerLayout({ user, isDark, toggleTheme }) {
     const [menuSections, setMenuSections] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [mobileNav, setMobileNav] = useState(false);
     const location = useLocation();
+
+    useEffect(() => {
+        document.title = `${buyerPageTitle(location.pathname)} · SkillNest`;
+    }, [location.pathname]);
 
     useEffect(() => { setMobileNav(false); }, [location.pathname]);
 
@@ -79,24 +101,11 @@ function BuyerLayout({ user, isDark, toggleTheme }) {
             .catch(() => {});
     }, []);
 
-    let title = 'Buyer Dashboard';
-    if (location.pathname === '/orders') title = 'Orders';
-    else if (location.pathname.startsWith('/orders/')) title = 'Order Details';
-    else if (location.pathname === '/projects') title = 'Projects';
-    else if (location.pathname.startsWith('/projects/')) title = 'Project Details';
-    else if (location.pathname === '/reviews') title = 'Reviews';
-    else if (location.pathname.startsWith('/reviews/')) title = 'Review Details';
-    else if (location.pathname === '/wallet') title = 'Wallet';
-    else if (location.pathname === '/wallet/deposit') title = 'Deposit Funds';
-    else if (location.pathname === '/profile') title = 'My Profile';
-    else if (location.pathname === '/settings') title = 'Account Settings';
-    else if (location.pathname === '/notifications') title = 'Notifications';
-    else if (location.pathname.startsWith('/reviews/create')) title = 'Write a Review';
-    else if (location.pathname === '/support') title = 'Support';
+    let title = buyerPageTitle(location.pathname);
 
     return (
         <div className="dashboard-layout buyer-app">
-            <Sidebar logo="KhanVerse" menus={menuSections} role="buyer" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
+            <Sidebar logo="SkillNest" menus={menuSections} role="buyer" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
             <div className={`sidebar-backdrop ${mobileNav ? 'show' : ''}`} onClick={() => setMobileNav(false)} />
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />

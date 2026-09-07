@@ -1,4 +1,4 @@
-const KEY = 'khanverse-compare';
+const KEY = 'skillnest-compare';
 
 export const COMPARE_MAX = 4;
 
@@ -16,7 +16,7 @@ const save = (items) => {
     try {
         localStorage.setItem(KEY, JSON.stringify(items));
     } catch { /* ignore storage errors */ }
-    window.dispatchEvent(new Event('khanverse-compare'));
+    window.dispatchEvent(new Event('skillnest-compare'));
 };
 
 export const isInCompare = (id) => {

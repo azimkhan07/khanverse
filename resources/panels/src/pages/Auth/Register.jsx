@@ -123,7 +123,7 @@ function Register() {
             <div className="auth-container">
                 <div className="auth-left">
                     <div className="auth-overlay">
-                        <span className="auth-badge">{role === "seller" ? "Start Selling" : role === "buyer" ? "Start Buying" : authText(s, "register.badge", "Join KhanVerse")}</span>
+                        <span className="auth-badge">{role === "seller" ? "Start Selling" : role === "buyer" ? "Start Buying" : authText(s, "register.badge", "Join SkillNest")}</span>
                         <h1>{role === "seller" ? "Turn Your Skills Into Income" : role === "buyer" ? "Hire Top Talent Today" : authText(s, "register.hero_heading", "Start Your Journey Today")}</h1>
                         <p>{authText(s, "register.hero_text", "Create your free account and connect with thousands of freelancers and clients worldwide.")}</p>
                     </div>

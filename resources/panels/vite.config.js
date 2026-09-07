@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/build/',
+  base: command === 'build' ? '/build/' : '/',
   server: {
     proxy: {
       '/api': 'http://127.0.0.1:8000',
@@ -46,4 +46,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

@@ -4,7 +4,7 @@ import { Bell, CheckCheck, BellOff } from 'lucide-react';
 import api from '../../shared/api';
 
 const fallbackData = [
-    { id: 1, title: 'Welcome', body: 'Welcome to KhanVerse buyer panel.', is_read: 0, created_at: '2026-08-20' },
+    { id: 1, title: 'Welcome', body: 'Welcome to SkillNest buyer panel.', is_read: 0, created_at: '2026-08-20' },
 ];
 
 const iconMap = {

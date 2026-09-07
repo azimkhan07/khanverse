@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_PREFIX = 'khanverse-theme';
+const STORAGE_PREFIX = 'skillnest-theme';
 
 export function useTheme(role = 'public', userId = null) {
     const key = userId

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X, Smartphone, Download, MonitorSmartphone, ArrowRight } from "lucide-react";
 import frontendApi from "../../shared/frontendApi";
 
-const DISMISS_SESSION_KEY = "khanverse-install-dismissed-session";
+const DISMISS_SESSION_KEY = "skillnest-install-dismissed-session";
 
 function isMobileOrTablet() {
     try {
@@ -52,7 +52,7 @@ function InstallAppPrompt() {
 
     if (!isMobileOrTablet() || dismissed || !info?.enabled || !ready) return null;
 
-    const brand = "KhanVerse";
+    const brand = "SkillNest";
     const apk = info.apk;
 
     const continueBrowsing = () => {

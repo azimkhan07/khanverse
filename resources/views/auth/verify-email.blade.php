@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ setting('auth', 'verify.title', 'Verify Email') }} — {{ config('app.name', 'KhanVerse') }}</title>
+    <title>{{ setting('auth', 'verify.title', 'Verify Email') }} — {{ config('app.name', 'SkillNest') }}</title>
     <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -19,9 +19,9 @@
         <div class="auth-card-header">
             <div class="logo-box">
                 @if(setting('auth', 'auth.logo'))
-                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'SkillNest') }}">
                 @else
-                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                    <span>{{ setting('auth', 'auth.name', 'SkillNest') }}</span>
                 @endif
             </div>
             <h2>{{ setting('auth', 'verify.heading', 'Verify Your Email') }}</h2>
