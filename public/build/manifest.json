@@ -145,7 +145,7 @@
     ]
   },
   "src/buyer/main.jsx": {
-    "file": "assets/buyer-DhkS-f6i.js",
+    "file": "assets/buyer-Cjq_D7fG.js",
     "name": "buyer",
     "src": "src/buyer/main.jsx",
     "isEntry": true,
@@ -161,7 +161,7 @@
     ]
   },
   "resources/panels/src/buyer/main.jsx": {
-    "file": "assets/buyer-DhkS-f6i.js",
+    "file": "assets/buyer-Cjq_D7fG.js",
     "name": "buyer",
     "src": "src/buyer/main.jsx",
     "isEntry": true,
@@ -177,7 +177,7 @@
     ]
   },
   "src/main.jsx": {
-    "file": "assets/main-DD5IG59J.js",
+    "file": "assets/main-CsD1BfC1.js",
     "name": "main",
     "src": "src/main.jsx",
     "isEntry": true,
@@ -200,7 +200,7 @@
     ]
   },
   "resources/panels/src/main.jsx": {
-    "file": "assets/main-DD5IG59J.js",
+    "file": "assets/main-CsD1BfC1.js",
     "name": "main",
     "src": "src/main.jsx",
     "isEntry": true,
@@ -223,7 +223,7 @@
     ]
   },
   "src/seller/main.jsx": {
-    "file": "assets/seller-Dn7eoTga.js",
+    "file": "assets/seller-CPWqW055.js",
     "name": "seller",
     "src": "src/seller/main.jsx",
     "isEntry": true,
@@ -239,7 +239,7 @@
     ]
   },
   "resources/panels/src/seller/main.jsx": {
-    "file": "assets/seller-Dn7eoTga.js",
+    "file": "assets/seller-CPWqW055.js",
     "name": "seller",
     "src": "src/seller/main.jsx",
     "isEntry": true,

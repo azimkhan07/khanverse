@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Send, FolderOpen, FileDown, Eye } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Send, FolderOpen, FileDown, Eye, FileText, XCircle } from 'lucide-react';
 import api from '../../shared/api';
 import { showDialog } from '../../shared/components/Dialog';
 
@@ -41,6 +41,8 @@ function OrderDetail() {
     const [order, setOrder] = useState(fallbackOrder);
     const [newStatus, setNewStatus] = useState('');
     const [busy, setBusy] = useState(false);
+    const [declineReason, setDeclineReason] = useState('');
+    const [showDecline, setShowDecline] = useState(false);
 
     useEffect(() => {
         api.get(`/seller/orders/${id}`).then(({ data }) => {
@@ -57,7 +59,7 @@ function OrderDetail() {
         if (!confirmed) return;
         setBusy(true);
         try {
-            const { data } = await api.post(`/seller/orders/${id}/status`, { status: target });
+            const { data } = await api.post(`/seller/orders/${id}/status`, { status: target, decline_reason: declineReason });
 
             if (target === 'active' && data.delivery_key) {
                 await showDialog({
@@ -134,8 +136,35 @@ function OrderDetail() {
                     <div className="detail-row"><span className="label">Amount</span><span className="value">₹{Number(order.amount || order.total_amount).toLocaleString('en-IN')}</span></div>
                     <div className="detail-row"><span className="label">Placed</span><span className="value">{order.created_at ? new Date(order.created_at).toLocaleDateString() : '-'}</span></div>
                     <div className="detail-row"><span className="label">Delivery</span><span className="value">{order.delivery_date ? new Date(order.delivery_date).toLocaleDateString() : '-'}</span></div>
-                    {order.requirements ? (
-                        <div className="detail-row"><span className="label">Requirements</span><span className="value">{order.requirements}</span></div>
+
+                    {(order.requirements_title || order.requirements_type || order.requirements || order.requirements_docs) && (
+                        <>
+                            <h3 style={{ marginTop: 18 }}>Buyer&apos;s Requirements</h3>
+                            {order.requirements_title ? (
+                                <div className="detail-row"><span className="label">Title</span><span className="value">{order.requirements_title}</span></div>
+                            ) : null}
+                            {order.requirements_type ? (
+                                <div className="detail-row"><span className="label">Type</span><span className="value">{order.requirements_type}</span></div>
+                            ) : null}
+                            {order.requirements ? (
+                                <div className="detail-row"><span className="label">Description</span><span className="value" style={{ whiteSpace: 'pre-wrap' }}>{order.requirements}</span></div>
+                            ) : null}
+                            {order.requirements_docs ? (
+                                <div className="detail-row">
+                                    <span className="label">Document</span>
+                                    <span className="value">
+                                        <a href={`/storage/${order.requirements_docs}`} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}><Eye size={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />View attached file</a>
+                                    </span>
+                                </div>
+                            ) : null}
+                        </>
+                    )}
+
+                    {order.status === 'cancelled' && order.decline_reason ? (
+                        <div className="detail-row" style={{ marginTop: 18 }}>
+                            <span className="label">Decline Reason</span>
+                            <span className="value" style={{ color: 'var(--danger,#EF4444)' }}>{order.decline_reason}</span>
+                        </div>
                     ) : null}
                 </motion.div>
                 <motion.div className="detail-box" variants={fadeUp} custom={2}>
@@ -166,7 +195,7 @@ function OrderDetail() {
                     transition={{ duration: 0.25 }}
                 >
                     <div className="card-header"><h3>Order Confirmation</h3></div>
-                    <p style={{ color: 'var(--text-muted)', marginBottom: 12, fontSize: 14 }}>Accepting this order will automatically create a linked project.</p>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: 12, fontSize: 14 }}>Accepting this order will automatically create a linked project. Review the buyer&apos;s requirements above before deciding.</p>
                     <div className="status-form">
                         <motion.button
                             className="btn btn-primary"
@@ -180,13 +209,41 @@ function OrderDetail() {
                         <motion.button
                             className="btn btn-danger"
                             disabled={busy}
-                            onClick={() => doTransition('cancelled', 'Reject Order', 'Reject this order?')}
+                            onClick={() => setShowDecline(true)}
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
-                            Reject
+                            <XCircle size={16} /> Decline
                         </motion.button>
                     </div>
+
+                    {showDecline && (
+                        <div style={{ marginTop: 16, padding: 16, border: '1px solid var(--border)', borderRadius: 12, background: 'rgba(239,68,68,0.04)' }}>
+                            <label style={{ fontWeight: 700, fontSize: 14, display: 'block', marginBottom: 8 }}><FileText size={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />Reason for declining <span style={{ color: 'var(--danger,#EF4444)' }}>*</span></label>
+                            <p style={{ color: 'var(--text-muted)', fontSize: 12.5, marginBottom: 10 }}>This reason will be shown to the buyer so they understand why you could not accept.</p>
+                            <textarea
+                                className="form-input"
+                                rows={3}
+                                placeholder="e.g. My current schedule is full, please try again later."
+                                value={declineReason}
+                                onChange={(e) => setDeclineReason(e.target.value)}
+                            />
+                            <div className="status-form" style={{ marginTop: 12 }}>
+                                <motion.button
+                                    className="btn btn-danger"
+                                    disabled={busy || !declineReason.trim()}
+                                    onClick={() => doTransition('cancelled', 'Decline Order', 'Decline this order? The buyer will be notified with your reason.')}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                >
+                                    <XCircle size={16} /> {busy ? 'Processing...' : 'Confirm Decline'}
+                                </motion.button>
+                                <motion.button className="btn btn-secondary" disabled={busy} onClick={() => setShowDecline(false)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                                    Cancel
+                                </motion.button>
+                            </div>
+                        </div>
+                    )}
                 </motion.div>
             )}
 

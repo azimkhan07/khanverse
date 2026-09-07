@@ -41,6 +41,9 @@ function ServiceDetail() {
 
     const [ordering, setOrdering] = useState(false);
     const [requirements, setRequirements] = useState("");
+    const [reqTitle, setReqTitle] = useState("");
+    const [reqType, setReqType] = useState("");
+    const [reqDoc, setReqDoc] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -128,16 +131,30 @@ function ServiceDetail() {
         }
         setOrdering(true);
         setRequirements("");
+        setReqTitle("");
+        setReqType(service?.category?.name || service?.type || "");
+        setReqDoc(null);
     };
 
     const placeOrder = async () => {
+        if (!reqTitle.trim()) {
+            await showDialog({ type: "warning", title: "Title required", message: "Please enter a title for your requirement.", confirmText: "OK" });
+            return;
+        }
+        if (!requirements.trim()) {
+            await showDialog({ type: "warning", title: "Description required", message: "Please describe your requirement in detail.", confirmText: "OK" });
+            return;
+        }
         setSubmitting(true);
         try {
-            const res = await frontendApi.post("/buyer/orders", {
-                service_id: service?.id,
-                package: selectedPackage.key || "basic",
-                requirements,
-            });
+            const fd = new FormData();
+            fd.append("service_id", service?.id);
+            fd.append("package", selectedPackage.key || "basic");
+            fd.append("requirements", requirements);
+            fd.append("requirements_title", reqTitle);
+            fd.append("requirements_type", reqType);
+            if (reqDoc) fd.append("requirements_docs", reqDoc);
+            const res = await frontendApi.post("/buyer/orders", fd, { headers: { "Content-Type": "multipart/form-data" } });
             await showDialog({
                 type: "success",
                 title: "Order Placed",
@@ -632,14 +649,47 @@ function ServiceDetail() {
                     </div>
                     <form onSubmit={(e) => { e.preventDefault(); placeOrder(); }}>
                         <div className="form-group">
-                            <label>Requirements</label>
+                            <label>Requirement Title <span style={{ color: "var(--danger,#EF4444)" }}>*</span></label>
+                            <input
+                                className="form-input"
+                                type="text"
+                                placeholder="e.g. Edit my product promo video"
+                                value={reqTitle}
+                                onChange={(e) => setReqTitle(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Type <span style={{ color: "var(--danger,#EF4444)" }}>*</span></label>
+                            <input
+                                className="form-input"
+                                type="text"
+                                value={reqType}
+                                onChange={(e) => setReqType(e.target.value)}
+                                placeholder="Service type"
+                            />
+                            <small style={{ color: "var(--text-muted,#64748B)" }}>Auto-filled from the service you are ordering.</small>
+                        </div>
+                        <div className="form-group">
+                            <label>Description <span style={{ color: "var(--danger,#EF4444)" }}>*</span></label>
                             <textarea
                                 className="form-input"
                                 rows={4}
-                                placeholder="Describe what you need to be done..."
+                                placeholder="Describe in detail what you need to be done..."
                                 value={requirements}
                                 onChange={(e) => setRequirements(e.target.value)}
                             />
+                        </div>
+                        <div className="form-group">
+                            <label>Attach Documents (Optional)</label>
+                            <input
+                                className="form-input"
+                                type="file"
+                                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.zip"
+                                onChange={(e) => setReqDoc(e.target.files?.[0] || null)}
+                            />
+                            {reqDoc && (
+                                <small style={{ color: "var(--accent,#4F46E5)" }}>Selected: {reqDoc.name}</small>
+                            )}
                         </div>
                         <div className="modal-actions" style={{ marginTop: 16 }}>
                             <button type="button" className="btn" onClick={() => setOrdering(false)} disabled={submitting}>Cancel</button>

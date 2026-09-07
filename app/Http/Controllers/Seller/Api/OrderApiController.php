@@ -47,6 +47,7 @@ class OrderApiController extends Controller
 
         $request->validate([
             'status' => 'required|in:pending,active,delivered,completed,cancelled,disputed',
+            'decline_reason' => 'nullable|string|max:1000',
         ]);
 
         $order = Order::with(['buyer', 'service'])->where('seller_id', $seller->id)->findOrFail($id);
@@ -177,18 +178,34 @@ class OrderApiController extends Controller
         }
 
         if ($request->status === 'cancelled' && $order->status !== 'completed') {
-            $order->update(['status' => 'cancelled']);
+            $reason = trim((string) $request->input('decline_reason', ''));
+            $wasPending = $order->status === 'pending';
+
+            if ($wasPending && $reason === '') {
+                return response()->json([
+                    'message' => 'Please provide a reason for declining this order.',
+                ], 422);
+            }
+
+            $order->update([
+                'status' => 'cancelled',
+                'decline_reason' => $reason ?: $order->decline_reason,
+            ]);
             if ($order->project) {
                 $order->project->update(['status' => 'cancelled']);
             }
 
+            $notice = $reason
+                ? 'Your order "' . ($order->service?->title ?? '#' . $order->id) . '" was declined. Reason: ' . $reason
+                : 'Your order "' . ($order->service?->title ?? '#' . $order->id) . '" has been cancelled.';
+
             NotificationService::send(
                 $order->buyer?->user_id,
-                'Order Cancelled',
-                'Your order "' . ($order->service?->title ?? '#' . $order->id) . '" has been cancelled by the seller.',
+                $wasPending ? 'Order Declined' : 'Order Cancelled',
+                $notice,
                 'order',
                 $order->project_id ? route('buyer.projects.show', $order->project_id) : route('buyer.orders.show', $order->id),
-                ['order_id' => $order->id],
+                ['order_id' => $order->id, 'decline_reason' => $reason],
             );
         }
 

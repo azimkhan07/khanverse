@@ -22,7 +22,10 @@ class OrderApiController extends Controller
 
         $validated = $request->validate([
             'service_id' => ['required', 'exists:services,id'],
-            'requirements' => ['nullable', 'string'],
+            'requirements' => ['required', 'string'],
+            'requirements_title' => ['required', 'string'],
+            'requirements_type' => ['required', 'string'],
+            'requirements_docs' => ['nullable', 'file', 'max:10240'],
             'delivery_date' => ['nullable', 'date'],
             'delivery_method' => ['nullable', 'in:digital,hosting'],
         ]);
@@ -37,6 +40,11 @@ class OrderApiController extends Controller
         $platformPct = (float) setting('payment', 'platform_fee', 12);
         $platformFee = round($service->price * $platformPct / 100, 2);
 
+        $docsPath = null;
+        if ($request->hasFile('requirements_docs') && $request->file('requirements_docs')->isValid()) {
+            $docsPath = $request->file('requirements_docs')->store('order-docs', 'public');
+        }
+
         $order = Order::create([
             'order_number' => InvoiceService::nextOrderNumber(),
             'buyer_id' => $buyer->id,
@@ -45,7 +53,10 @@ class OrderApiController extends Controller
             'amount' => $service->price,
             'platform_fee' => $platformFee,
             'status' => 'pending',
-            'requirements' => $validated['requirements'] ?? null,
+            'requirements' => $validated['requirements'],
+            'requirements_title' => $validated['requirements_title'],
+            'requirements_type' => $validated['requirements_type'],
+            'requirements_docs' => $docsPath,
             'delivery_date' => $validated['delivery_date']
                 ?? now()->addDays((int) $service->delivery_days)->toDateString(),
         ]);
@@ -53,7 +64,7 @@ class OrderApiController extends Controller
         NotificationService::send(
             $seller ? $seller->user_id : null,
             'New Order Received',
-            'A new order "' . $service->title . '" worth ₹' . number_format($order->amount, 2) . ' is awaiting your approval.',
+            'Requirement "' . $validated['requirements_title'] . '" for "' . $service->title . '" worth ₹' . number_format($order->amount, 2) . ' is awaiting your approval.',
             'order',
             route('seller.orders.show', $order->id),
             ['order_id' => $order->id],
@@ -62,7 +73,7 @@ class OrderApiController extends Controller
         NotificationService::send(
             Auth::id(),
             'Order Placed',
-            'Your order for "' . $service->title . '" has been placed and is awaiting seller approval.',
+            'Your order "' . $validated['requirements_title'] . '" has been placed and is awaiting seller approval.',
             'order',
             route('buyer.orders.show', $order->id),
             ['order_id' => $order->id],

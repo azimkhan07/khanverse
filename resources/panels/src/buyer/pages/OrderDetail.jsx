@@ -65,7 +65,42 @@ function OrderDetail() {
                     <div className="detail-row"><span className="label">Amount</span><span className="value">₹{Number(order.amount).toLocaleString('en-IN')}</span></div>
                     <div className="detail-row"><span className="label">Placed</span><span className="value">{order.created_at ? new Date(order.created_at).toLocaleDateString() : '-'}</span></div>
                     <div className="detail-row"><span className="label">Delivery</span><span className="value">{order.delivery_date ? new Date(order.delivery_date).toLocaleDateString() : '-'}</span></div>
+
+                    {(order.requirements_title || order.requirements_type || order.requirements || order.requirements_docs) && (
+                        <>
+                            <h3 style={{ marginTop: 18 }}>My Requirements</h3>
+                            {order.requirements_title ? (
+                                <div className="detail-row"><span className="label">Title</span><span className="value">{order.requirements_title}</span></div>
+                            ) : null}
+                            {order.requirements_type ? (
+                                <div className="detail-row"><span className="label">Type</span><span className="value">{order.requirements_type}</span></div>
+                            ) : null}
+                            {order.requirements ? (
+                                <div className="detail-row"><span className="label">Description</span><span className="value" style={{ whiteSpace: 'pre-wrap' }}>{order.requirements}</span></div>
+                            ) : null}
+                            {order.requirements_docs ? (
+                                <div className="detail-row">
+                                    <span className="label">Document</span>
+                                    <span className="value">
+                                        <a href={`/storage/${order.requirements_docs}`} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}><Eye size={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />View attached file</a>
+                                    </span>
+                                </div>
+                            ) : null}
+                        </>
+                    )}
                 </motion.div>
+                {order.status === 'cancelled' && order.decline_reason && (
+                    <motion.div className="detail-box" variants={fadeUp} style={{ marginTop: 16, borderColor: 'rgba(239,68,68,0.3)' }}>
+                        <h3 style={{ color: 'var(--danger,#EF4444)' }}><Info size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Order Declined</h3>
+                        <div className="detail-row">
+                            <span className="label">Reason</span>
+                            <span className="value">{order.decline_reason}</span>
+                        </div>
+                        <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 10 }}>
+                            The seller could not accept your order. You may contact support or place a new order for a different service.
+                        </p>
+                    </motion.div>
+                )}
                 <motion.div className="detail-box" variants={fadeUp}>
                     <h3>Actions</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
