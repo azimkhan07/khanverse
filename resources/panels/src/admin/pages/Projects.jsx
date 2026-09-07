@@ -39,11 +39,13 @@ function Projects() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No projects found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Title</th><th>Buyer</th><th>Seller</th><th>Budget</th><th>Status</th><th>Deadline</th><th></th></tr></thead>
-                            <tbody>
-                                {data.map((p) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Title</th><th>Buyer</th><th>Seller</th><th>Budget</th><th>Status</th><th>Deadline</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={8} className="empty">No projects found</td></tr>
+                            ) : (
+                                data.map((p) => (
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
                                         <td>{p.title}</td>
@@ -54,10 +56,10 @@ function Projects() {
                                         <td>{p.deadline ? new Date(p.deadline).toLocaleDateString() : '-'}</td>
                                         <td><button className="btn btn-sm" onClick={() => navigate(`/projects/${p.id}`)}><Eye size={13} /> View</button></td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

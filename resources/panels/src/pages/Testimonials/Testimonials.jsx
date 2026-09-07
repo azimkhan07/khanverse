@@ -1,16 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "../../theme/css/testimonials.css";
-import { testimonials as staticTestimonials } from "../../components/testimonials/testimonialsData";
 import { Star, Quote, TrendingUp, Users, Globe, Award } from "lucide-react";
 import frontendApi from "../../shared/frontendApi";
-
-const stats = [
-    { icon: Users, number: "15K+", label: "Freelancers" },
-    { icon: TrendingUp, number: "8K+", label: "Projects Done" },
-    { icon: Globe, number: "120+", label: "Countries" },
-    { icon: Award, number: "98%", label: "Satisfaction" },
-];
 
 const containerVariants = {
     hidden: {},
@@ -22,11 +14,12 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        filter: "blur(0px)",
+        transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] },
     },
 };
 
@@ -51,25 +44,36 @@ const statVariants = {
 
 function Testimonials() {
     const [testimonials, setTestimonials] = useState([]);
+    const [stats, setStats] = useState([]);
 
     useEffect(() => {
+        frontendApi.get("/frontend/home")
+            .then((res) => {
+                const s = res.data?.stats;
+                if (s) {
+                    setStats([
+                        { icon: Users, number: s.sellers, label: "Freelancers" },
+                        { icon: TrendingUp, number: s.services, label: "Active Services" },
+                        { icon: Award, number: s.delivered, label: "Orders Delivered" },
+                        { icon: Globe, number: s.countries, label: "Countries" },
+                    ].filter((st) => Number(st.number) > 0));
+                }
+            })
+            .catch(() => {});
+
         frontendApi.get("/frontend/testimonials")
             .then((res) => {
                 const data = Array.isArray(res.data) ? res.data : [];
-                if (data.length > 0) {
-                    setTestimonials(data.map((t) => ({
-                        id: t.id,
-                        name: t.name,
-                        role: t.designation || t.company || "Client",
-                        rating: t.rating || 5,
-                        review: t.review,
-                        image: t.image || "https://placehold.co/120",
-                    })));
-                } else {
-                    setTestimonials(staticTestimonials);
-                }
+                setTestimonials(data.map((t) => ({
+                    id: t.id,
+                    name: t.name,
+                    role: t.designation || t.company || "Client",
+                    rating: t.rating || 5,
+                    review: t.review,
+                    image: t.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name || "U")}&background=4F46E5&color=fff`,
+                })));
             })
-            .catch(() => setTestimonials(staticTestimonials));
+            .catch(() => setTestimonials([]));
     }, []);
 
     if (testimonials.length === 0) return null;
@@ -86,7 +90,7 @@ function Testimonials() {
                 >
                     <span>Testimonials</span>
                     <h2>What Our Clients Say</h2>
-                    <p>Thousands of businesses trust KhanVerse to hire top freelancers from around the world.</p>
+                    <p>Real feedback from real clients who hired freelancers on KhanVerse.</p>
                 </motion.div>
 
                 <div className="testimonials-marquee">
@@ -95,7 +99,7 @@ function Testimonials() {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true, margin: "-60px" }}
+                        viewport={{ once: true, margin: "0px 0px -10% 0px" }}
                     >
                         {[...testimonials, ...testimonials].map((item, idx) => (
                             <motion.div
@@ -137,26 +141,28 @@ function Testimonials() {
                     </motion.div>
                 </div>
 
-                <motion.div
-                    className="trusted-stats"
-                    variants={statsContainerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-40px" }}
-                >
-                    {stats.map((stat, i) => {
-                        const Icon = stat.icon;
-                        return (
-                            <motion.div className="trusted-stat" key={i} variants={statVariants}>
-                                <div className="trusted-stat-icon">
-                                    <Icon size={22} />
-                                </div>
-                                <h3>{stat.number}</h3>
-                                <p>{stat.label}</p>
-                            </motion.div>
-                        );
-                    })}
-                </motion.div>
+                {stats.length > 0 && (
+                    <motion.div
+                        className="trusted-stats"
+                        variants={statsContainerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-40px" }}
+                    >
+                        {stats.map((stat, i) => {
+                            const Icon = stat.icon;
+                            return (
+                                <motion.div className="trusted-stat" key={i} variants={statVariants}>
+                                    <div className="trusted-stat-icon">
+                                        <Icon size={22} />
+                                    </div>
+                                    <h3>{Number(stat.number).toLocaleString("en-IN")}+</h3>
+                                    <p>{stat.label}</p>
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
+                )}
             </div>
         </section>
     );

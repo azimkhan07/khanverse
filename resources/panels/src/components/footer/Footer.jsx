@@ -1,4 +1,4 @@
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, ShieldCheck } from "lucide-react";
 import {
     FaFacebookF,
     FaInstagram,
@@ -131,6 +131,34 @@ function Footer() {
                         </motion.div>
                     ))}
                 </div>
+
+                {footer.sub_brand && footer.sub_brand.name && (
+                    <motion.div
+                        className="footer-subbrand"
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                    >
+                        <div className="subbrand-badge">
+                            <ShieldCheck size={18} />
+                            {footer.sub_brand.badge || `${new Date().getFullYear() - 2000}+ Years of Trust`}
+                        </div>
+                        <div className="subbrand-text">
+                            <h4>{footer.sub_brand.tagline || `${footer.sub_brand.name} family`}</h4>
+                            <p>
+                                KhanVerse is a product of {footer.sub_brand.name}
+                                {footer.sub_brand.since ? ` — trusted since ${footer.sub_brand.since}` : ""}.
+                                {" "}{footer.sub_brand.description || ""}
+                            </p>
+                        </div>
+                        {footer.sub_brand.url && (
+                            <a href={footer.sub_brand.url} target="_blank" rel="noopener noreferrer" className="subbrand-link">
+                                Known {footer.sub_brand.name}
+                            </a>
+                        )}
+                    </motion.div>
+                )}
 
                 <motion.div
                     className="footer-newsletter"

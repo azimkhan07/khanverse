@@ -208,9 +208,10 @@ textarea.form-input { resize:vertical; min-height:90px; }
 .page-toolbar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
 .toolbar-filters { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
-/* Responsive */
+/* Responsive (mobile nav handled by dedicated drawer block at end of file) */
 @media (max-width: 768px) {
-    .sidebar { display:none; }
+    .sidebar { visibility:hidden; }
+    .sidebar.mobile-open { visibility:visible; }
     .main-content { margin-left:0; }
     .stat-grid { grid-template-columns:1fr; }
     .detail-grid { grid-template-columns:1fr; }
@@ -236,7 +237,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     position: absolute;
     cursor: pointer;
     inset: 0;
-    background: var(--border, #d1d5db);
+    background: var(--border-color, #d1d5db);
     border-radius: 999px;
     transition: .3s;
 }
@@ -256,7 +257,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
 
 /* ===== Notifications ===== */
 .notif-item { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 14px; }
-.notif-item + .notif-item { border-top: 1px solid var(--border, #d1d5db); }
+.notif-item + .notif-item { border-top: 1px solid var(--border-color, #d1d5db); }
 .notif-item.unread { background: rgba(109, 40, 217, .06); }
 .notif-icon {
     flex: 0 0 auto;
@@ -289,7 +290,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     cursor: pointer; opacity: .7;
     transition: all .2s;
 }
-.sidebar-toggle:hover { opacity: 1; background: var(--hover-bg, rgba(255,255,255,.08)); color: #fff; }
+.sidebar-toggle:hover { opacity: 1; background: var(--bg-hover, rgba(255,255,255,.08)); color: #fff; }
 .sidebar.collapsed { width: 72px !important; }
 .sidebar.collapsed .sidebar-logo { padding-left: 14px; padding-right: 12px; justify-content: center; }
 .sidebar.collapsed .sidebar-logo-link { display: none; }
@@ -310,7 +311,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
 }
 .confirm-box {
     position: relative; text-align: center;
-    background: var(--bg-card,#fff); border: 1px solid var(--border,#E5E7EB);
+    background: var(--bg-card,#fff); border: 1px solid var(--border-color,#E5E7EB);
     border-radius: 16px; padding: 28px 30px;
     width: 100%; max-width: 380px;
     box-shadow: 0 25px 60px rgba(0,0,0,.22);
@@ -322,7 +323,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     background: none; border: none; color: var(--text-muted,#6b7280);
     cursor: pointer; padding: 4px; border-radius: 6px; line-height: 1;
 }
-.confirm-x:hover { background: var(--hover-bg,#f3f4f6); color: var(--text-primary); }
+.confirm-x:hover { background: var(--bg-hover,#f3f4f6); color: var(--text-primary); }
 .confirm-icon {
     width: 52px; height: 52px; margin: 0 auto 14px;
     border-radius: 50%;
@@ -372,7 +373,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     padding: 4px 8px 4px 4px; border-radius: 12px;
     transition: background .2s;
 }
-.top-nav .user-menu-btn:hover { background: var(--hover-bg, rgba(99,102,241,.08)); }
+.top-nav .user-menu-btn:hover { background: var(--bg-hover, rgba(99,102,241,.08)); }
 .top-nav .user-menu-btn img {
     width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
 }
@@ -409,7 +410,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     cursor: pointer; transition: background .15s, color .15s;
 }
 .user-dropdown-menu button svg { color: var(--text-muted,#6b7280); }
-.user-dropdown-menu button:hover { background: var(--hover-bg, rgba(99,102,241,.08)); color: var(--accent, #465FFF); }
+.user-dropdown-menu button:hover { background: var(--bg-hover, rgba(99,102,241,.08)); color: var(--accent, #465FFF); }
 .user-dropdown-menu button:hover svg { color: var(--accent, #465FFF); }
 .user-dropdown-menu button.danger { color: #ef4444; }
 .user-dropdown-menu button.danger svg { color: #ef4444; }
@@ -470,3 +471,70 @@ textarea.form-input { resize:vertical; min-height:90px; }
 @keyframes lockIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lockOut { to { opacity: 0; } }
 @keyframes lockCard { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* =====================================================================
+   TopNav hamburger (visible on mobile only; admin overrides with its own)
+   ===================================================================== */
+.topnav-menu-btn {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border: 1px solid var(--border-color, #E2E8F0);
+    border-radius: 10px;
+    background: var(--bg-card, #fff);
+    color: var(--text-secondary, #475569);
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    transition: all .18s;
+}
+[data-theme="dark"] .topnav-menu-btn {
+    background: #1E293B; border-color: #334155; color: #CBD5E1;
+}
+.topnav-menu-btn:hover {
+    border-color: var(--accent, #465FFF); color: var(--accent, #465FFF);
+}
+
+/* =====================================================================
+   Mobile drawer navigation (seller / buyer panels)
+   ===================================================================== */
+@media (max-width: 768px) {
+    .sidebar {
+        display: block;
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+        width: 280px !important;
+        transition: transform .28s ease, opacity .22s ease, background .3s;
+        z-index: 210;
+        box-shadow: none;
+    }
+    .sidebar.collapsed { width: 280px !important; }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+        box-shadow: 24px 0 60px rgba(2, 6, 23, .35);
+    }
+    .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(15, 23, 42, .55);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .25s ease;
+    }
+    .sidebar-backdrop.show { opacity: 1; pointer-events: auto; }
+
+    .topnav-menu-btn { display: grid !important; }
+    .top-nav { padding: 0 12px; }
+    .topnav-right { gap: 10px; }
+    .topnav-left { min-width: 0; flex: 1; }
+    .topnav-left h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
+    .top-nav .user-menu-btn span { display: none; }
+    .top-nav .user-menu-btn { padding: 4px; }
+    .page-content { padding: 14px; }
+    .main-content { margin-left: 0; }
+}

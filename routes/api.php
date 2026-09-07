@@ -17,8 +17,12 @@ use App\Http\Controllers\Admin\Api\SettingApiController as AdminSettingApiContro
 use App\Http\Controllers\Admin\Api\MenuApiController as AdminMenuApiController;
 use App\Http\Controllers\Admin\Api\ModuleApiController as AdminModuleApiController;
 use App\Http\Controllers\Admin\Api\TutorialApiController as AdminTutorialApiController;
+use App\Http\Controllers\Admin\Api\BrandPartnerApiController as AdminBrandPartnerApiController;
+use App\Http\Controllers\Admin\Api\TeamMemberApiController as AdminTeamMemberApiController;
 use App\Http\Controllers\Admin\Api\PermissionApiController as AdminPermissionApiController;
+use App\Http\Controllers\Admin\Api\AdminAppBuildsApiController;
 use App\Http\Controllers\Admin\Api\DeviceApiController as AdminDeviceApiController;
+use App\Http\Controllers\Admin\Api\LoginHistoryApiController as AdminLoginHistoryApiController;
 use App\Http\Controllers\Admin\Api\SuspiciousApiController as AdminSuspiciousApiController;
 use App\Http\Controllers\Admin\Api\NotificationApiController as AdminNotificationApiController;
 use App\Http\Controllers\Admin\Api\WebsiteApiController as AdminWebsiteApiController;
@@ -69,10 +73,15 @@ Route::prefix('frontend')->name('frontend.')->group(function () {
     Route::get('/testimonials', [FrontendApiController::class, 'testimonials'])->name('testimonials');
     Route::get('/tutorials', [FrontendApiController::class, 'tutorials'])->name('tutorials');
     Route::get('/app-settings', [FrontendApiController::class, 'appSettings'])->name('app.settings');
+    Route::get('/trusted-companies', [FrontendApiController::class, 'trustedCompanies'])->name('trusted.companies');
+    Route::get('/team', [FrontendApiController::class, 'team'])->name('team');
     Route::get('/navigation', [FrontendApiController::class, 'navigation'])->name('navigation');
     Route::get('/footer', [FrontendApiController::class, 'footer'])->name('footer');
     Route::get('/categories/{slug}', [FrontendApiController::class, 'categoryServices'])->name('category.services')->where('slug', '[a-z0-9\-]+');
     Route::get('/services/{id}', [FrontendApiController::class, 'service'])->name('service.show')->where('id', '[0-9]+');
+    Route::get('/search', [FrontendApiController::class, 'search'])->name('search');
+    Route::get('/compare', [FrontendApiController::class, 'compare'])->name('compare');
+    Route::get('/install', [FrontendApiController::class, 'appInstall'])->name('install');
 });
 
 /*
@@ -103,6 +112,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/become-seller', [AuthController::class, 'becomeSeller'])->name('api.become-seller');
     Route::post('/become-buyer', [AuthController::class, 'becomeBuyer'])->name('api.become-buyer');
     Route::get('/role-record', [AuthController::class, 'currentRoleRecord'])->name('api.role-record');
+
+    Route::prefix('sidebar')->name('api.sidebar.')->group(function () {
+        Route::get('/menus', [AdminMenuApiController::class, 'sidebar'])->name('menus');
+    });
 
     Route::prefix('chat')->name('api.chat.')->group(function () {
         Route::get('/', [ChatApiController::class, 'index'])->name('index');
@@ -173,8 +186,11 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::get('/', [AdminSettingApiController::class, 'index'])->name('index');
         Route::put('/', [AdminSettingApiController::class, 'update'])->name('update');
         Route::post('/', [AdminSettingApiController::class, 'store'])->name('store');
+        Route::post('/upload', [AdminSettingApiController::class, 'upload'])->name('upload');
         Route::delete('/{id}', [AdminSettingApiController::class, 'destroy'])->name('destroy');
     });
+
+    Route::get('/menus/sidebar', [AdminMenuApiController::class, 'sidebar'])->name('menus.sidebar');
 
     Route::prefix('menus')->name('menus.')->group(function () {
         Route::get('/', [AdminMenuApiController::class, 'index'])->name('index');
@@ -203,6 +219,24 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::post('/{id}/status', [AdminTutorialApiController::class, 'toggleStatus'])->name('status');
     });
 
+    Route::prefix('brand-partners')->name('brand-partners.')->group(function () {
+        Route::get('/', [AdminBrandPartnerApiController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminBrandPartnerApiController::class, 'show'])->name('show');
+        Route::post('/', [AdminBrandPartnerApiController::class, 'store'])->name('store');
+        Route::put('/{id}', [AdminBrandPartnerApiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminBrandPartnerApiController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [AdminBrandPartnerApiController::class, 'toggleStatus'])->name('status');
+    });
+
+    Route::prefix('team-members')->name('team-members.')->group(function () {
+        Route::get('/', [AdminTeamMemberApiController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminTeamMemberApiController::class, 'show'])->name('show');
+        Route::post('/', [AdminTeamMemberApiController::class, 'store'])->name('store');
+        Route::put('/{id}', [AdminTeamMemberApiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminTeamMemberApiController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [AdminTeamMemberApiController::class, 'toggleStatus'])->name('status');
+    });
+
     Route::prefix('permissions')->name('permissions.')->group(function () {
         Route::get('/', [AdminPermissionApiController::class, 'index'])->name('index');
         Route::get('/{id}', [AdminPermissionApiController::class, 'show'])->name('show');
@@ -211,9 +245,20 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::delete('/{id}', [AdminPermissionApiController::class, 'destroy'])->name('destroy');
     });
 
+    Route::prefix('app-builds')->name('app-builds.')->group(function () {
+        Route::get('/', [AdminAppBuildsApiController::class, 'index'])->name('index');
+        Route::post('/upload', [AdminAppBuildsApiController::class, 'upload'])->name('upload');
+        Route::post('/{id}/active', [AdminAppBuildsApiController::class, 'setActive'])->name('active');
+        Route::delete('/{id}', [AdminAppBuildsApiController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::post('/app-settings/install-prompt', [AdminAppBuildsApiController::class, 'updatePrompt'])->name('app-settings.install-prompt');
+
     Route::prefix('devices')->name('devices.')->group(function () {
         Route::get('/', [AdminDeviceApiController::class, 'index'])->name('index');
     });
+
+    Route::get('/login-history', [AdminLoginHistoryApiController::class, 'index'])->name('login-history');
 
     Route::prefix('suspicious')->name('suspicious.')->group(function () {
         Route::get('/', [AdminSuspiciousApiController::class, 'index'])->name('index');

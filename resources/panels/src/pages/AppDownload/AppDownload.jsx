@@ -9,12 +9,30 @@ const DOWNLOAD_URL = "/app/khanverse.apk";
 
 function AppDownload() {
     const [appUrl, setAppUrl] = useState(DOWNLOAD_URL);
+    const [apkInfo, setApkInfo] = useState(null);
     const [status, setStatus] = useState("idle");
 
     useEffect(() => {
-        frontendApi.get("/frontend/app-settings").then((res) => {
-            if (res.data?.download_url) setAppUrl(res.data.download_url);
-        }).catch(() => {});
+        let apkFromInstall = null;
+        frontendApi.get("/frontend/install").then((res) => {
+            if (res.data?.apk?.url) {
+                apkFromInstall = res.data.apk;
+            }
+        }).catch(() => {}).finally(() => {
+            frontendApi.get("/frontend/app-settings").then((res2) => {
+                if (apkFromInstall?.url) {
+                    setAppUrl(apkFromInstall.url);
+                    setApkInfo(apkFromInstall);
+                } else if (res2.data?.download_url) {
+                    setAppUrl(res2.data.download_url);
+                }
+            }).catch(() => {
+                if (apkFromInstall?.url) {
+                    setAppUrl(apkFromInstall.url);
+                    setApkInfo(apkFromInstall);
+                }
+            });
+        });
     }, []);
 
     const openApp = () => {
@@ -60,6 +78,8 @@ function AppDownload() {
                                 style={{ display: "block", padding: "14px 24px", borderRadius: 14, textDecoration: "none", color: "#fff", fontWeight: 700,
                                     background: "linear-gradient(135deg,#059669,#10B981)", border: "none", cursor: "pointer" }}>
                                 <Download size={18} style={{ verticalAlign: "middle", marginRight: 8 }} /> Download APK
+                                {apkInfo?.version && <span style={{ marginLeft: 8, opacity: 0.85, fontSize: 12 }}>v{apkInfo.version}</span>}
+                                {apkInfo?.size && <span style={{ marginLeft: 4, opacity: 0.85, fontSize: 12 }}>· {apkInfo.size}</span>}
                             </a>
                         </div>
                     )}

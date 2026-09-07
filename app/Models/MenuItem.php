@@ -11,6 +11,9 @@ class MenuItem extends Model
 
     protected $fillable = [
         'title',
+        'panel',
+        'section',
+        'path',
         'icon',
         'route_name',
         'parent_id',

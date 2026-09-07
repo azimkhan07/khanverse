@@ -48,7 +48,7 @@
 
 .gigs-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   align-items: stretch;
 }
@@ -67,6 +67,7 @@
   color: inherit;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   height: 100%;
   box-shadow: 0 4px 24px rgba(79,70,229,0.04);
 }
@@ -85,6 +86,7 @@
   height: 170px;
   overflow: hidden;
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .gig-image::after {
@@ -103,6 +105,7 @@
 
 .gig-image img {
   width: 100%;
+  min-width: 0;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -157,6 +160,68 @@
   background: #fff;
   transform: scale(1.1);
   box-shadow: 0 4px 16px rgba(239,68,68,0.2);
+}
+
+/* --- Compare --- */
+.gig-compare {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted, #64748B);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 5;
+}
+
+.gig-compare:hover {
+  color: var(--accent, #4F46E5);
+  background: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(79,70,229,0.2);
+}
+
+.gig-compare.active {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.35);
+}
+
+.gig-review-count {
+  color: var(--text-light, #94A3B8);
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.gig-new-badge {
+  background: var(--accent-light, rgba(79,70,229,0.1));
+  color: var(--accent, #4F46E5);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 8px;
+  border-radius: 50px;
+}
+
+.gig-detail-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary, #475569);
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 /* --- Body --- */
@@ -403,16 +468,44 @@
 
 @media (max-width: 1024px) {
   .gigs-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
+  .featured-gigs { padding-left: 0; padding-right: 0; }
+  .featured-gigs .container { padding: 0 16px; }
   .gigs-grid {
-    grid-template-columns: 1fr;
-    max-width: 400px;
-    margin: 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0;
   }
+  .gigs-grid > div { min-width: 0; }
+}
+
+@media (max-width: 480px) {
+  .featured-gigs .container { padding: 0 12px; }
+  .gigs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .gigs-grid .gig-card { border-radius: 14px; }
+  .gigs-grid .gig-image { height: 100px; }
+  .gigs-grid .gig-body { padding: 10px; }
+  .gigs-grid .gig-seller { gap: 6px; margin-bottom: 6px; }
+  .gigs-grid .gig-seller-avatar { width: 24px; height: 24px; font-size: 10px; }
+  .gigs-grid .gig-seller-name { font-size: 11px; }
+  .gigs-grid .gig-title { font-size: 13px; margin-bottom: 6px; }
+  .gigs-grid .gig-rating { font-size: 12px; }
+  .gigs-grid .gig-level { font-size: 10px; padding: 3px 8px; }
+  .gigs-grid .gig-wishlist,
+  .gigs-grid .gig-compare { width: 30px; height: 30px; top: 8px; }
+  .gigs-grid .gig-compare { left: 8px; }
+  .gigs-grid .gig-wishlist { right: 8px; }
+  .gigs-grid .gig-delivery { font-size: 11px; }
+  .gigs-grid .gig-price strong { font-size: 15px; }
+  .gigs-grid .gig-footer { margin-bottom: 10px; }
+  .gigs-grid .gig-view-btn { padding: 9px; font-size: 13px; border-radius: 10px; }
 }
 
 /* ==========================================
@@ -578,4 +671,21 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .gig-wishlist,
+  .gig-compare {
+    width: 32px;
+    height: 32px;
+  }
+  .gig-title-btn {
+    min-height: 40px;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+  }
+  .gig-title-btn .gig-title {
+    line-height: 1.35;
+  }
 }

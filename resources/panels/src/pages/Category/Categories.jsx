@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../../theme/css/categories.css";
-import { categories as staticCategories } from "../../components/category/categoriesData";
 import frontendApi from "../../shared/frontendApi";
 import { Code2, Palette, Megaphone, BrainCircuit, Video, Smartphone, PenTool, Search, FileText, BarChart3, Server, HelpCircle, ArrowRight } from "lucide-react";
 
@@ -31,12 +30,13 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    hidden: { opacity: 0, y: 40, scale: 0.95, filter: "blur(6px)" },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+        filter: "blur(0px)",
+        transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] },
     },
 };
 
@@ -55,11 +55,9 @@ function Categories() {
                         icon: iconMap[cat.slug] || HelpCircle,
                         slug: cat.slug,
                     })));
-                } else {
-                    setCategories(staticCategories);
                 }
             })
-            .catch(() => setCategories(staticCategories));
+            .catch(() => {});
     }, []);
 
     if (categories.length === 0) return null;
@@ -83,7 +81,7 @@ function Categories() {
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, margin: "0px 0px -10% 0px" }}
             >
                 {categories.map((item) => {
                     const Icon = item.icon;

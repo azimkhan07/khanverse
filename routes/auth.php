@@ -4,9 +4,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\RememberController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,3 +56,19 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 });
+
+// Google OAuth
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])
+            ->name('google.redirect');
+
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
+            ->name('google.callback');
+
+// Remember me encrypt/decrypt
+Route::post('/encrypt-value', [RememberController::class, 'encrypt'])
+            ->middleware('throttle:30,1')
+            ->name('encrypt.value');
+
+Route::post('/decrypt-value', [RememberController::class, 'decrypt'])
+            ->middleware('throttle:30,1')
+            ->name('decrypt.value');

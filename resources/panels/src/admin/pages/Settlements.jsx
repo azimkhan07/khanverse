@@ -78,18 +78,18 @@ function Settlements() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? (
-                        <div className="empty">No settlements found</div>
-                    ) : (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Order No.</th><th>Invoice</th><th>Seller</th>
-                                    <th>Order Amt</th><th>Fee</th><th>Payout</th><th>Date</th><th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map((s) => (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order No.</th><th>Invoice</th><th>Seller</th>
+                                <th>Order Amt</th><th>Fee</th><th>Payout</th><th>Date</th><th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={8} className="empty">No settlements found</td></tr>
+                            ) : (
+                                data.map((s) => (
                                     <tr key={s.id}>
                                         <td style={{ fontWeight: 600 }}>{s.order_number || `#${s.order_id}`}</td>
                                         <td>{s.invoice_number || '-'}</td>
@@ -108,10 +108,10 @@ function Settlements() {
                                             )}
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

@@ -151,7 +151,92 @@
   width: 14px;
 }
 
-/* --- Newsletter --- */
+/* --- Sub-brand (AMTech trust strip) --- */
+.footer-subbrand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 28px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.14), rgba(124, 58, 237, 0.08));
+  border: 1px solid rgba(129, 140, 248, 0.28);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-subbrand::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.16), transparent 70%);
+  top: -160px;
+  right: -80px;
+  pointer-events: none;
+}
+
+.subbrand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+  white-space: nowrap;
+}
+
+.subbrand-text {
+  flex: 1;
+  min-width: 220px;
+}
+
+.subbrand-text h4 {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.subbrand-text p {
+  color: #94A3B8;
+  font-size: 12.5px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.subbrand-link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #A5B4FC;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.subbrand-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .footer-subbrand {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .footer-newsletter {
   display: flex;
   align-items: center;

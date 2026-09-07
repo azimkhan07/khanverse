@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Buyer;
 use App\Models\BuyerProfile;
 use App\Models\LoginHistory;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
@@ -48,30 +50,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['nullable', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'role' => ['nullable', 'in:buyer,seller'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'bio' => ['nullable', 'string'],
-            'skills' => ['nullable', 'string', 'max:500'],
-            'country' => ['nullable', 'string', 'max:120'],
-            'city' => ['nullable', 'string', 'max:120'],
-            'company_name' => ['nullable', 'string', 'max:255'],
-            'hourly_rate' => ['nullable', 'numeric', 'min:0'],
-            'experience_level' => ['nullable', 'in:junior,mid,senior'],
-            'gender' => ['nullable', 'in:male,female,other'],
-            'dob' => ['nullable', 'date'],
-            'country_id' => ['nullable', 'integer'],
-            'state_id' => ['nullable', 'integer'],
-            'city_id' => ['nullable', 'integer'],
-            'postal_code' => ['nullable', 'string', 'max:20'],
-            'address' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
 
         $role = $request->role ?? 'buyer';
 
@@ -305,7 +286,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'You are already a seller.',
-                'redirect' => route('seller.dashboard'),
+                'redirect' => '/seller',
             ]);
         }
 
@@ -317,7 +298,7 @@ class AuthController extends Controller
             'city' => ['nullable', 'string', 'max:120'],
             'hourly_rate' => ['nullable', 'numeric', 'min:0'],
             'experience_level' => ['nullable', 'in:junior,mid,senior'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20', Rule::unique('users', 'phone')->ignore($user->id)],
             'gender' => ['nullable', 'in:male,female,other'],
             'dob' => ['nullable', 'date'],
             'country_id' => ['nullable', 'integer'],
@@ -374,7 +355,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'You are now a seller.',
-            'redirect' => route('seller.dashboard'),
+            'redirect' => '/seller',
         ]);
     }
 
@@ -386,7 +367,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'You are already a buyer.',
-                'redirect' => route('buyer.dashboard'),
+                'redirect' => '/buyer',
             ]);
         }
 
@@ -395,7 +376,7 @@ class AuthController extends Controller
             'company_name' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:120'],
             'city' => ['nullable', 'string', 'max:120'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20', Rule::unique('users', 'phone')->ignore($user->id)],
             'gender' => ['nullable', 'in:male,female,other'],
             'dob' => ['nullable', 'date'],
             'country_id' => ['nullable', 'integer'],
@@ -443,13 +424,13 @@ class AuthController extends Controller
             'You are now a Buyer',
             'Welcome aboard! Browse services and place your first order.',
             'role',
-            route('buyer.dashboard'),
+            '/buyer',
         );
 
         return response()->json([
             'status' => true,
             'message' => 'You are now a buyer.',
-            'redirect' => route('buyer.dashboard'),
+            'redirect' => '/buyer',
         ]);
     }
 
@@ -603,8 +584,8 @@ class AuthController extends Controller
         }
         return match ($user->role) {
             'admin' => route('admin.dashboard'),
-            'seller' => route('seller.dashboard'),
-            'buyer' => route('buyer.dashboard'),
+            'seller' => '/seller',
+            'buyer' => '/buyer',
             default => '/',
         };
     }

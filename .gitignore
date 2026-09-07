@@ -18,3 +18,7 @@ yarn-error.log
 /Velora UI
 /React- Dashboard
 /_transform_confirm.cjs
+
+# Scratch / personal uploads (not part of the app)
+/public/demo
+/public/Screenshot*.png

@@ -25,11 +25,13 @@ function Suspicious() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No suspicious users found</div> : (
-                        <table>
-                            <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Same IP Accounts</th><th>Status</th><th>Action</th></tr></thead>
-                            <tbody>
-                                {data.map((u) => (
+                    <table>
+                        <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Same IP Accounts</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={6} className="empty">No suspicious users found</td></tr>
+                            ) : (
+                                data.map((u) => (
                                     <tr key={u.id}>
                                         <td style={{ fontWeight: 500 }}>{u.name || u.username}</td>
                                         <td>{u.email}</td>
@@ -44,10 +46,10 @@ function Suspicious() {
                                             <Link className="btn btn-sm" to={u.role === 'buyer' ? `/buyers/${u.id}` : `/sellers/${u.id}`}>View</Link>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

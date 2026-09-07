@@ -13,13 +13,6 @@ use App\Http\Controllers\InvoiceController;
 | All public GET routes fall through to the React SPA mount (app.blade.php).
 */
 
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout');
-
 Route::get('/redirect-user', function () {
     $user = Auth::user();
     if ($user->role == 'admin') {
@@ -50,14 +43,10 @@ foreach (['admin', 'seller', 'buyer'] as $panel) {
     });
 }
 
-// Public React SPA - serve the app for all non-panel public routes
-Route::get('/login', function () {
-    return view('app');
-})->name('login');
+// Auth routes (login, register, forgot-password, etc.) — blade templates
+require base_path('routes/auth.php');
 
-Route::get('/register', function () {
-    return view('app');
-})->name('register');
+// Public React SPA - serve the app for all non-panel public routes
 
 // Public invoice access (scannable barcode opens / downloads the PDF without login)
 Route::get('/invoice/{token}', [InvoiceController::class, 'view'])->name('invoice.view');

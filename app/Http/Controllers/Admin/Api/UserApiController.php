@@ -25,7 +25,7 @@ class UserApiController extends Controller
             });
         }
 
-        $users = $query->latest()->paginate($request->get('per_page', 10));
+        $users = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($users);
     }
@@ -49,7 +49,7 @@ class UserApiController extends Controller
             });
         }
 
-        $buyers = $query->latest()->paginate($request->get('per_page', 10));
+        $buyers = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($buyers);
     }
@@ -65,7 +65,7 @@ class UserApiController extends Controller
             });
         }
 
-        $sellers = $query->latest()->paginate($request->get('per_page', 10));
+        $sellers = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($sellers);
     }

@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ServiceSeeder::class,
             SettingSeeder::class,
+            AuthSettingsSeeder::class,
             MenuSeeder::class,
             ContentSeeder::class,
             EmailTemplateSeeder::class,

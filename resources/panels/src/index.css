@@ -40,9 +40,14 @@ body {
     padding: 0 24px;
 }
 
-/* ==========================================
-   GLOBAL TYPOGRAPHY
-========================================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+    .container-narrow {
+        padding: 0 16px;
+    }
+}
 
 a {
     text-decoration: none;

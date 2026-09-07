@@ -54,11 +54,13 @@ function WebsiteSeo() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No SEO settings found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Page</th><th>Meta Title</th><th>Robots</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((s) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Page</th><th>Meta Title</th><th>Robots</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={6} className="empty">No SEO settings found</td></tr>
+                            ) : (
+                                data.map((s) => (
                                     <tr key={s.id}>
                                         <td>#{s.id}</td>
                                         <td style={{ fontWeight: 500 }}>{s.page_key}</td>
@@ -76,10 +78,10 @@ function WebsiteSeo() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

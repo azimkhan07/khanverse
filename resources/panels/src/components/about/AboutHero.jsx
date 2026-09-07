@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import heroImg from "../../theme/images/4.jpg";
+import useHomeStats from "./useHomeStats";
 
 const staggerContainer = {
     hidden: {},
@@ -22,6 +23,14 @@ const fadeUp = {
 };
 
 function AboutHero() {
+    const { stats } = useHomeStats();
+
+    const heroStats = [
+        { value: stats.sellers, label: "Freelancers" },
+        { value: stats.delivered, label: "Projects Completed" },
+        { value: stats.countries, label: "Countries Served" },
+    ].filter((s) => s.value > 0);
+
     return (
         <section className="about-hero">
 
@@ -70,20 +79,12 @@ function AboutHero() {
 
                     <motion.div className="about-stats" variants={fadeUp}>
 
-                        <div>
-                            <h3>15K+</h3>
-                            <span>Freelancers</span>
-                        </div>
-
-                        <div>
-                            <h3>8K+</h3>
-                            <span>Projects</span>
-                        </div>
-
-                        <div>
-                            <h3>120+</h3>
-                            <span>Countries</span>
-                        </div>
+                        {heroStats.length > 0 && heroStats.map((s) => (
+                            <div key={s.label}>
+                                <h3>{s.value}</h3>
+                                <span>{s.label}</span>
+                            </div>
+                        ))}
 
                     </motion.div>
 

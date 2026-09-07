@@ -25,6 +25,8 @@ import ServiceListing from "../pages/Category/ServiceListing";
 import ServiceDetail from "../pages/Category/ServiceDetail";
 import Tutorials from "../pages/Tutorials/Tutorials";
 import AppDownload from "../pages/AppDownload/AppDownload";
+import Search from "../pages/Search/Search";
+import Compare from "../pages/Compare/Compare";
 
 function AppRoutes() {
     return (
@@ -45,6 +47,8 @@ function AppRoutes() {
                     <Route path="/cookie-policy" element={<CookiePolicy />} />
                     <Route path="/category/:slug" element={<ServiceListing />} />
                     <Route path="/service/:id" element={<ServiceDetail />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/compare" element={<Compare />} />
                     <Route path="/tutorials" element={<Tutorials />} />
                     <Route path="/app" element={<AppDownload />} />
                 </Route>

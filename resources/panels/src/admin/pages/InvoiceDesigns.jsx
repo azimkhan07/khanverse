@@ -117,13 +117,15 @@ function InvoiceDesigns() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {rows.length === 0 ? <div className="empty">No invoice designs found</div> : (
-                        <table>
-                            <thead>
-                                <tr><th>Name</th><th>Type</th><th>Company</th><th>Status</th><th>Updated</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody>
-                                {rows.map((d) => (
+                    <table>
+                        <thead>
+                            <tr><th>Name</th><th>Type</th><th>Company</th><th>Status</th><th>Updated</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            {rows.length === 0 ? (
+                                <tr><td colSpan={6} className="empty">No invoice designs found</td></tr>
+                            ) : (
+                                rows.map((d) => (
                                     <tr key={d.id}>
                                         <td style={{ fontWeight: 500 }}>{d.name}</td>
                                         <td><span className={`badge ${d.type === 'seller' ? 'badge-info' : 'badge-primary'}`}>{d.type}</span></td>
@@ -141,10 +143,10 @@ function InvoiceDesigns() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

@@ -1,117 +1,86 @@
-import { motion } from "framer-motion";
-import team1 from "../../theme/images/2.jpg";
-import team2 from "../../theme/images/4.jpg";
-import team3 from "../../theme/images/2.jpg";
-import team4 from "../../theme/images/4.jpg";
+import { useEffect, useState } from "react";
+import frontendApi from "../../shared/frontendApi";
 
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+const avatarColors = ["linear-gradient(135deg,#4F46E5,#7C3AED)", "linear-gradient(135deg,#06B6D4,#4F46E5)", "linear-gradient(135deg,#EC4899,#7C3AED)"];
 
-const gridVariants = {
-    hidden: {},
-    visible: {
-        transition: {
-            staggerChildren: 0.1,
-        },
-    },
-};
+const FALLBACK_TEAM = [
+    { id: 1, name: "Azim Khan", role: "Founder of KhanVerse", tagline: "Brand Partner with AMTech", image: null },
+    { id: 2, name: "Nadeem Mansuri", role: "Co-Founder of KhanVerse", tagline: null, image: null },
+    { id: 3, name: "Sayed Mujeeb", role: "Brand Partner with KhanVerse", tagline: "Director of AMTech", image: null },
+];
 
-const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-    },
-};
+function initials(name) {
+    return (name || "K")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((w) => w.charAt(0).toUpperCase())
+        .join("");
+}
 
 function Team() {
-    const members = [
-        {
-            id: 1,
-            image: team1,
-            name: "Azim Khan",
-            role: "Founder & CEO",
-            socials: [
-                { icon: FaLinkedin, url: "#" },
-                { icon: FaGithub, url: "#" },
-                { icon: FaTwitter, url: "#" },
-            ],
-        },
-        {
-            id: 2,
-            image: team2,
-            name: "Sarah Wilson",
-            role: "UI / UX Designer",
-            socials: [
-                { icon: FaLinkedin, url: "#" },
-                { icon: FaGithub, url: "#" },
-                { icon: FaTwitter, url: "#" },
-            ],
-        },
-        {
-            id: 3,
-            image: team3,
-            name: "Michael James",
-            role: "Backend Developer",
-            socials: [
-                { icon: FaLinkedin, url: "#" },
-                { icon: FaGithub, url: "#" },
-                { icon: FaTwitter, url: "#" },
-            ],
-        },
-        {
-            id: 4,
-            image: team4,
-            name: "Emily Brown",
-            role: "Support Manager",
-            socials: [
-                { icon: FaLinkedin, url: "#" },
-                { icon: FaGithub, url: "#" },
-                { icon: FaTwitter, url: "#" },
-            ],
-        },
-    ];
+    const [members, setMembers] = useState([]);
+
+    useEffect(() => {
+        let active = true;
+        frontendApi
+            .get("/frontend/team")
+            .then((res) => {
+                const data = Array.isArray(res.data) ? res.data : [];
+                if (!active) return;
+                if (data.length > 0) {
+                    setMembers(data.map((m) => ({
+                        id: m.id,
+                        name: m.name,
+                        role: m.role,
+                        tagline: m.tagline,
+                        image: m.image_url || m.image || null,
+                    })));
+                } else {
+                    setMembers([]);
+                }
+            })
+            .catch((err) => {
+                console.error("Team API fetch failed, using fallback team:", err);
+                if (active) setMembers(FALLBACK_TEAM);
+            });
+        return () => { active = false; };
+    }, []);
+
+    if (members.length === 0) return null;
 
     return (
         <section className="about-team">
             <div className="container">
                 <div className="section-heading">
                     <span className="section-tag">OUR TEAM</span>
-                    <h2>Meet Our Amazing Team</h2>
-                    <p>Passionate people building the future of freelancing together.</p>
+                    <h2>Meet Our Awesome Team</h2>
+                    <p>The people behind KhanVerse building the future of freelancing.</p>
                 </div>
 
-                <motion.div
-                    className="team-grid"
-                    variants={gridVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
-                >
-                    {members.map((member) => (
-                        <motion.div
-                            className="team-card"
-                            key={member.id}
-                            variants={cardVariants}
-                            whileHover={{ y: -6, scale: 1.02, transition: { duration: 0.3 } }}
-                        >
+                <div className="team-grid">
+                    {members.map((member, index) => (
+                        <div className="team-card" key={member.id}>
                             <div className="team-image">
-                                <img src={member.image} alt={member.name} />
+                                {member.image ? (
+                                    <img src={member.image} alt={member.name} />
+                                ) : (
+                                    <div
+                                        className="team-avatar"
+                                        style={{ background: avatarColors[index % avatarColors.length] }}
+                                    >
+                                        {initials(member.name)}
+                                    </div>
+                                )}
                             </div>
                             <div className="team-content">
                                 <h3>{member.name}</h3>
                                 <span>{member.role}</span>
-                                <div className="team-social">
-                                    {member.socials.map((s, i) => (
-                                        <a href={s.url} key={i} target="_blank" rel="noopener noreferrer">
-                                            <s.icon size={18} />
-                                        </a>
-                                    ))}
-                                </div>
+                                {member.tagline && <p className="team-tagline">{member.tagline}</p>}
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
-                </motion.div>
+                </div>
             </div>
         </section>
     );

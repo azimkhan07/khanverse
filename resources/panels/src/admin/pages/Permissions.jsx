@@ -61,11 +61,13 @@ function Permissions() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No permissions found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Module</th><th>Group</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((p) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Module</th><th>Group</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No permissions found</td></tr>
+                            ) : (
+                                data.map((p) => (
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
                                         <td style={{ fontWeight: 500 }}>{p.name}</td>
@@ -80,10 +82,10 @@ function Permissions() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

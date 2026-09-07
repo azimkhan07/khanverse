@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
-function Sidebar({ logo, menus, role, collapsed, onToggle, hidden }) {
+function Sidebar({ logo, menus, role, collapsed, onToggle, hidden, mobileOpen, onNavigate }) {
     const hiddenMode = typeof hidden === 'boolean';
     return (
-        <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${hidden ? "hidden" : ""}`}>
+        <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${hidden ? "hidden" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
             <div className="sidebar-logo">
-                <NavLink to={`/${role}`} className="sidebar-logo-link">{logo}</NavLink>
+                <NavLink to={`/${role}`} className="sidebar-logo-link" onClick={onNavigate}>{logo}</NavLink>
                 <button className="sidebar-toggle" onClick={onToggle} title={hiddenMode ? (hidden ? "Show sidebar" : "Hide sidebar") : "Toggle sidebar"}>
                     {hiddenMode
                         ? <ChevronsLeft size={16} />
@@ -22,6 +22,7 @@ function Sidebar({ logo, menus, role, collapsed, onToggle, hidden }) {
                                 key={item.path}
                                 to={item.path}
                                 end={item.exact}
+                                onClick={onNavigate}
                                 title={collapsed ? item.label : undefined}
                                 className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
                             >

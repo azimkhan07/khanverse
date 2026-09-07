@@ -7,6 +7,8 @@ import '../shared/styles/velora.css';
 const user = window.__BUYER_USER__ || { name: 'Buyer', email: 'buyer@khanverse.com' };
 window.__BUYER_USER__ = user;
 
+try { sessionStorage.removeItem("khanverse-install-dismissed-session"); } catch { /* ignore */ }
+
 createRoot(document.getElementById('buyer-root')).render(
     <React.StrictMode>
         <BuyerApp user={user} />

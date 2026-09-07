@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import "../../theme/css/statistics.css";
-import { statistics } from "../../components/Statistics/statisticsData";
 import { Users, Briefcase, ThumbsUp, Globe } from "lucide-react";
+import frontendApi from "../../shared/frontendApi";
 
 const iconComponents = {
     Users,
@@ -25,7 +25,7 @@ function useCountUp(target, duration = 2000, startOnView = false) {
             ([entry]) => {
                 if (entry.isIntersecting && !hasAnimated.current) {
                     hasAnimated.current = true;
-                    const numericTarget = parseFloat(target.replace(/[^0-9.]/g, ""));
+                    const numericTarget = parseFloat(String(target).replace(/[^0-9.]/g, ""));
                     if (isNaN(numericTarget)) {
                         setCount(target);
                         return;
@@ -64,19 +64,20 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    hidden: { opacity: 0, y: 40, scale: 0.95, filter: "blur(6px)" },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        filter: "blur(0px)",
+        transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] },
     },
 };
 
 function AnimatedStat({ item }) {
     const Icon = iconComponents[item.icon] || Globe;
     const { count, ref } = useCountUp(item.number, 2000, true);
-    const suffix = item.number.replace(/[0-9.]/g, "");
+    const suffix = typeof item.number === "string" ? item.number.replace(/[0-9.]/g, "") : "";
 
     return (
         <motion.div
@@ -95,6 +96,27 @@ function AnimatedStat({ item }) {
 }
 
 function Statistics() {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        frontendApi
+            .get("/frontend/home")
+            .then((res) => {
+                const s = res.data?.stats;
+                if (!s) return;
+                const stats = [
+                    { number: s.services, title: "Services", icon: "Briefcase" },
+                    { number: s.sellers, title: "Active Sellers", icon: "Users" },
+                    { number: s.delivered, title: "Orders Delivered", icon: "Globe" },
+                    { number: s.buyers, title: "Happy Buyers", icon: "ThumbsUp" },
+                ].filter((item) => Number(item.number) > 0);
+                setItems(stats);
+            })
+            .catch(() => {});
+    }, []);
+
+    if (items.length === 0) return null;
+
     return (
         <section className="statistics">
             <div className="container">
@@ -107,7 +129,7 @@ function Statistics() {
                 >
                     <span>Our Achievements</span>
                     <h2>Trusted by Businesses Worldwide</h2>
-                    <p>Thousands of clients trust KhanVerse to hire the best freelancers and grow their business.</p>
+                    <p>Real numbers. Every count on KhanVerse reflects actual marketplace activity.</p>
                 </motion.div>
 
                 <motion.div
@@ -115,10 +137,10 @@ function Statistics() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, margin: "0px 0px -10% 0px" }}
                 >
-                    {statistics.map((item) => (
-                        <AnimatedStat key={item.id} item={item} />
+                    {items.map((item, i) => (
+                        <AnimatedStat key={i} item={item} />
                     ))}
                 </motion.div>
             </div>

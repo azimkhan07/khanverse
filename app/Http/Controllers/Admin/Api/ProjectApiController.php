@@ -17,7 +17,7 @@ class ProjectApiController extends Controller
             $query->where('status', $request->status);
         }
 
-        $projects = $query->latest()->paginate($request->get('per_page', 10));
+        $projects = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($projects);
     }

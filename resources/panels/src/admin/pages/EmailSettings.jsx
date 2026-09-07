@@ -250,13 +250,15 @@ function EmailSettings() {
                             <button className="btn btn-primary btn-sm" onClick={openCreate}><Plus size={14} /> New Template</button>
                         </div>
                         <div className="card-body" style={{ padding: 0 }}>
-                            {rows.length === 0 ? <div className="empty">No email templates found</div> : (
-                                <table>
-                                    <thead>
-                                        <tr><th>Name</th><th>Key</th><th>Subject</th><th>Purpose</th><th>Status</th><th>Actions</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        {rows.map((d) => (
+                            <table>
+                                <thead>
+                                    <tr><th>Name</th><th>Key</th><th>Subject</th><th>Purpose</th><th>Status</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody>
+                                    {rows.length === 0 ? (
+                                        <tr><td colSpan={6} className="empty">No email templates found</td></tr>
+                                    ) : (
+                                        rows.map((d) => (
                                             <tr key={d.id}>
                                                 <td style={{ fontWeight: 500 }}>{d.name}</td>
                                                 <td><code style={{ fontSize: 11, background: 'var(--bg-muted)', padding: '2px 7px', borderRadius: 6 }}>{d.key}</code></td>
@@ -274,10 +276,10 @@ function EmailSettings() {
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 

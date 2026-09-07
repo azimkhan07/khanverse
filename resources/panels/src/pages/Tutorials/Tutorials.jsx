@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Play, Clock } from "lucide-react";
 import frontendApi from "../../shared/frontendApi";
+import PageHero from "../../components/common/PageHero";
+import SectionHeading from "../../components/common/SectionHeading";
 
 const embedUrl = (u) => {
     if (!u) return "";
@@ -27,22 +29,24 @@ function Tutorials() {
     }, []);
 
     return (
-        <div style={{ background: "var(--bg-body, #F8FAFC)", minHeight: "80vh", padding: "60px 24px" }}>
-            <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-                <div style={{ textAlign: "center", marginBottom: 44 }}>
-                    <h1 style={{ fontSize: "clamp(28px,4vw,40px)", fontWeight: 800, color: "var(--text-primary, #0F172A)", letterSpacing: "-1px" }}>
-                        How to use KhanVerse
-                    </h1>
-                    <p style={{ color: "var(--text-muted, #64748B)", marginTop: 8 }}>
-                        Watch these short tutorials to get the most out of the platform.
-                    </p>
-                </div>
+        <>
+            <PageHero
+                title="Tutorials"
+                subtitle="Watch these short tutorials to get the most out of the platform."
+            />
+            <div style={{ background: "var(--bg-body, #F8FAFC)", minHeight: "60vh", padding: "60px 24px" }}>
+                <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+                    <SectionHeading
+                        tag="GUIDES"
+                        title="How to use KhanVerse"
+                        subtitle="Step-by-step video guides for buyers, sellers and admin."
+                    />
 
-                {loading ? (
-                    <div style={{ textAlign: "center", padding: 60, color: "var(--text-muted, #64748B)" }}>Loading…</div>
-                ) : videos.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: 60, color: "var(--text-muted, #64748B)" }}>No tutorials available yet.</div>
-                ) : (
+                    {loading ? (
+                        <div style={{ textAlign: "center", padding: 60, color: "var(--text-muted, #64748B)" }}>Loading…</div>
+                    ) : videos.length === 0 ? (
+                        <div style={{ textAlign: "center", padding: 60, color: "var(--text-muted, #64748B)" }}>No tutorials available yet.</div>
+                    ) : (
                     <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24, alignItems: "start" }}>
                         <div>
                             {active && (
@@ -91,6 +95,7 @@ function Tutorials() {
                 )}
             </div>
         </div>
+        </>
     );
 }
 

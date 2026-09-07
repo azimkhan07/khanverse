@@ -75,11 +75,13 @@ function Categories() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No categories found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Icon</th><th>Services</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((c) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Icon</th><th>Services</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No categories found</td></tr>
+                            ) : (
+                                data.map((c) => (
                                     <tr key={c.id}>
                                         <td>#{c.id}</td>
                                         <td style={{ fontWeight: 500 }}>{c.name}</td>
@@ -98,10 +100,10 @@ function Categories() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

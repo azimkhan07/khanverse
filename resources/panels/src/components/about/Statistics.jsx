@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import {
     Users,
     Briefcase,
-    Globe,
-    Star
+    ShoppingBag,
+    Package
 } from "lucide-react";
+import useHomeStats from "./useHomeStats";
 
-function useCountUp(target, duration = 2000) {
+function useCountUp(target, duration = 1500) {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
     const hasAnimated = useRef(false);
@@ -20,7 +21,7 @@ function useCountUp(target, duration = 2000) {
             ([entry]) => {
                 if (entry.isIntersecting && !hasAnimated.current) {
                     hasAnimated.current = true;
-                    const numericTarget = parseFloat(target.replace(/[^0-9.]/g, ""));
+                    const numericTarget = parseFloat(String(target).replace(/[^0-9.]/g, ""));
                     if (isNaN(numericTarget)) {
                         setCount(target);
                         return;
@@ -67,16 +68,9 @@ const cardVariants = {
     },
 };
 
-const statCards = [
-    { Icon: Users, value: "15K+", label: "Verified Freelancers" },
-    { Icon: Briefcase, value: "8K+", label: "Projects Completed" },
-    { Icon: Globe, value: "120+", label: "Countries Served" },
-    { Icon: Star, value: "4.9", label: "Average Rating", suffix: "★" },
-];
-
 function AnimatedStatCard({ Icon, value, label, suffix = "" }) {
-    const { count, ref } = useCountUp(value, 2000);
-    const numSuffix = suffix || value.replace(/[0-9.]/g, "");
+    const { count, ref } = useCountUp(value, 1500);
+    const numSuffix = suffix || "";
 
     return (
         <motion.div
@@ -93,34 +87,26 @@ function AnimatedStatCard({ Icon, value, label, suffix = "" }) {
 }
 
 function Statistics() {
+    const { stats } = useHomeStats();
+
+    const statCards = [
+        { Icon: ShoppingBag, value: String(stats.services), label: "Services Listed" },
+        { Icon: Users, value: String(stats.sellers), label: "Verified Freelancers" },
+        { Icon: Briefcase, value: String(stats.delivered), label: "Projects Completed" },
+        { Icon: Package, value: String(stats.buyers), label: "Happy Buyers" },
+    ].filter((card) => parseInt(card.value, 10) > 0);
+
+    if (statCards.length === 0) return null;
 
     return (
-
         <section className="about-stats-section">
-
             <div className="container">
-
                 <div className="section-heading">
-
-                    <span className="section-tag">
-
-                        OUR ACHIEVEMENTS
-
-                    </span>
-
-                    <h2>
-
-                        Trusted By Thousands Worldwide
-
-                    </h2>
-
+                    <span className="section-tag">OUR ACHIEVEMENTS</span>
+                    <h2>Our Achievements In Numbers</h2>
                     <p>
-
-                        We help businesses and freelancers connect through a
-                        secure, AI-powered marketplace.
-
+                        Real numbers from real activity on the KhanVerse marketplace.
                     </p>
-
                 </div>
 
                 <motion.div
@@ -130,7 +116,6 @@ function Statistics() {
                     whileInView="visible"
                     viewport={{ once: true, margin: "-60px" }}
                 >
-
                     {statCards.map((card) => (
                         <AnimatedStatCard
                             key={card.label}
@@ -140,15 +125,10 @@ function Statistics() {
                             suffix={card.suffix}
                         />
                     ))}
-
                 </motion.div>
-
             </div>
-
         </section>
-
     );
-
 }
 
 export default Statistics;

@@ -13,15 +13,19 @@ class AdminPaymentGatewayApiController extends Controller
     public function index(Request $request): JsonResponse
     {
         $gateways = PaymentGateway::latest()
-            ->paginate($request->integer('per_page', 10));
+            ->paginate(min(100, $request->integer('per_page', 10)));
 
         return response()->json($gateways);
     }
 
     public function show($id): JsonResponse
     {
+        $gateway = PaymentGateway::findOrFail($id);
+        $gateway->access_code = $gateway->access_code ? '••••••••' : '';
+        $gateway->working_key = $gateway->working_key ? '••••••••' : '';
+
         return response()->json([
-            'gateway' => PaymentGateway::findOrFail($id),
+            'gateway' => $gateway,
         ]);
     }
 

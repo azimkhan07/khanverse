@@ -3,8 +3,8 @@ export default function Pagination({ page = 1, lastPage = 1, onPage, total, from
 
     const winStart = Math.max(1, Math.min(page - 4, lastPage - 9));
     const winEnd = Math.min(lastPage, winStart + 9);
-    const window = [];
-    for (let i = winStart; i <= winEnd; i++) window.push(i);
+    const pages = [];
+    for (let i = winStart; i <= winEnd; i++) pages.push(i);
 
     return (
         <div className="pagination">
@@ -17,7 +17,7 @@ export default function Pagination({ page = 1, lastPage = 1, onPage, total, from
                 <button disabled={page <= 1} onClick={() => onPage(page - 1)}>‹</button>
                 {winStart > 1 && <button onClick={() => onPage(1)}>1</button>}
                 {winStart > 2 && <span className="pagination-ellipsis">…</span>}
-                {window.map((p) => (
+                {pages.map((p) => (
                     <button key={p} className={p === page ? 'active' : ''} onClick={() => onPage(p)}>{p}</button>
                 ))}
                 {winEnd < lastPage - 1 && <span className="pagination-ellipsis">…</span>}

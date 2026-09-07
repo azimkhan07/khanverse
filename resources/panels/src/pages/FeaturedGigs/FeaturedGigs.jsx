@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import "../../theme/css/featured-gigs.css";
 import GigCard from "../../components/cards/GigCard";
-import { featuredGigs as staticGigs } from "../../components/FeaturedGigs/featuredGigsData";
 import frontendApi from "../../shared/frontendApi";
 import Modal from "../../shared/components/Modal";
 import { showDialog } from "../../shared/components/Dialog";
@@ -20,11 +19,12 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        filter: "blur(0px)",
+        transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] },
     },
 };
 
@@ -43,18 +43,18 @@ function FeaturedGigs() {
                     setGigs(services.map((s) => ({
                         id: s.id,
                         title: s.title,
-                        seller: s.seller?.full_name || s.seller?.user?.name || "Unknown",
+                        seller: s.seller?.full_name || s.seller?.name || "Unknown",
                         level: s.seller?.experience_level || "New Seller",
-                        rating: 4.8,
-                        reviews: 0,
+                        rating: Number(s.rating || 0),
+                        reviews: Number(s.reviews || 0),
+                        sold: Number(s.sold || 0),
                         price: s.price,
                         image: s.thumbnail || "https://placehold.co/600x400",
+                        delivery: s.delivery_days ? `${s.delivery_days} Days` : "3 Days",
                     })));
-                } else {
-                    setGigs(staticGigs);
                 }
             })
-            .catch(() => setGigs(staticGigs));
+            .catch(() => {});
     }, []);
 
     const openOrder = (gig) => {
@@ -128,7 +128,7 @@ function FeaturedGigs() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, margin: "0px 0px -10% 0px" }}
                 >
                     {gigs.map((gig) => (                        <motion.div
                             key={gig.id}

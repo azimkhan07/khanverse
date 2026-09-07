@@ -12,11 +12,12 @@ const containerVariants = {
 };
 
 const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 50, filter: "blur(6px)" },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        filter: "blur(0px)",
+        transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] },
     },
 };
 
@@ -41,7 +42,7 @@ function WhyKhanVerse() {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, margin: "0px 0px -10% 0px" }}
                 >
                     {whyData.map((item) => {
                         const Icon = item.icon;

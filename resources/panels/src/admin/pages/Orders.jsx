@@ -5,6 +5,7 @@ import api from '../../shared/api';
 import { orderStatusBadge, fmtMoney, fmtTime } from '../helpers';
 import Pagination from '../components/Pagination';
 import Modal from '../components/Modal';
+import Loading from '../components/Loading';
 import toastr from '../../shared/toastr';
 
 const PLACEHOLDER_HELP = ['{prefix}', '{suffix}', '{year}', '{yy}', '{month}', '{seq}'];
@@ -38,15 +39,18 @@ function Orders() {
     const [numOpen, setNumOpen] = useState(false);
     const [numForm, setNumForm] = useState({ pattern: 'ORD-{year}-{seq}', prefix: 'ORD', suffix: '', seq_padding: 4 });
     const [numBusy, setNumBusy] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         const t = setTimeout(() => {
             api.get('/admin/orders', { params: { status, search: query || undefined, page, per_page: 10 } })
                 .then((res) => {
                     setData(res.data.data || res.data || []);
                     setMeta(res.data);
                 })
-                .catch(() => {});
+                .catch(() => {})
+                .finally(() => setLoading(false));
         }, 300);
         return () => clearTimeout(t);
     }, [status, page, query]);
@@ -69,6 +73,8 @@ function Orders() {
             setNumBusy(false);
         }
     };
+
+    if (loading) return <Loading />;
 
     return (
         <div>
@@ -96,15 +102,15 @@ function Orders() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? (
-                        <div className="empty">No orders found</div>
-                    ) : (
-                        <table>
-                            <thead>
-                                <tr><th>Order No.</th><th>Buyer</th><th>Seller</th><th>Amount</th><th>Status</th><th>Date</th><th></th></tr>
-                            </thead>
-                            <tbody>
-                                {data.map((o) => (
+                    <table>
+                        <thead>
+                            <tr><th>Order No.</th><th>Buyer</th><th>Seller</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No orders found</td></tr>
+                            ) : (
+                                data.map((o) => (
                                     <tr key={o.id}>
                                         <td style={{ fontWeight: 600 }}>{o.order_number || `#${o.id}`}</td>
                                         <td>{o.buyer?.full_name || o.buyer?.name || '-'}</td>
@@ -118,10 +124,10 @@ function Orders() {
                                             </button>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

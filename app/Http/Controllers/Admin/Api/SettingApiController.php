@@ -42,10 +42,10 @@ class SettingApiController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'group' => 'required|in:admin,seller,buyer,frontend,auth',
+            'group' => 'required|in:admin,seller,buyer,frontend,auth,website',
             'key' => ['required', 'regex:/^[a-z0-9._-]+$/i'],
             'value' => 'nullable|string',
-            'type' => 'required|in:text,textarea,number,boolean,image',
+            'type' => 'required|in:text,textarea,number,boolean,image,html',
         ], [
             'key.regex' => 'The key may only contain letters, numbers, dots, underscores and dashes.',
         ]);
@@ -87,6 +87,21 @@ class SettingApiController extends Controller
 
         return response()->json([
             'message' => 'Setting deleted successfully.',
+        ]);
+    }
+
+    public function upload(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'file' => 'required|image|max:5120',
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store('settings', 'public');
+
+        return response()->json([
+            'path' => $path,
+            'url' => asset('storage/' . $path),
         ]);
     }
 }

@@ -30,11 +30,13 @@ function Devices() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No devices found</div> : (
-                        <table>
-                            <thead><tr><th>User</th><th>Email</th><th>Device</th><th>IP Address</th><th>User Agent</th><th>Last Activity</th></tr></thead>
-                            <tbody>
-                                {data.map((d) => (
+                    <table>
+                        <thead><tr><th>User</th><th>Email</th><th>Device</th><th>IP Address</th><th>User Agent</th><th>Last Activity</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={6} className="empty">No devices found</td></tr>
+                            ) : (
+                                data.map((d) => (
                                     <tr key={d.id}>
                                         <td style={{ fontWeight: 500 }}>{d.user?.name || d.user?.username || '-'}</td>
                                         <td>{d.user?.email || '-'}</td>
@@ -43,10 +45,10 @@ function Devices() {
                                         <td style={{ maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.user_agent || '-'}</td>
                                         <td>{d.last_activity ? new Date(d.last_activity).toLocaleString() : '-'}</td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

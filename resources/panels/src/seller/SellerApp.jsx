@@ -1,19 +1,11 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useTheme } from '../hooks/useTheme';
 import Sidebar from '../shared/components/Sidebar';
 import TopNav from '../shared/components/TopNav';
-import {
-    LayoutDashboard,
-    Briefcase,
-    ShoppingCart,
-    FolderKanban,
-    Wallet,
-    Star,
-    Settings,
-    Bell,
-} from 'lucide-react';
+import iconMap from '../admin/iconMap';
+import api from '../shared/api';
 
 import Dashboard from './pages/Dashboard';
 import Services from './pages/Services';
@@ -37,32 +29,7 @@ import SettingsPage from './pages/Settings';
 import Notifications from './pages/Notifications';
 import ConfirmDialog from '../shared/components/ConfirmDialog';
 import DialogHost from '../shared/components/Dialog';
-
-const menuSections = [
-    {
-        title: 'Main',
-        items: [
-            { path: '/', label: 'Dashboard', icon: <LayoutDashboard />, exact: true },
-            { path: '/services', label: 'Services', icon: <Briefcase /> },
-            { path: '/orders', label: 'Orders', icon: <ShoppingCart /> },
-            { path: '/projects', label: 'Projects', icon: <FolderKanban /> },
-        ],
-    },
-    {
-        title: 'Finance',
-        items: [
-            { path: '/wallet', label: 'Wallet', icon: <Wallet /> },
-            { path: '/reviews', label: 'Reviews', icon: <Star /> },
-        ],
-    },
-    {
-        title: 'Account',
-        items: [
-            { path: '/settings', label: 'Settings', icon: <Settings /> },
-            { path: '/notifications', label: 'Notifications', icon: <Bell /> },
-        ],
-    },
-];
+import InstallAppPrompt from '../components/app/InstallAppPrompt';
 
 const pageTitles = {
     '/': 'Seller Dashboard',
@@ -82,6 +49,7 @@ function AnimatedRoutes({ user }) {
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<Dashboard user={user} />} />
+                <Route path="/dashboard" element={<Navigate to="/" replace />} />
                 <Route path="/services" element={<Services user={user} />} />
                 <Route path="/services/new" element={<ServiceForm user={user} />} />
                 <Route path="/services/:id/edit" element={<ServiceForm user={user} />} />
@@ -108,8 +76,32 @@ function AnimatedRoutes({ user }) {
 }
 
 function SellerLayout({ user, isDark, toggleTheme }) {
+    const [menuSections, setMenuSections] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
+    const [mobileNav, setMobileNav] = useState(false);
     const location = useLocation();
+
+    useEffect(() => { setMobileNav(false); }, [location.pathname]);
+
+    const renderIcon = (iconName) => {
+        const Icon = iconMap[iconName];
+        return Icon ? <Icon /> : null;
+    };
+
+    useEffect(() => {
+        api.get('/sidebar/menus')
+            .then((res) => {
+                const sections = (res.data || []).map((s) => ({
+                    ...s,
+                    items: (s.items || []).map((item) => ({
+                        ...item,
+                        icon: renderIcon(item.icon),
+                    })),
+                }));
+                setMenuSections(sections);
+            })
+            .catch(() => {});
+    }, []);
 
     let title = pageTitles[location.pathname] || 'Seller Dashboard';
     if (location.pathname === '/services/new') title = 'Add Service';
@@ -126,11 +118,13 @@ function SellerLayout({ user, isDark, toggleTheme }) {
 
     return (
         <div className="dashboard-layout">
-            <Sidebar logo="KhanVerse" menus={menuSections} role="seller" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+            <Sidebar logo="KhanVerse" menus={menuSections} role="seller" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
+            <div className={`sidebar-backdrop ${mobileNav ? 'show' : ''}`} onClick={() => setMobileNav(false)} />
             <div className="main-content">
-                <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} />
+                <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />
                 <div className="page-content kv-velora">
                     <AnimatedRoutes user={user} />
+                    <InstallAppPrompt />
                 </div>
             </div>
         </div>

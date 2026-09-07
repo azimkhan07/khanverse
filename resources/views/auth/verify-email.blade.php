@@ -1,40 +1,56 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-        <h2 class="text-lg font-semibold">{{ setting('auth', 'verify.heading', 'Verify Your Email') }}</h2>
-        <p class="mb-4 text-sm text-gray-600">
-            {{ setting('auth', 'verify.subheading', 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-        </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ setting('auth', 'verify.title', 'Verify Email') }} — {{ config('app.name', 'KhanVerse') }}</title>
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-grid" id="authGrid"></div>
+
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="logo-box">
+                @if(setting('auth', 'auth.logo'))
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                @else
+                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                @endif
+            </div>
+            <h2>{{ setting('auth', 'verify.heading', 'Verify Your Email') }}</h2>
+            <p>{{ setting('auth', 'verify.subheading', 'Thanks for signing up! Please verify your email address by clicking on the link we just emailed to you.') }}</p>
+        </div>
 
         @if (session('status') == 'verification-link-sent')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-            </div>
+            <div class="alert alert-success">A new verification link has been sent to the email address you provided during registration.</div>
         @endif
 
-        <div class="mt-4 flex items-center justify-between">
+        <div class="auth-form" style="display:flex; flex-direction:column; gap:12px;">
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
-
-                <div>
-                    <x-button>
-                        {{ setting('auth', 'verify.button', 'Resend Verification Email') }}
-                    </x-button>
-                </div>
+                <button type="submit" class="auth-btn">
+                    <span>{{ setting('auth', 'verify.button', 'Resend Verification Email') }}</span>
+                </button>
             </form>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-
-                <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    {{ __('Log Out') }}
+                <button type="submit" class="auth-social-btn" style="border:1px solid rgba(0,0,0,0.10); background:#fff;">
+                    <span style="color:#757575;">Log Out</span>
                 </button>
             </form>
         </div>
-    </x-auth-card>
-</x-guest-layout>
+
+    </div>
+
+    <script src="{{ asset('admin/assets/js/auth.js') }}"></script>
+
+</body>
+</html>

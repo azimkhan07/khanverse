@@ -1,22 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useTheme } from '../hooks/useTheme';
 import Sidebar from '../shared/components/Sidebar';
 import TopNav from '../shared/components/TopNav';
-import {
-    LayoutDashboard,
-    ShoppingCart,
-    FolderKanban,
-    Wallet,
-    Star,
-    Settings,
-    Bell,
-    LifeBuoy,
-} from 'lucide-react';
+import iconMap from '../admin/iconMap';
+import api from '../shared/api';
 
 import ConfirmDialog from '../shared/components/ConfirmDialog';
 import DialogHost from '../shared/components/Dialog';
+import InstallAppPrompt from '../components/app/InstallAppPrompt';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
@@ -31,32 +24,6 @@ import SettingsPage from './pages/Settings';
 import Notifications from './pages/Notifications';
 import NewReview from './pages/NewReview';
 import Support from './pages/Support';
-
-const menuSections = [
-    {
-        title: 'Main',
-        items: [
-            { path: '/', label: 'Dashboard', icon: <LayoutDashboard />, exact: true },
-            { path: '/orders', label: 'Orders', icon: <ShoppingCart /> },
-            { path: '/projects', label: 'Projects', icon: <FolderKanban /> },
-        ],
-    },
-    {
-        title: 'Finance',
-        items: [
-            { path: '/wallet', label: 'Wallet', icon: <Wallet /> },
-            { path: '/reviews', label: 'Reviews', icon: <Star /> },
-        ],
-    },
-    {
-        title: 'Account',
-        items: [
-            { path: '/settings', label: 'Settings', icon: <Settings /> },
-            { path: '/notifications', label: 'Notifications', icon: <Bell /> },
-            { path: '/support', label: 'Support', icon: <LifeBuoy /> },
-        ],
-    },
-];
 
 function AnimatedRoutes({ user }) {
     const location = useLocation();
@@ -85,8 +52,32 @@ function AnimatedRoutes({ user }) {
 }
 
 function BuyerLayout({ user, isDark, toggleTheme }) {
+    const [menuSections, setMenuSections] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
+    const [mobileNav, setMobileNav] = useState(false);
     const location = useLocation();
+
+    useEffect(() => { setMobileNav(false); }, [location.pathname]);
+
+    const renderIcon = (iconName) => {
+        const Icon = iconMap[iconName];
+        return Icon ? <Icon /> : null;
+    };
+
+    useEffect(() => {
+        api.get('/sidebar/menus')
+            .then((res) => {
+                const sections = (res.data || []).map((s) => ({
+                    ...s,
+                    items: (s.items || []).map((item) => ({
+                        ...item,
+                        icon: renderIcon(item.icon),
+                    })),
+                }));
+                setMenuSections(sections);
+            })
+            .catch(() => {});
+    }, []);
 
     let title = 'Buyer Dashboard';
     if (location.pathname === '/orders') title = 'Orders';
@@ -105,11 +96,13 @@ function BuyerLayout({ user, isDark, toggleTheme }) {
 
     return (
         <div className="dashboard-layout buyer-app">
-            <Sidebar logo="KhanVerse" menus={menuSections} role="buyer" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+            <Sidebar logo="KhanVerse" menus={menuSections} role="buyer" collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} mobileOpen={mobileNav} onNavigate={() => setMobileNav(false)} />
+            <div className={`sidebar-backdrop ${mobileNav ? 'show' : ''}`} onClick={() => setMobileNav(false)} />
             <div className="main-content">
-                <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} />
+                <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />
                 <div className="page-content kv-velora">
                     <AnimatedRoutes user={user} />
+                    <InstallAppPrompt />
                 </div>
             </div>
         </div>

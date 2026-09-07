@@ -1,37 +1,56 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-        <h2 class="text-lg font-semibold">{{ setting('auth', 'confirm.heading', 'Confirm Password') }}</h2>
-        <p class="mb-4 text-sm text-gray-600">
-            {{ setting('auth', 'confirm.subheading', 'This is a secure area of the application. Please confirm your password before continuing.') }}
-        </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ setting('auth', 'confirm.title', 'Confirm Password') }} — {{ config('app.name', 'KhanVerse') }}</title>
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+<body class="auth-page">
 
-        <form method="POST" action="{{ route('password.confirm') }}">
+    <div class="auth-grid" id="authGrid"></div>
+
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="logo-box">
+                @if(setting('auth', 'auth.logo'))
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                @else
+                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                @endif
+            </div>
+            <h2>{{ setting('auth', 'confirm.heading', 'Confirm Password') }}</h2>
+            <p>{{ setting('auth', 'confirm.subheading', 'This is a secure area. Please confirm your password before continuing.') }}</p>
+        </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('password.confirm') }}" class="auth-form">
             @csrf
 
-            <!-- Password -->
-            <div>
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
             </div>
 
-            <div class="flex justify-end mt-4">
-                <x-button>
-                    {{ setting('auth', 'confirm.button', 'Confirm') }}
-                </x-button>
-            </div>
+            <button type="submit" class="auth-btn">
+                <span>{{ setting('auth', 'confirm.button', 'Confirm') }}</span>
+            </button>
         </form>
-    </x-auth-card>
-</x-guest-layout>
+
+    </div>
+
+    <script src="{{ asset('admin/assets/js/auth.js') }}"></script>
+
+</body>
+</html>

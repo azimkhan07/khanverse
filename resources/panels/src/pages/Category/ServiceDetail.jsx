@@ -392,10 +392,14 @@ function ServiceDetail() {
                         <h1 className="sd-title">{service.title}</h1>
 
                         <div className="sd-rating-row">
-                            <span className="sd-rating">
-                                <Star size={14} fill="#FBBF24" color="#FBBF24" />
-                                {service.rating || service.avg_rating || 4.8}
-                            </span>
+                            {service.rating || service.avg_rating ? (
+                                <span className="sd-rating">
+                                    <Star size={14} fill="#FBBF24" color="#FBBF24" />
+                                    {service.rating || service.avg_rating}
+                                </span>
+                            ) : (
+                                <span className="sd-badge" style={{ color: "var(--accent,#4F46E5)", fontWeight: 700 }}>New</span>
+                            )}
                             <span className="sd-reviews-count">
                                 {service.reviews_count || reviews.length} reviews
                             </span>
@@ -411,8 +415,10 @@ function ServiceDetail() {
                                 <div className="sd-seller-name">{sellerName}</div>
                                 <div className="sd-seller-level">{sellerLevel}</div>
                                 <div className="sd-seller-meta">
-                                    <span><Star size={12} fill="#FBBF24" color="#FBBF24" /> {service.seller?.rating || service.rating || 4.8}</span>
-                                    <span><Package size={12} /> {service.seller?.total_orders || service.total_sales || 320} orders</span>
+                                    {service.seller?.rating || service.rating ? (
+                                        <span><Star size={12} fill="#FBBF24" color="#FBBF24" /> {service.seller?.rating || service.rating}</span>
+                                    ) : null}
+                                    <span><Package size={12} /> {service.seller?.total_orders ?? service.total_sales ?? 0} orders</span>
                                 </div>
                             </div>
                         </div>
@@ -521,6 +527,11 @@ function ServiceDetail() {
                         </div>
                     </ScrollReveal>
                     <div className="sd-reviews-list">
+                        {reviews.length === 0 && (
+                            <div className="sd-review" style={{ textAlign: "center", color: "var(--text-muted,#64748B)", fontSize: 14, padding: 30 }}>
+                                No reviews yet. Be the first to order and share feedback after delivery.
+                            </div>
+                        )}
                         {reviews.map((r) => (
                             <ScrollReveal key={r.id} direction="up" distance={20}>
                                 <div className="sd-review">
@@ -595,8 +606,8 @@ function ServiceDetail() {
                                 ...gig,
                                 seller: gig.seller?.full_name || gig.seller?.name || gig.seller || "Unknown",
                                 level: gig.seller?.experience_level || gig.level || "New Seller",
-                                rating: Number(gig.rating || 4.8),
-                                reviews: gig.reviews || 0,
+                                rating: Number(gig.rating || 0),
+                                reviews: Number(gig.reviews || 0),
                                 price: gig.price || 0,
                                 image: gig.thumbnail || gig.image || "https://placehold.co/600x400",
                                 delivery: gig.delivery_days ? `${gig.delivery_days} Days` : gig.delivery || "3 Days",

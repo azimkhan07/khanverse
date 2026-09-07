@@ -1,37 +1,65 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-        <h2 class="text-lg font-semibold">{{ setting('auth', 'forgot.heading', 'Forgot Password?') }}</h2>
-        <p class="mb-4 text-sm text-gray-600">
-            {{ setting('auth', 'forgot.subheading', 'No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-        </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ setting('auth', 'forgot.title', 'Forgot Password') }} — {{ config('app.name', 'KhanVerse') }}</title>
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+<body class="auth-page">
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <div class="auth-grid" id="authGrid"></div>
 
-        <form method="POST" action="{{ route('password.email') }}">
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="logo-box">
+                @if(setting('auth', 'auth.logo'))
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                @else
+                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                @endif
+            </div>
+            <h2>{{ setting('auth', 'forgot.heading', 'Forgot Password?') }}</h2>
+            <p>{{ setting('auth', 'forgot.subheading', 'No problem. Just let us know your email address and we will email you a password reset link.') }}</p>
+        </div>
+
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('password.email') }}" class="auth-form">
             @csrf
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-box">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" required autofocus>
+                </div>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ setting('auth', 'forgot.button', 'Email Password Reset Link') }}
-                </x-button>
-            </div>
+            <button type="submit" class="auth-btn">
+                <span>{{ setting('auth', 'forgot.button', 'Email Password Reset Link') }}</span>
+            </button>
         </form>
-    </x-auth-card>
-</x-guest-layout>
+
+        <div class="auth-footer auth-form">
+            <span>Remember your password?</span>
+            <a href="{{ route('login') }}">Back to Login</a>
+        </div>
+
+    </div>
+
+    <script src="{{ asset('admin/assets/js/auth.js') }}"></script>
+
+</body>
+</html>

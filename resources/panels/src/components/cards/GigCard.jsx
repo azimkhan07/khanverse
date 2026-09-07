@@ -1,16 +1,51 @@
 import { useState } from "react";
-import { Heart, Star, ArrowRight, Eye } from "lucide-react";
+import { Heart, Star, ArrowRight, Eye, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import Modal from "../../shared/components/Modal";
+import toastr from "../../shared/toastr";
+import { toggleCompare, isInCompare, COMPARE_MAX } from "../../shared/compare";
 
 function GigCard({ gig, onOrder }) {
     const [showDetail, setShowDetail] = useState(false);
+    const [, forceRender] = useState(0);
+
+    const inCompare = isInCompare(gig.id);
+
+    const toggle = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const res = toggleCompare({
+            id: gig.id,
+            title: gig.title,
+            image: gig.image,
+            price: gig.price,
+        });
+        forceRender((n) => n + 1);
+        if (res.added && res.replaced) {
+            toastr.warning(`Max ${COMPARE_MAX} services compared. Oldest replaced.`);
+        } else if (res.added) {
+            toastr.success("Added to compare");
+        } else {
+            toastr.info("Removed from compare");
+        }
+    };
+
+    const rating = Number(gig.rating || 0);
+    const reviews = Number(gig.reviews || 0);
 
     return (
         <>
             <div className="gig-card">
                 <Link to={`/service/${gig.id}`} className="gig-image">
                     <img src={gig.image} alt={gig.title} />
+                    <button
+                        className={`gig-compare ${inCompare ? "active" : ""}`}
+                        aria-label="Add to compare"
+                        title={inCompare ? "Remove from compare" : "Add to compare"}
+                        onClick={toggle}
+                    >
+                        <Scale size={16} />
+                    </button>
                     <button
                         className="gig-wishlist"
                         aria-label="Add to wishlist"
@@ -38,8 +73,15 @@ function GigCard({ gig, onOrder }) {
                     </button>
                     <div className="gig-meta">
                         <div className="gig-rating">
-                            <Star size={14} fill="#FBBF24" color="#FBBF24" />
-                            <span>{gig.rating}</span>
+                            {rating > 0 ? (
+                                <>
+                                    <Star size={14} fill="#FBBF24" color="#FBBF24" />
+                                    <span>{rating}</span>
+                                    <span className="gig-review-count">({reviews})</span>
+                                </>
+                            ) : (
+                                <span className="gig-new-badge">New</span>
+                            )}
                         </div>
                         <span className="gig-level">{gig.level}</span>
                     </div>
@@ -67,6 +109,11 @@ function GigCard({ gig, onOrder }) {
                         <div className="gig-detail-meta">
                             <span className="gig-level">{gig.level}</span>
                             <span className="gig-detail-delivery">🕐 {gig.delivery || "3 days"}</span>
+                            {rating > 0 && (
+                                <span className="gig-detail-rating">
+                                    <Star size={13} fill="#FBBF24" color="#FBBF24" /> {rating} ({reviews})
+                                </span>
+                            )}
                         </div>
                         <p className="gig-detail-desc">
                             {gig.description || gig.short_description ||

@@ -6,6 +6,7 @@ import api from '../../shared/api';
 import { showConfirm } from '../../shared/components/ConfirmDialog';
 import { avatar, fmtTime } from '../helpers';
 import Pagination from '../components/Pagination';
+import Loading from './Loading';
 
 export default function UsersPage({ title, subtitle, endpoint, detailPath }) {
     const navigate = useNavigate();
@@ -13,11 +14,14 @@ export default function UsersPage({ title, subtitle, endpoint, detailPath }) {
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(1);
     const [meta, setMeta] = useState({});
+    const [loading, setLoading] = useState(true);
 
     const load = (p, q) => {
+        setLoading(true);
         api.get(endpoint, { params: { page: p, per_page: 10, search: q || undefined } })
             .then((res) => { setData(res.data.data || res.data || []); setMeta(res.data); })
-            .catch(() => {});
+            .catch(() => {})
+            .finally(() => setLoading(false));
     };
 
     useEffect(() => {
@@ -53,6 +57,8 @@ export default function UsersPage({ title, subtitle, endpoint, detailPath }) {
         }
         load(page, query);
     };
+
+    if (loading) return <Loading />;
 
     return (
         <div>

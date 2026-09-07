@@ -174,19 +174,21 @@ function PaymentGateways() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {rows.length === 0 ? <div className="empty">No payment gateways found — add your first one</div> : (
-                        <table>
+                    <table>
 <thead>
                                     <tr><th>Name</th><th>Slug</th><th>Merchant ID</th><th>Access Code</th><th>Endpoint</th><th>Default</th><th>Status</th><th>Actions</th></tr>
                                 </thead>
                                 <tbody>
-                                    {rows.map((d) => (
-                                        <tr key={d.id}>
-                                            <td style={{ fontWeight: 500 }}>{d.name}</td>
-                                            <td><code style={{ fontSize: 11, background: 'var(--bg-muted)', padding: '2px 7px', borderRadius: 6 }}>{d.slug}</code></td>
-                                            <td style={{ fontSize: 12 }}>{d.merchant_id || '-'}</td>
-                                            <td style={{ fontSize: 12 }}>{d.access_code}</td>
-                                            <td style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }} title={d.endpoint}>{d.endpoint}</td>
+                                    {rows.length === 0 ? (
+                                        <tr><td colSpan={8} className="empty">No payment gateways found — add your first one</td></tr>
+                                    ) : (
+                                        rows.map((d) => (
+                                            <tr key={d.id}>
+                                                <td style={{ fontWeight: 500 }}>{d.name}</td>
+                                                <td><code style={{ fontSize: 11, background: 'var(--bg-muted)', padding: '2px 7px', borderRadius: 6 }}>{d.slug}</code></td>
+                                                <td style={{ fontSize: 12 }}>{d.merchant_id || '-'}</td>
+                                                <td style={{ fontSize: 12 }}>{d.access_code}</td>
+                                                <td style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }} title={d.endpoint}>{d.endpoint}</td>
                                         <td>
                                             {d.is_default ? (
                                                 <span className="badge badge-warning"><Star size={10} style={{ marginRight: 3 }} /> Default</span>
@@ -206,10 +208,10 @@ function PaymentGateways() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
+                                ))
+                                    )}
+                                </tbody>
                         </table>
-                    )}
                 </div>
             </div>
 

@@ -21,7 +21,7 @@ class ServiceApiController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $services = $query->latest()->paginate($request->get('per_page', 10));
+        $services = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($services);
     }

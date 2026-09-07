@@ -77,11 +77,13 @@ function Modules() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No modules found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Route</th><th>Panel</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((m) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Name</th><th>Slug</th><th>Route</th><th>Panel</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No modules found</td></tr>
+                            ) : (
+                                data.map((m) => (
                                     <tr key={m.id}>
                                         <td>#{m.id}</td>
                                         <td style={{ fontWeight: 500 }}>{m.name}</td>
@@ -100,10 +102,10 @@ function Modules() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

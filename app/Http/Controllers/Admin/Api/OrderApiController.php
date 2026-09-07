@@ -30,7 +30,7 @@ class OrderApiController extends Controller
             });
         }
 
-        $orders = $query->latest()->paginate($request->get('per_page', 10));
+        $orders = $query->latest()->paginate(min(100, $request->get('per_page', 10)));
 
         return response()->json($orders);
     }

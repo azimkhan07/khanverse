@@ -1,34 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useTheme } from '../hooks/useTheme';
 import Sidebar from '../shared/components/Sidebar';
 import TopNav from '../shared/components/TopNav';
-import {
-    LayoutDashboard,
-    ShoppingCart,
-    FolderKanban,
-    Briefcase,
-    Tag,
-    Users,
-    UserCheck,
-    ShieldCheck,
-    Sliders,
-    Menu as MenuIcon,
-    Boxes,
-    KeyRound,
-    MonitorSmartphone,
-    AlertTriangle,
-    Megaphone,
-    Globe,
-    MessageSquareText,
-    FileText,
-    Settings2,
-    Mail,
-    CreditCard,
-    Banknote,
-    PlayCircle,
-} from 'lucide-react';
+import iconMap from './iconMap';
+import api from '../shared/api';
 
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
@@ -45,12 +22,14 @@ import SellerDetail from './pages/SellerDetail';
 import Roles from './pages/Roles';
 import SettingsPage from './pages/Settings';
 import Menus from './pages/Menus';
-import Modules from './pages/Modules';
 import Tutorials from './pages/Tutorials';
 import TutorialsForm from './pages/TutorialsForm';
+import BrandPartners from './pages/BrandPartners';
+import TeamMembers from './pages/TeamMembers';
 import Permissions from './pages/Permissions';
 import Devices from './pages/Devices';
 import Suspicious from './pages/Suspicious';
+import LoginHistory from './pages/LoginHistory';
 import WebsiteBanners from './pages/WebsiteBanners';
 import WebsiteFaqs from './pages/WebsiteFaqs';
 import WebsiteTestimonials from './pages/WebsiteTestimonials';
@@ -71,83 +50,58 @@ import InvoiceSettings from './pages/InvoiceSettings';
 import EmailSettings from './pages/EmailSettings';
 import PaymentGateways from './pages/PaymentGateways';
 import Settlements from './pages/Settlements';
+import AppBuilds from './pages/AppBuilds';
 import ConfirmDialog from '../shared/components/ConfirmDialog';
 
-const menuSections = [
-    {
-        title: 'Overview',
-        items: [
-            { path: '/', label: 'Dashboard', icon: <LayoutDashboard size={15} />, exact: true },
-        ],
-    },
-    {
-        title: 'Marketplace',
-        items: [
-            { path: '/orders', label: 'Orders', icon: <ShoppingCart size={15} /> },
-            { path: '/projects', label: 'Projects', icon: <FolderKanban size={15} /> },
-            { path: '/services', label: 'Services', icon: <Briefcase size={15} /> },
-            { path: '/categories', label: 'Categories', icon: <Tag size={15} /> },
-        ],
-    },
-    {
-        title: 'Users',
-        items: [
-            { path: '/buyers', label: 'Buyers', icon: <Users size={15} /> },
-            { path: '/sellers', label: 'Sellers', icon: <UserCheck size={15} /> },
-            { path: '/devices', label: 'Login Devices', icon: <MonitorSmartphone size={15} /> },
-            { path: '/suspicious', label: 'Suspicious', icon: <AlertTriangle size={15} /> },
-        ],
-    },
-    {
-        title: 'Access & System',
-        items: [
-            { path: '/roles', label: 'Roles', icon: <ShieldCheck size={15} /> },
-            { path: '/permissions', label: 'Permissions', icon: <KeyRound size={15} /> },
-            { path: '/menus', label: 'Menus', icon: <MenuIcon size={15} /> },
-            { path: '/modules', label: 'Modules', icon: <Boxes size={15} /> },
-            { path: '/settings', label: 'Settings', icon: <Sliders size={15} /> },
-        ],
-    },
-    {
-        title: 'Invoicing',
-        items: [
-            { path: '/invoices', label: 'Invoice Designs', icon: <FileText size={15} />, exact: true },
-            { path: '/invoices/settings', label: 'Invoice Settings', icon: <Settings2 size={15} /> },
-        ],
-    },
-    {
-        title: 'Email',
-        items: [
-            { path: '/email-settings', label: 'Email Settings', icon: <Mail size={15} />, exact: true },
-        ],
-    },
-    {
-        title: 'Payments',
-        items: [
-            { path: '/payment-gateways', label: 'Payment Gateways', icon: <CreditCard size={15} />, exact: true },
-            { path: '/settlements', label: 'Settlements', icon: <Banknote size={15} />, exact: true },
-        ],
-    },
-    {
-        title: 'Website',
-        items: [
-            { path: '/website/banners', label: 'Banners', icon: <Megaphone size={15} /> },
-            { path: '/website/homepage', label: 'Homepage', icon: <Globe size={15} /> },
-            { path: '/website/pages', label: 'Pages', icon: <Globe size={15} /> },
-            { path: '/website/faqs', label: 'FAQs', icon: <MessageSquareText size={15} /> },
-            { path: '/website/testimonials', label: 'Testimonials', icon: <ShieldCheck size={15} /> },
-            { path: '/website/seo', label: 'SEO', icon: <Globe size={15} /> },
-            { path: '/website/maintenance', label: 'Maintenance', icon: <Sliders size={15} /> },
-            { path: '/tutorials', label: 'Tutorial Videos', icon: <PlayCircle size={15} /> },
-        ],
-    },
-];
+function NotFound() {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', gap: 16 }}>
+            <div style={{ fontSize: 64, fontWeight: 800, color: 'var(--text-muted, #cbd5e1)', lineHeight: 1 }}>404</div>
+            <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary, #1e293b)' }}>Page Not Found</h2>
+            <p style={{ fontSize: 13, color: 'var(--text-muted, #64748b)' }}>The page you're looking for doesn't exist.</p>
+            <a href="/admin" className="btn btn-primary btn-sm" style={{ marginTop: 8 }}>Back to Dashboard</a>
+        </div>
+    );
+}
 
 function AdminLayout({ user, isDark, toggleTheme }) {
+    const [menuSections, setMenuSections] = useState([]);
+    const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
     const [hidden, setHidden] = useState(() => {
         try { return localStorage.getItem('khanverse-admin-sidebar') === 'hidden'; } catch { return false; }
     });
     const location = useLocation();
+
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    if (isMobile) {
+        window.location.href = '/';
+        return null;
+    }
+
+    const renderIcon = (iconName, props) => {
+        const Icon = iconMap[iconName];
+        return Icon ? <Icon {...props} /> : null;
+    };
+
+    useEffect(() => {
+        api.get('/sidebar/menus')
+            .then((res) => {
+                const sections = (res.data || []).map((s) => ({
+                    ...s,
+                    items: (s.items || []).map((item) => ({
+                        ...item,
+                        icon: renderIcon(item.icon, { size: 15 }),
+                    })),
+                }));
+                setMenuSections(sections);
+            })
+            .catch(() => {});
+    }, []);
 
     const toggleSidebar = () => {
         setHidden((h) => {
@@ -161,13 +115,17 @@ function AdminLayout({ user, isDark, toggleTheme }) {
         '/': 'Dashboard', '/orders': 'Orders', '/projects': 'Projects',
         '/services': 'Services', '/categories': 'Categories', '/buyers': 'Buyers',
         '/sellers': 'Sellers', '/roles': 'Roles', '/settings': 'Settings',
-        '/menus': 'Menus', '/modules': 'Modules', '/permissions': 'Permissions',
+        '/menus': 'Menus', '/permissions': 'Permissions',
         '/profile': 'My Profile',
         '/devices': 'Login Devices', '/suspicious': 'Suspicious Users',
+        '/login-history': 'Login History',
         '/website/banners': 'Banners', '/website/homepage': 'Homepage',
         '/website/pages': 'Pages', '/website/faqs': 'FAQs',
         '/website/testimonials': 'Testimonials', '/website/seo': 'SEO',
         '/website/maintenance': 'Maintenance', '/notifications': 'Notifications',
+        '/brand-partners': 'Brand Partners',
+        '/team-members': 'Team Members',
+        '/app-builds': 'App Builds',
         '/invoices': 'Invoice Designs', '/invoices/settings': 'Invoice Settings',
         '/email-settings': 'Email Settings',
         '/payment-gateways': 'Payment Gateways',
@@ -217,10 +175,10 @@ function AdminLayout({ user, isDark, toggleTheme }) {
                         <Route path="/roles" element={<Roles />} />
                         <Route path="/settings" element={<SettingsPage />} />
                         <Route path="/menus" element={<Menus />} />
-                        <Route path="/modules" element={<Modules />} />
                         <Route path="/permissions" element={<Permissions />} />
                         <Route path="/devices" element={<Devices />} />
                         <Route path="/suspicious" element={<Suspicious />} />
+                        <Route path="/login-history" element={<LoginHistory />} />
                         <Route path="/website/banners" element={<WebsiteBanners />} />
                         <Route path="/website/banners/new" element={<WebsiteBannersForm />} />
                         <Route path="/website/banners/:id" element={<WebsiteBannersForm />} />
@@ -243,12 +201,16 @@ function AdminLayout({ user, isDark, toggleTheme }) {
                         <Route path="/tutorials" element={<Tutorials />} />
                         <Route path="/tutorials/new" element={<TutorialsForm />} />
                         <Route path="/tutorials/:id" element={<TutorialsForm />} />
+                        <Route path="/brand-partners" element={<BrandPartners />} />
+                        <Route path="/team-members" element={<TeamMembers />} />
+                        <Route path="/app-builds" element={<AppBuilds />} />
                         <Route path="/notifications" element={<Notifications />} />
                         <Route path="/invoices" element={<InvoiceDesigns />} />
                         <Route path="/invoices/settings" element={<InvoiceSettings />} />
                         <Route path="/email-settings" element={<EmailSettings />} />
                         <Route path="/payment-gateways" element={<PaymentGateways />} />
                         <Route path="/settlements" element={<Settlements />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
             </div>

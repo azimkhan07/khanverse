@@ -21,7 +21,7 @@ class AdminEmailSettingApiController extends Controller
         $this->ensureDefaults();
 
         $templates = EmailTemplate::latest()
-            ->paginate($request->integer('per_page', 10));
+            ->paginate(min(100, $request->integer('per_page', 10)));
 
         return response()->json($templates);
     }
@@ -174,7 +174,7 @@ class AdminEmailSettingApiController extends Controller
             'port' => (int) setting('smtp', 'port', 587),
             'encryption' => setting('smtp', 'encryption', 'tls'),
             'username' => setting('smtp', 'username', ''),
-            'password' => setting('smtp', 'password', ''),
+            'password' => setting('smtp', 'password', '') !== '' ? '••••••••' : '',
             'from_address' => setting('smtp', 'from_address', ''),
             'from_name' => setting('smtp', 'from_name', config('app.name', 'KhanVerse')),
             'enabled' => (bool) setting('smtp', 'enabled', false),

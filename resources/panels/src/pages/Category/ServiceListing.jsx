@@ -338,6 +338,7 @@ function ServiceListing() {
                     background: var(--bg-card, #fff);
                     border: 1px solid var(--border-color, #E2E8F0);
                     border-radius: 16px; box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.06));
+                    min-width: 0; max-width: 100%; flex-wrap: wrap;
                 }
 
                 .sl-result-count { font-size: 14px; color: var(--text-muted, #64748B); }
@@ -346,8 +347,8 @@ function ServiceListing() {
                 .sl-sort { display: flex; align-items: center; gap: 10px; }
                 .sl-sort-label { font-size: 13px; font-weight: 600; color: var(--text-muted, #64748B); white-space: nowrap; }
 
-                .sl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
-                .sl-gig-item { height: 100%; display: flex; flex-direction: column; }
+                .sl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
+                .sl-gig-item { height: 100%; display: flex; flex-direction: column; min-width: 0; }
 
                 .sl-empty {
                     text-align: center; padding: 80px 24px;
@@ -383,7 +384,7 @@ function ServiceListing() {
                 }
 
                 @media (max-width: 1100px) {
-                    .sl-grid { grid-template-columns: repeat(2, 1fr); }
+                    .sl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
                 }
 
                 @media (max-width: 900px) {
@@ -393,7 +394,8 @@ function ServiceListing() {
                 }
 
                 @media (max-width: 640px) {
-                    .sl-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+                    .sl-grid { grid-template-columns: minmax(0, 1fr); max-width: 440px; margin: 0 auto; }
+                    .sl-gig-item > * { min-width: 0; }
                 }
             `}</style>
 
@@ -546,8 +548,8 @@ function ServiceListing() {
                                         ...gig,
                                         seller: gig.seller?.full_name || gig.seller?.user?.name || gig.seller?.name || gig.seller || "Unknown",
                                         level: gig.seller?.experience_level || gig.level || "New Seller",
-                                        rating: Number(gig.rating || 4.8),
-                                        reviews: gig.reviews || 0,
+                                        rating: Number(gig.rating || 0),
+                                        reviews: Number(gig.reviews || 0),
                                         price: gig.price || gig.packages?.basic?.price || 0,
                                         image: gig.thumbnail || gig.image || "https://placehold.co/600x400",
                                         delivery: gig.delivery_days ? `${gig.delivery_days} Days` : gig.delivery || "3 Days",

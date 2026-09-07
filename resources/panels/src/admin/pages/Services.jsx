@@ -38,11 +38,13 @@ function Services() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No services found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Title</th><th>Seller</th><th>Category</th><th>Price</th><th>Status</th><th></th></tr></thead>
-                            <tbody>
-                                {data.map((s) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Title</th><th>Seller</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No services found</td></tr>
+                            ) : (
+                                data.map((s) => (
                                     <tr key={s.id}>
                                         <td>#{s.id}</td>
                                         <td>{s.title}</td>
@@ -52,10 +54,10 @@ function Services() {
                                         <td><span className={`badge ${serviceStatusBadge[s.status] || 'badge-info'}`}>{s.status}</span></td>
                                         <td><button className="btn btn-sm" onClick={() => navigate(`/services/${s.id}`)}><Eye size={13} /> View</button></td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

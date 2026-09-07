@@ -59,8 +59,10 @@ const footer = {
             title: "Marketplace",
             links: [
                 { label: "Find Services", url: "/#categories" },
+                { label: "Tutorials", url: "/tutorials" },
                 { label: "Pricing", url: "/pricing" },
-                { label: "FAQ", url: "/faq" }
+                { label: "FAQ", url: "/faq" },
+                { label: "Download App", url: "/app" }
             ]
         },
 
@@ -73,12 +75,39 @@ const footer = {
                 { label: "Terms", url: "/terms-conditions" },
                 { label: "FAQs", url: "/faq" }
             ]
+        },
+
+        {
+            id: 4,
+            title: "Account",
+            links: [
+                { label: "Sign In", url: "/login" },
+                { label: "Create Account", url: "/register" },
+                { label: "Download App", url: "/app" }
+            ]
         }
 
     ],
 
     copyright:
-        "© 2026 KhanVerse. All Rights Reserved."
+        "© 2026 KhanVerse. All Rights Reserved.",
+
+    sub_brand: {
+
+        name: "AMTech",
+
+        since: "2014",
+
+        tagline: "Part of the AMTech family",
+
+        description:
+            "KhanVerse is a product of AMTech — a trusted technology company building digital solutions for over a decade.",
+
+        badge: "12+ Years of Trust",
+
+        url: "https://amtech.com"
+
+    }
 
 };
 

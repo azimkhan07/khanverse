@@ -1,53 +1,78 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-        <h2 class="text-lg font-semibold">{{ setting('auth', 'reset.heading', 'Reset Password') }}</h2>
-        <p class="mb-4 text-sm text-gray-600">
-            {{ setting('auth', 'reset.subheading', 'Choose a new password for your account.') }}
-        </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ setting('auth', 'reset.title', 'Reset Password') }} — {{ config('app.name', 'KhanVerse') }}</title>
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/master.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+<body class="auth-page">
 
-        <form method="POST" action="{{ route('password.update') }}">
+    <div class="auth-grid" id="authGrid"></div>
+
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="logo-box">
+                @if(setting('auth', 'auth.logo'))
+                    <img src="{{ asset('storage/' . setting('auth', 'auth.logo')) }}" alt="{{ setting('auth', 'auth.name', 'KhanVerse') }}">
+                @else
+                    <span>{{ setting('auth', 'auth.name', 'KhanVerse') }}</span>
+                @endif
+            </div>
+            <h2>{{ setting('auth', 'reset.heading', 'Reset Password') }}</h2>
+            <p>{{ setting('auth', 'reset.subheading', 'Choose a new password for your account.') }}</p>
+        </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('password.update') }}" class="auth-form">
             @csrf
-
-            <!-- Password Reset Token -->
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-box">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input type="email" name="email" value="{{ old('email', $request->email) }}" placeholder="Enter your email" required autofocus>
+                </div>
             </div>
 
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required />
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" placeholder="Enter new password" required>
+                </div>
             </div>
 
-            <!-- Confirm Password -->
-            <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                <x-input id="password_confirmation" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password_confirmation" required />
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password_confirmation" placeholder="Confirm new password" required>
+                </div>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ setting('auth', 'reset.button', 'Reset Password') }}
-                </x-button>
-            </div>
+            <button type="submit" class="auth-btn">
+                <span>{{ setting('auth', 'reset.button', 'Reset Password') }}</span>
+            </button>
         </form>
-    </x-auth-card>
-</x-guest-layout>
+
+        <div class="auth-footer auth-form">
+            <span>Remember your password?</span>
+            <a href="{{ route('login') }}">Back to Login</a>
+        </div>
+
+    </div>
+
+    <script src="{{ asset('admin/assets/js/auth.js') }}"></script>
+
+</body>
+</html>

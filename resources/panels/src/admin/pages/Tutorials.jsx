@@ -71,11 +71,13 @@ function Tutorials() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No tutorials found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Title</th><th>Duration</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((t) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Title</th><th>Duration</th><th>Roles</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={6} className="empty">No tutorials found</td></tr>
+                            ) : (
+                                data.map((t) => (
                                     <tr key={t.id}>
                                         <td>#{t.id}</td>
                                         <td style={{ fontWeight: 500 }}>
@@ -98,10 +100,10 @@ function Tutorials() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

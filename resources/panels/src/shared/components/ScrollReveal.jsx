@@ -28,7 +28,7 @@ export function ScrollReveal({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: '-40px' }}
+      viewport={{ once, margin: '-20px' }}
       variants={variants}
       transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -63,7 +63,7 @@ export function ScrollRevealGroup({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: '-40px' }}
+      viewport={{ once, margin: '-20px' }}
       variants={containerVariants}
     >
       {Array.isArray(children)

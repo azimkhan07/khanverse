@@ -36,4 +36,14 @@ class Service extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, Order::class, 'service_id', 'order_id', 'id', 'id');
+    }
 }

@@ -54,11 +54,13 @@ function WebsiteBanners() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No banners found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Position</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((b) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Position</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={7} className="empty">No banners found</td></tr>
+                            ) : (
+                                data.map((b) => (
                                     <tr key={b.id}>
                                         <td>#{b.id}</td>
                                         <td>{b.image_url ? <img src={b.image_url} alt={b.title} style={{ width: 60, height: 40, objectFit: 'cover', borderRadius: 6 }} /> : '-'}</td>
@@ -77,10 +79,10 @@ function WebsiteBanners() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

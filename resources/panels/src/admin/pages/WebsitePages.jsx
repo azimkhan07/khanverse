@@ -54,11 +54,13 @@ function WebsitePages() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
-                    {data.length === 0 ? <div className="empty">No pages found</div> : (
-                        <table>
-                            <thead><tr><th>ID</th><th>Title</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody>
-                                {data.map((p) => (
+                    <table>
+                        <thead><tr><th>ID</th><th>Title</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr><td colSpan={5} className="empty">No pages found</td></tr>
+                            ) : (
+                                data.map((p) => (
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
                                         <td style={{ fontWeight: 500 }}>{p.title}</td>
@@ -75,10 +77,10 @@ function WebsitePages() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

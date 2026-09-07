@@ -10,103 +10,77 @@ class MenuSeeder extends Seeder
     public function run(): void
     {
         $adminMenus = [
-            ['title' => 'Dashboard', 'icon' => 'fas fa-tachometer-alt', 'route_name' => 'admin.dashboard', 'roles' => ['admin'], 'sort_order' => 1, 'is_active' => true],
-            ['title' => 'Users', 'icon' => 'fas fa-users', 'route_name' => null, 'roles' => ['admin'], 'sort_order' => 2, 'is_active' => true],
-            ['title' => 'Orders', 'icon' => 'fas fa-shopping-cart', 'route_name' => 'admin.orders.index', 'roles' => ['admin'], 'sort_order' => 3, 'is_active' => true],
-            ['title' => 'Projects', 'icon' => 'fas fa-project-diagram', 'route_name' => 'admin.projects.index', 'roles' => ['admin'], 'sort_order' => 4, 'is_active' => true],
-            ['title' => 'Services', 'icon' => 'fas fa-concierge-bell', 'route_name' => 'admin.services.index', 'roles' => ['admin'], 'sort_order' => 5, 'is_active' => true],
-            ['title' => 'Categories', 'icon' => 'fas fa-tags', 'route_name' => 'admin.categories.index', 'roles' => ['admin'], 'sort_order' => 6, 'is_active' => true],
-            ['title' => 'Settings', 'icon' => 'fas fa-cog', 'route_name' => null, 'roles' => ['admin'], 'sort_order' => 7, 'is_active' => true],
-            ['title' => 'Website', 'icon' => 'fas fa-globe', 'route_name' => null, 'roles' => ['admin'], 'sort_order' => 8, 'is_active' => true],
-            ['title' => 'Roles', 'icon' => 'fas fa-user-shield', 'route_name' => 'admin.roles.index', 'roles' => ['admin'], 'sort_order' => 9, 'is_active' => true],
-            ['title' => 'Modules', 'icon' => 'fas fa-puzzle-piece', 'route_name' => 'admin.modules.index', 'roles' => ['admin'], 'sort_order' => 10, 'is_active' => true],
+            ['section' => 'Overview', 'title' => 'Dashboard', 'path' => '/', 'icon' => 'dashboard', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Marketplace', 'title' => 'Orders', 'path' => '/orders', 'icon' => 'orders', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Marketplace', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Marketplace', 'title' => 'Services', 'path' => '/services', 'icon' => 'services', 'panel' => 'admin', 'sort_order' => 2],
+            ['section' => 'Marketplace', 'title' => 'Categories', 'path' => '/categories', 'icon' => 'categories', 'panel' => 'admin', 'sort_order' => 3],
+            ['section' => 'Users', 'title' => 'Buyers', 'path' => '/buyers', 'icon' => 'buyers', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Users', 'title' => 'Sellers', 'path' => '/sellers', 'icon' => 'sellers', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Users', 'title' => 'Login Devices', 'path' => '/devices', 'icon' => 'devices', 'panel' => 'admin', 'sort_order' => 2],
+            ['section' => 'Users', 'title' => 'Suspicious', 'path' => '/suspicious', 'icon' => 'suspicious', 'panel' => 'admin', 'sort_order' => 3],
+            ['section' => 'Users', 'title' => 'Login History', 'path' => '/login-history', 'icon' => 'login-history', 'panel' => 'admin', 'sort_order' => 4],
+            ['section' => 'Access & System', 'title' => 'Roles', 'path' => '/roles', 'icon' => 'roles', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Access & System', 'title' => 'Permissions', 'path' => '/permissions', 'icon' => 'permissions', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Access & System', 'title' => 'Menus', 'path' => '/menus', 'icon' => 'menus', 'panel' => 'admin', 'sort_order' => 2],
+            ['section' => 'Access & System', 'title' => 'Settings', 'path' => '/settings', 'icon' => 'settings', 'panel' => 'admin', 'sort_order' => 3],
+            ['section' => 'Invoicing', 'title' => 'Invoice Designs', 'path' => '/invoices', 'icon' => 'invoices', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Invoicing', 'title' => 'Invoice Settings', 'path' => '/invoices/settings', 'icon' => 'invoice-settings', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Email', 'title' => 'Email Settings', 'path' => '/email-settings', 'icon' => 'email-settings', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Payments', 'title' => 'Payment Gateways', 'path' => '/payment-gateways', 'icon' => 'payment-gateways', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Payments', 'title' => 'Settlements', 'path' => '/settlements', 'icon' => 'settlements', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Website', 'title' => 'Banners', 'path' => '/website/banners', 'icon' => 'banners', 'panel' => 'admin', 'sort_order' => 0],
+            ['section' => 'Website', 'title' => 'Homepage', 'path' => '/website/homepage', 'icon' => 'homepage', 'panel' => 'admin', 'sort_order' => 1],
+            ['section' => 'Website', 'title' => 'Pages', 'path' => '/website/pages', 'icon' => 'website', 'panel' => 'admin', 'sort_order' => 2],
+            ['section' => 'Website', 'title' => 'FAQs', 'path' => '/website/faqs', 'icon' => 'faqs', 'panel' => 'admin', 'sort_order' => 3],
+            ['section' => 'Website', 'title' => 'Testimonials', 'path' => '/website/testimonials', 'icon' => 'testimonials', 'panel' => 'admin', 'sort_order' => 4],
+            ['section' => 'Website', 'title' => 'SEO', 'path' => '/website/seo', 'icon' => 'seo', 'panel' => 'admin', 'sort_order' => 5],
+            ['section' => 'Website', 'title' => 'Maintenance', 'path' => '/website/maintenance', 'icon' => 'maintenance', 'panel' => 'admin', 'sort_order' => 6],
+            ['section' => 'Website', 'title' => 'Tutorial Videos', 'path' => '/tutorials', 'icon' => 'tutorials', 'panel' => 'admin', 'sort_order' => 7],
+            ['section' => 'Website', 'title' => 'Brand Partners', 'path' => '/brand-partners', 'icon' => 'brand-partners', 'panel' => 'admin', 'sort_order' => 8],
+            ['section' => 'Website', 'title' => 'Team Members', 'path' => '/team-members', 'icon' => 'team-members', 'panel' => 'admin', 'sort_order' => 9],
         ];
 
-        foreach ($adminMenus as $menuData) {
-            MenuItem::firstOrCreate(
-                ['route_name' => $menuData['route_name'], 'title' => $menuData['title']],
-                $menuData
+        foreach ($adminMenus as $menu) {
+            MenuItem::updateOrCreate(
+                ['title' => $menu['title'], 'panel' => $menu['panel']],
+                array_merge($menu, ['is_active' => 1])
             );
         }
 
-        $adminUsersMenu = MenuItem::where('title', 'Users')->first();
-        if ($adminUsersMenu) {
-            $buyerChildren = [
-                ['title' => 'Buyers', 'icon' => 'fas fa-user', 'route_name' => 'admin.users.buyers.index', 'parent_id' => $adminUsersMenu->id, 'roles' => ['admin'], 'sort_order' => 1, 'is_active' => true],
-                ['title' => 'Sellers', 'icon' => 'fas fa-user-tie', 'route_name' => 'admin.users.sellers.index', 'parent_id' => $adminUsersMenu->id, 'roles' => ['admin'], 'sort_order' => 2, 'is_active' => true],
-            ];
-            foreach ($buyerChildren as $child) {
-                MenuItem::firstOrCreate(
-                    ['route_name' => $child['route_name']],
-                    $child
-                );
-            }
-        }
-
-        $adminSettingsMenu = MenuItem::where('title', 'Settings')->first();
-        if ($adminSettingsMenu) {
-            $settingChildren = [
-                ['title' => 'Admin Settings', 'icon' => 'fas fa-cog', 'route_name' => 'admin.settings.admin', 'parent_id' => $adminSettingsMenu->id, 'roles' => ['admin'], 'sort_order' => 1, 'is_active' => true],
-                ['title' => 'Seller Settings', 'icon' => 'fas fa-cog', 'route_name' => 'admin.settings.seller', 'parent_id' => $adminSettingsMenu->id, 'roles' => ['admin'], 'sort_order' => 2, 'is_active' => true],
-                ['title' => 'Buyer Settings', 'icon' => 'fas fa-cog', 'route_name' => 'admin.settings.buyer', 'parent_id' => $adminSettingsMenu->id, 'roles' => ['admin'], 'sort_order' => 3, 'is_active' => true],
-                ['title' => 'Frontend Settings', 'icon' => 'fas fa-cog', 'route_name' => 'admin.settings.frontend', 'parent_id' => $adminSettingsMenu->id, 'roles' => ['admin'], 'sort_order' => 4, 'is_active' => true],
-                ['title' => 'Auth Settings', 'icon' => 'fas fa-cog', 'route_name' => 'admin.settings.auth', 'parent_id' => $adminSettingsMenu->id, 'roles' => ['admin'], 'sort_order' => 5, 'is_active' => true],
-            ];
-            foreach ($settingChildren as $child) {
-                MenuItem::firstOrCreate(
-                    ['route_name' => $child['route_name']],
-                    $child
-                );
-            }
-        }
-
-        $adminWebsiteMenu = MenuItem::where('title', 'Website')->first();
-        if ($adminWebsiteMenu) {
-            $websiteChildren = [
-                ['title' => 'Homepage', 'icon' => 'fas fa-home', 'route_name' => 'admin.website.homepage.index', 'parent_id' => $adminWebsiteMenu->id, 'roles' => ['admin'], 'sort_order' => 1, 'is_active' => true],
-                ['title' => 'About', 'icon' => 'fas fa-info-circle', 'route_name' => 'admin.website.about.index', 'parent_id' => $adminWebsiteMenu->id, 'roles' => ['admin'], 'sort_order' => 2, 'is_active' => true],
-                ['title' => 'FAQs', 'icon' => 'fas fa-question-circle', 'route_name' => 'admin.website.faq.index', 'parent_id' => $adminWebsiteMenu->id, 'roles' => ['admin'], 'sort_order' => 3, 'is_active' => true],
-                ['title' => 'Testimonials', 'icon' => 'fas fa-quote-right', 'route_name' => 'admin.website.testimonials.index', 'parent_id' => $adminWebsiteMenu->id, 'roles' => ['admin'], 'sort_order' => 4, 'is_active' => true],
-                ['title' => 'Banners', 'icon' => 'fas fa-image', 'route_name' => 'admin.website.banners.index', 'parent_id' => $adminWebsiteMenu->id, 'roles' => ['admin'], 'sort_order' => 5, 'is_active' => true],
-            ];
-            foreach ($websiteChildren as $child) {
-                MenuItem::firstOrCreate(
-                    ['route_name' => $child['route_name']],
-                    $child
-                );
-            }
-        }
-
         $sellerMenus = [
-            ['title' => 'Dashboard', 'icon' => 'fas fa-tachometer-alt', 'route_name' => 'seller.dashboard', 'roles' => ['seller'], 'sort_order' => 1, 'is_active' => true],
-            ['title' => 'Orders', 'icon' => 'fas fa-shopping-cart', 'route_name' => 'seller.orders.index', 'roles' => ['seller'], 'sort_order' => 2, 'is_active' => true],
-            ['title' => 'Projects', 'icon' => 'fas fa-project-diagram', 'route_name' => 'seller.projects.index', 'roles' => ['seller'], 'sort_order' => 3, 'is_active' => true],
-            ['title' => 'Services', 'icon' => 'fas fa-concierge-bell', 'route_name' => 'seller.services.index', 'roles' => ['seller'], 'sort_order' => 4, 'is_active' => true],
-            ['title' => 'Reviews', 'icon' => 'fas fa-star', 'route_name' => 'seller.reviews.index', 'roles' => ['seller'], 'sort_order' => 5, 'is_active' => true],
-            ['title' => 'Wallet', 'icon' => 'fas fa-wallet', 'route_name' => 'seller.wallet.index', 'roles' => ['seller'], 'sort_order' => 6, 'is_active' => true],
-            ['title' => 'Settings', 'icon' => 'fas fa-cog', 'route_name' => 'seller.settings.index', 'roles' => ['seller'], 'sort_order' => 7, 'is_active' => true],
+            ['section' => 'Main', 'title' => 'Dashboard', 'path' => '/', 'icon' => 'dashboard', 'panel' => 'seller', 'sort_order' => 0],
+            ['section' => 'Main', 'title' => 'Services', 'path' => '/services', 'icon' => 'services', 'panel' => 'seller', 'sort_order' => 1],
+            ['section' => 'Main', 'title' => 'Orders', 'path' => '/orders', 'icon' => 'orders', 'panel' => 'seller', 'sort_order' => 2],
+            ['section' => 'Main', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'seller', 'sort_order' => 3],
+            ['section' => 'Finance', 'title' => 'Wallet', 'path' => '/wallet', 'icon' => 'wallet', 'panel' => 'seller', 'sort_order' => 0],
+            ['section' => 'Finance', 'title' => 'Reviews', 'path' => '/reviews', 'icon' => 'reviews', 'panel' => 'seller', 'sort_order' => 1],
+            ['section' => 'Account', 'title' => 'Settings', 'path' => '/settings', 'icon' => 'settings', 'panel' => 'seller', 'sort_order' => 0],
+            ['section' => 'Account', 'title' => 'Notifications', 'path' => '/notifications', 'icon' => 'notifications', 'panel' => 'seller', 'sort_order' => 1],
         ];
 
         foreach ($sellerMenus as $menu) {
-            MenuItem::firstOrCreate(
-                ['route_name' => $menu['route_name']],
-                $menu
+            MenuItem::updateOrCreate(
+                ['title' => $menu['title'], 'panel' => $menu['panel']],
+                array_merge($menu, ['is_active' => 1])
             );
         }
 
         $buyerMenus = [
-            ['title' => 'Dashboard', 'icon' => 'fas fa-tachometer-alt', 'route_name' => 'buyer.dashboard', 'roles' => ['buyer'], 'sort_order' => 1, 'is_active' => true],
-            ['title' => 'Orders', 'icon' => 'fas fa-shopping-cart', 'route_name' => 'buyer.orders.index', 'roles' => ['buyer'], 'sort_order' => 2, 'is_active' => true],
-            ['title' => 'Projects', 'icon' => 'fas fa-project-diagram', 'route_name' => 'buyer.projects.index', 'roles' => ['buyer'], 'sort_order' => 3, 'is_active' => true],
-            ['title' => 'Reviews', 'icon' => 'fas fa-star', 'route_name' => 'buyer.reviews.index', 'roles' => ['buyer'], 'sort_order' => 4, 'is_active' => true],
-            ['title' => 'Wallet', 'icon' => 'fas fa-wallet', 'route_name' => 'buyer.wallet.index', 'roles' => ['buyer'], 'sort_order' => 5, 'is_active' => true],
-            ['title' => 'Settings', 'icon' => 'fas fa-cog', 'route_name' => 'buyer.settings.index', 'roles' => ['buyer'], 'sort_order' => 6, 'is_active' => true],
+            ['section' => 'Main', 'title' => 'Dashboard', 'path' => '/', 'icon' => 'dashboard', 'panel' => 'buyer', 'sort_order' => 0],
+            ['section' => 'Main', 'title' => 'Orders', 'path' => '/orders', 'icon' => 'orders', 'panel' => 'buyer', 'sort_order' => 1],
+            ['section' => 'Main', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'buyer', 'sort_order' => 2],
+            ['section' => 'Finance', 'title' => 'Wallet', 'path' => '/wallet', 'icon' => 'wallet', 'panel' => 'buyer', 'sort_order' => 0],
+            ['section' => 'Finance', 'title' => 'Reviews', 'path' => '/reviews', 'icon' => 'reviews', 'panel' => 'buyer', 'sort_order' => 1],
+            ['section' => 'Account', 'title' => 'Settings', 'path' => '/settings', 'icon' => 'settings', 'panel' => 'buyer', 'sort_order' => 0],
+            ['section' => 'Account', 'title' => 'Notifications', 'path' => '/notifications', 'icon' => 'notifications', 'panel' => 'buyer', 'sort_order' => 1],
+            ['section' => 'Account', 'title' => 'Support', 'path' => '/support', 'icon' => 'support', 'panel' => 'buyer', 'sort_order' => 2],
         ];
 
         foreach ($buyerMenus as $menu) {
-            MenuItem::firstOrCreate(
-                ['route_name' => $menu['route_name']],
-                $menu
+            MenuItem::updateOrCreate(
+                ['title' => $menu['title'], 'panel' => $menu['panel']],
+                array_merge($menu, ['is_active' => 1])
             );
         }
     }
