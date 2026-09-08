@@ -280,7 +280,7 @@
   margin-bottom: 18px;
 }
 
-.input-group svg {
+.input-group > svg {
   position: absolute;
   left: 18px;
   color: var(--text-light, #94A3B8);

@@ -163,13 +163,11 @@ function UserMenu({ user, base }) {
 
     const go = (path) => { setOpen(false); navigate(path); };
 
-    const logout = (e) => {
+    const logout = async (e) => {
         e.preventDefault();
-        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const body = new URLSearchParams({ _token: csrf });
         try { sessionStorage.removeItem("skillnest-install-dismissed-session"); } catch { /* ignore */ }
-        fetch('/logout', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body, credentials: 'same-origin' })
-            .finally(() => { window.location.href = '/'; });
+        try { await api.post('/logout'); } catch { /* ignore */ }
+        window.location.href = '/login';
     };
 
     const role = ['seller', 'buyer', 'admin'].includes(base) ? base : 'admin';
