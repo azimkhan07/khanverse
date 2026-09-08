@@ -33,12 +33,6 @@ function VerifyEmail() {
 
     return (
         <AuthShell>
-            <div className="auth-brand">
-                <span className="auth-badge">{authText(s, "verify.badge", "Verify Your Email")}</span>
-                <h1>{authText(s, "verify.hero_heading", "One More Step Left")}</h1>
-                <p>{authText(s, "verify.hero_text", "We've sent a verification email to your registered email address. Please verify your account before continuing.")}</p>
-            </div>
-
             <div className="auth-card-body verify-card">
                 <div className="verify-icon">
                     <MailCheck size={70} />

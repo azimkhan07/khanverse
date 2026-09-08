@@ -121,12 +121,6 @@ function Register() {
 
     return (
         <AuthShell wide>
-            <div className="auth-brand">
-                <span className="auth-badge">{role === "seller" ? "Start Selling" : role === "buyer" ? "Start Buying" : authText(s, "register.badge", "Join SkillNest")}</span>
-                <h1>{role === "seller" ? "Turn Your Skills Into Income" : role === "buyer" ? "Hire Top Talent Today" : authText(s, "register.hero_heading", "Start Your Journey Today")}</h1>
-                <p>{authText(s, "register.hero_text", "Create your free account and connect with thousands of freelancers and clients worldwide.")}</p>
-            </div>
-
             <div className="auth-card-body">
                 <h2>{role === "seller" ? "Become a Seller" : role === "buyer" ? "Become a Buyer" : authText(s, "register.heading", "Create Account")}</h2>
                 <p>{authText(s, "register.subheading", "It's free and takes less than a minute.")}</p>

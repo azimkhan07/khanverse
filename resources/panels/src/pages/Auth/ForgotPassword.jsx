@@ -39,12 +39,6 @@ function ForgotPassword() {
 
     return (
         <AuthShell>
-            <div className="auth-brand">
-                <span className="auth-badge">{authText(s, "forgot.badge", "Account Recovery")}</span>
-                <h1>{authText(s, "forgot.hero_heading", "Forgot Your Password?")}</h1>
-                <p>{authText(s, "forgot.hero_text", "Don't worry. Enter your registered email and we'll send you a password reset link.")}</p>
-            </div>
-
             <div className="auth-card-body">
                 {sent ? (
                     <>

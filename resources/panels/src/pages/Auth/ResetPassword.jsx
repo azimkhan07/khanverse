@@ -56,12 +56,6 @@ function ResetPassword() {
 
     return (
         <AuthShell>
-            <div className="auth-brand">
-                <span className="auth-badge">{authText(s, "reset.badge", "Secure Password")}</span>
-                <h1>{authText(s, "reset.hero_heading", "Create New Password")}</h1>
-                <p>{authText(s, "reset.hero_text", "Your new password should be strong and different from your previous password.")}</p>
-            </div>
-
             <div className="auth-card-body">
                 {success ? (
                     <>

@@ -51,12 +51,6 @@ function Login() {
 
     return (
         <AuthShell>
-            <div className="auth-brand">
-                <span className="auth-badge">{authText(s, "login.badge", "Welcome to SkillNest")}</span>
-                <h1>{authText(s, "login.hero_heading", "Work. Hire. Grow.")}</h1>
-                <p>{authText(s, "login.hero_text", "Join thousands of freelancers and businesses building the future together.")}</p>
-            </div>
-
             <div className="auth-card-body">
                 <h2>{authText(s, "login.heading", "Welcome Back")}</h2>
                 <p>{authText(s, "login.subheading", "Login to continue your journey.")}</p>
