@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Mail, ArrowLeft, Loader2, CheckCircle } from "lucide-react";
 import frontendApi from "../../shared/frontendApi";
 import useAuthSettings, { authText } from "../../shared/authSettings";
+import AuthShell from "../../shared/components/AuthShell";
 
 function ForgotPassword() {
     const s = useAuthSettings();
@@ -37,60 +38,54 @@ function ForgotPassword() {
     };
 
     return (
-        <section className="auth">
-            <div className="auth-container">
-                <div className="auth-left">
-                    <div className="auth-overlay">
-                        <span className="auth-badge">{authText(s, "forgot.badge", "Account Recovery")}</span>
-                        <h1>{authText(s, "forgot.hero_heading", "Forgot Your Password?")}</h1>
-                        <p>{authText(s, "forgot.hero_text", "Don't worry. Enter your registered email and we'll send you a password reset link.")}</p>
-                    </div>
-                </div>
+        <AuthShell>
+            <div className="auth-brand">
+                <span className="auth-badge">{authText(s, "forgot.badge", "Account Recovery")}</span>
+                <h1>{authText(s, "forgot.hero_heading", "Forgot Your Password?")}</h1>
+                <p>{authText(s, "forgot.hero_text", "Don't worry. Enter your registered email and we'll send you a password reset link.")}</p>
+            </div>
 
-                <div className="auth-right">
-                    <div className="auth-card">
-                        {sent ? (
-                            <>
-                                <div className="verify-icon"><CheckCircle size={70} /></div>
-                                <h2>{authText(s, "forgot.sent_heading", "Check Your Email")}</h2>
-                                <p>We've sent a password reset link to <strong>{email}</strong>. Please check your inbox.</p>
-                            </>
-                        ) : (
-                            <>
-                                <h2>{authText(s, "forgot.heading", "Reset Password")}</h2>
-                                <p>{authText(s, "forgot.subheading", "Enter your email address below.")}</p>
+            <div className="auth-card-body">
+                {sent ? (
+                    <>
+                        <div className="verify-icon"><CheckCircle size={70} /></div>
+                        <h2 style={{ textAlign: "center" }}>{authText(s, "forgot.sent_heading", "Check Your Email")}</h2>
+                        <p style={{ textAlign: "center" }}>We've sent a password reset link to <strong>{email}</strong>. Please check your inbox.</p>
+                    </>
+                ) : (
+                    <>
+                        <h2>{authText(s, "forgot.heading", "Reset Password")}</h2>
+                        <p>{authText(s, "forgot.subheading", "Enter your email address below.")}</p>
 
-                                {error && <div className="auth-error">{error}</div>}
+                        {error && <div className="auth-error">{error}</div>}
 
-                                <form onSubmit={handleSubmit}>
-                                    <div className="input-group">
-                                        <Mail size={18} />
-                                        <input
-                                            type="email"
-                                            placeholder="Email Address"
-                                            value={email}
-                                            onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                                            required
-                                        />
-                                    </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="input-group">
+                                <Mail size={18} />
+                                <input
+                                    type="email"
+                                    placeholder="Email Address"
+                                    value={email}
+                                    onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                                    required
+                                />
+                            </div>
 
-                                    <button type="submit" className="auth-btn" disabled={loading}>
-                                        {loading ? <Loader2 size={18} className="spin" /> : authText(s, "forgot.button", "Send Reset Link")}
-                                    </button>
-                                </form>
-                            </>
-                        )}
+                            <button type="submit" className="auth-btn" disabled={loading}>
+                                {loading ? <Loader2 size={18} className="spin" /> : authText(s, "forgot.button", "Send Reset Link")}
+                            </button>
+                        </form>
+                    </>
+                )}
 
-                        <div className="bottom-link">
-                            <Link to="/login">
-                                <ArrowLeft size={16} />
-                                {authText(s, "forgot.back", "Back to Login")}
-                            </Link>
-                        </div>
-                    </div>
+                <div className="bottom-link">
+                    <Link to="/login">
+                        <ArrowLeft size={16} />
+                        {authText(s, "forgot.back", "Back to Login")}
+                    </Link>
                 </div>
             </div>
-        </section>
+        </AuthShell>
     );
 }
 
