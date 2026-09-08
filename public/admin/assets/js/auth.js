@@ -4,10 +4,10 @@
     /* ============ DARK MODE DETECTION ============ */
     function applyTheme() {
         var isDark = false;
-        // check all possible khanverse theme keys
+        // check all possible skillnest theme keys
         for (var i = 0; i < localStorage.length; i++) {
             var k = localStorage.key(i);
-            if (k && k.indexOf('khanverse-theme-') === 0) {
+            if (k && k.indexOf('skillnest-theme-') === 0) {
                 if (localStorage.getItem(k) === 'dark') {
                     isDark = true;
                     break;
