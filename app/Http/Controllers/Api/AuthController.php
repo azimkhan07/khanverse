@@ -202,7 +202,21 @@ class AuthController extends Controller
     {
         $settings = Setting::where('group', 'auth')->get();
 
-        return response()->json($settings->pluck('value', 'key'));
+        return response()->json(
+            $settings->pluck('value', 'key')
+                ->put('google_enabled', $this->googleConfigured())
+        );
+    }
+
+    private function googleConfigured(): bool
+    {
+        $id     = (string) config('services.google.client_id');
+        $secret = (string) config('services.google.client_secret');
+
+        return $id !== ''
+            && $secret !== ''
+            && ! str_contains($id, 'your-google-client')
+            && ! str_contains($secret, 'your-google-client');
     }
 
     public function verifyEmail(Request $request): JsonResponse

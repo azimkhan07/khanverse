@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Eye } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Eye, Plus } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../shared/api';
 import { serviceStatusBadge, fmtMoney } from '../helpers';
 import Pagination from '../components/Pagination';
@@ -23,7 +23,10 @@ function Services() {
 
     return (
         <div>
-            <div className="page-heading"><div><h1>Services</h1><p>All seller services</p></div></div>
+            <div className="page-heading">
+                <div><h1>Services</h1><p>All seller services</p></div>
+                <Link to="/service-types" className="btn btn-primary btn-sm"><Plus size={14} /> Add Service Type</Link>
+            </div>
 
             <div className="toolbar">
                 <div className="filters">

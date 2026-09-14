@@ -10,6 +10,7 @@ import AuthShell from "../../shared/components/AuthShell";
 
 function Register() {
     const s = useAuthSettings();
+    const googleEnabled = s.google_enabled !== false;
 
     const [form, setForm] = useState({
         name: "",
@@ -161,14 +162,21 @@ function Register() {
 
                 <div className="divider"><span>OR</span></div>
 
-                <button
-                    type="button"
-                    className="google-btn"
-                    onClick={() => (window.location.href = "/auth/google/redirect")}
-                >
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
-                    Continue with Google
-                </button>
+                {googleEnabled ? (
+                    <button
+                        type="button"
+                        className="google-btn"
+                        onClick={() => (window.location.href = "/auth/google/redirect")}
+                    >
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
+                        Continue with Google
+                    </button>
+                ) : (
+                    <button type="button" className="google-btn" disabled title="Google login is not configured yet">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
+                        Google login not configured
+                    </button>
+                )}
 
                 <div className="bottom-link">
                     {authText(s, "register.login_link", "Already have an account?")}{" "}

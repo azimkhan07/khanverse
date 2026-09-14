@@ -9,6 +9,7 @@ import AuthShell from "../../shared/components/AuthShell";
 
 function Login() {
     const s = useAuthSettings();
+    const googleEnabled = s.google_enabled !== false;
     const [form, setForm] = useState({ email: "", password: "", remember: false });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -78,12 +79,13 @@ function Login() {
                     <div className="input-group">
                         <Mail size={18} />
                         <input
-                            type="email"
+                            type="text"
                             name="email"
                             placeholder="Email or Username"
                             value={form.email}
                             onChange={handleChange}
                             required
+                            autoComplete="username"
                         />
                     </div>
                     {errors.email && <span className="field-error">{errors.email[0]}</span>}
@@ -124,14 +126,21 @@ function Login() {
 
                 <div className="divider"><span>OR</span></div>
 
-                <button
-                    type="button"
-                    className="google-btn"
-                    onClick={() => (window.location.href = "/auth/google/redirect")}
-                >
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
-                    Continue with Google
-                </button>
+                {googleEnabled ? (
+                    <button
+                        type="button"
+                        className="google-btn"
+                        onClick={() => (window.location.href = "/auth/google/redirect")}
+                    >
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
+                        Continue with Google
+                    </button>
+                ) : (
+                    <button type="button" className="google-btn" disabled title="Google login is not configured yet">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
+                        Google login not configured
+                    </button>
+                )}
 
                 <div className="bottom-link">
                     {authText(s, "login.new_here", "Don't have an account?")}{" "}

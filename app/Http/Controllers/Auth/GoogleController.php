@@ -14,6 +14,13 @@ class GoogleController extends Controller
 {
     public function redirect()
     {
+        $id     = (string) config('services.google.client_id');
+        $secret = (string) config('services.google.client_secret');
+
+        if ($id === '' || $secret === '' || str_contains($id, 'your-google-client') || str_contains($secret, 'your-google-client')) {
+            return redirect()->route('login')->with('error', 'Google login is not configured yet. Please login with your email and password.');
+        }
+
         return Socialite::driver('google')->redirect();
     }
 
