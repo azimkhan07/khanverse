@@ -9,6 +9,7 @@ import api from '../shared/api';
 
 import Dashboard from './pages/Dashboard';
 import Services from './pages/Services';
+import OfferedServices from './pages/OfferedServices';
 import ServiceForm from './pages/ServiceForm';
 import ServiceDetail from './pages/ServiceDetail';
 import Orders from './pages/Orders';
@@ -36,6 +37,7 @@ import InstallAppPrompt from '../components/app/InstallAppPrompt';
 const pageTitles = {
     '/': 'Seller Dashboard',
     '/services': 'My Services',
+    '/services/offered': 'Offered Services',
     '/orders': 'Orders',
     '/projects': 'Projects',
     '/wallet': 'Wallet',
@@ -51,6 +53,7 @@ function sellerPageTitle(pathname) {
     if (pathname === '/services/new') title = 'Add Service';
     else if (pathname.endsWith('/edit')) title = 'Edit Service';
     else if (pathname.includes('/deliver')) title = 'Submit Delivery';
+    else if (pathname === '/services/offered') title = 'Offered Services';
     else if (pathname.startsWith('/services/')) title = 'Service Details';
     else if (pathname.startsWith('/orders/')) title = 'Order Details';
     else if (pathname.startsWith('/projects/')) title = 'Project Details';
@@ -70,6 +73,7 @@ function AnimatedRoutes({ user }) {
                 <Route path="/" element={<Dashboard user={user} />} />
                 <Route path="/dashboard" element={<Navigate to="/" replace />} />
                 <Route path="/services" element={<Services user={user} />} />
+                <Route path="/services/offered" element={<OfferedServices user={user} />} />
                 <Route path="/services/new" element={<ServiceForm user={user} />} />
                 <Route path="/services/:id/edit" element={<ServiceForm user={user} />} />
                 <Route path="/services/:id" element={<ServiceDetail user={user} />} />
@@ -105,7 +109,10 @@ function SellerLayout({ user, isDark, toggleTheme }) {
         document.title = `${sellerPageTitle(location.pathname)} · SkillNest`;
     }, [location.pathname]);
 
-    useEffect(() => { setMobileNav(false); }, [location.pathname]);
+    useEffect(() => {
+        const t = setTimeout(() => setMobileNav(false), 0);
+        return () => clearTimeout(t);
+    }, [location.pathname]);
 
     const renderIcon = (iconName) => {
         const Icon = iconMap[iconName];

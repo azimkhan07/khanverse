@@ -42,9 +42,9 @@ class ServiceTypeApiController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
+            'name' => 'required|string|max:255|unique:service_types,name',
+            'slug' => 'nullable|string|max:255|unique:service_types,slug',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string|max:1000',
             'icon' => 'nullable|string|max:255',
             'is_active' => 'boolean',
@@ -66,9 +66,9 @@ class ServiceTypeApiController extends Controller
         $type = ServiceType::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
+            'name' => 'sometimes|required|string|max:255|unique:service_types,name,' . $id,
             'slug' => 'sometimes|nullable|string|max:255|unique:service_types,slug,' . $id,
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'sometimes|required|exists:categories,id',
             'description' => 'nullable|string|max:1000',
             'icon' => 'nullable|string|max:255',
             'is_active' => 'boolean',

@@ -52,8 +52,9 @@ class MenuSeeder extends Seeder
         $sellerMenus = [
             ['section' => 'Main', 'title' => 'Dashboard', 'path' => '/', 'icon' => 'dashboard', 'panel' => 'seller', 'sort_order' => 0],
             ['section' => 'Main', 'title' => 'Services', 'path' => '/services', 'icon' => 'services', 'panel' => 'seller', 'sort_order' => 1],
-            ['section' => 'Main', 'title' => 'Orders', 'path' => '/orders', 'icon' => 'orders', 'panel' => 'seller', 'sort_order' => 2],
-            ['section' => 'Main', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'seller', 'sort_order' => 3],
+            ['section' => 'Main', 'title' => 'Offered Services', 'path' => '/services/offered', 'icon' => 'service-types', 'panel' => 'seller', 'sort_order' => 2],
+            ['section' => 'Main', 'title' => 'Orders', 'path' => '/orders', 'icon' => 'orders', 'panel' => 'seller', 'sort_order' => 3],
+            ['section' => 'Main', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'seller', 'sort_order' => 4],
             ['section' => 'Finance', 'title' => 'Wallet', 'path' => '/wallet', 'icon' => 'wallet', 'panel' => 'seller', 'sort_order' => 0],
             ['section' => 'Finance', 'title' => 'Reviews', 'path' => '/reviews', 'icon' => 'reviews', 'panel' => 'seller', 'sort_order' => 1],
             ['section' => 'Account', 'title' => 'Availability', 'path' => '/availability', 'icon' => 'availability', 'panel' => 'seller', 'sort_order' => 0],

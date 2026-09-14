@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Power, Tag } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Edit2, Trash2, Power, Tag, Search, X } from 'lucide-react';
 import toastr from '../../shared/toastr';
 import api from '../../shared/api';
 import { showConfirm } from '../../shared/components/ConfirmDialog';
@@ -14,14 +14,24 @@ function ServiceTypes() {
     const [modalOpen, setModalOpen] = useState(false);
     const [editing, setEditing] = useState(null);
     const [form, setForm] = useState({ name: '', slug: '', category_id: '', description: '', icon: '' });
+    const [q, setQ] = useState('');
+    const [catFilter, setCatFilter] = useState('');
 
-    const load = (p) => {
-        api.get('/admin/service-types', { params: { page: p, per_page: 10 } }).then((res) => {
+    const load = useCallback((p) => {
+        const params = { page: p, per_page: 10 };
+        if (q.trim() !== '') params.q = q.trim();
+        if (catFilter !== '') params.category_id = catFilter;
+        api.get('/admin/service-types', { params }).then((res) => {
             setData(res.data.data || []); setMeta(res.data);
         }).catch(() => {});
-    };
+    }, [q, catFilter]);
 
-    useEffect(() => { load(page); }, [page]);
+    useEffect(() => { load(page); }, [page, load]);
+
+    useEffect(() => {
+        const t = setTimeout(() => { setPage(1); load(1); }, 350);
+        return () => clearTimeout(t);
+    }, [q, catFilter, load]);
 
     useEffect(() => {
         api.get('/admin/categories', { params: { all: 1, per_page: 100 } }).then((res) => {
@@ -99,6 +109,27 @@ function ServiceTypes() {
 
             <div className="admin-card">
                 <div className="card-body" style={{ padding: 0 }}>
+                    <div style={{ display: 'flex', gap: 9, padding: '14px 16px', borderBottom: '1px solid rgba(148,163,184,.2)', flexWrap: 'wrap' }}>
+                        <div style={{ position: 'relative', flex: '1 1 240px', maxWidth: 360 }}>
+                            <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', opacity: .5 }} />
+                            <input
+                                className="form-control"
+                                style={{ paddingLeft: 30 }}
+                                placeholder="Search service names…"
+                                value={q}
+                                onChange={(e) => setQ(e.target.value)}
+                            />
+                        </div>
+                        <select className="form-control" style={{ width: 220 }} value={catFilter} onChange={(e) => setCatFilter(e.target.value)}>
+                            <option value="">All categories</option>
+                            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        </select>
+                        {(q !== '' || catFilter !== '') && (
+                            <button type="button" className="btn btn-sm" onClick={() => { setQ(''); setCatFilter(''); }}>
+                                <X size={13} /> Reset
+                            </button>
+                        )}
+                    </div>
                     <table>
                         <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
                         <tbody>
@@ -135,9 +166,9 @@ function ServiceTypes() {
             <Modal open={modalOpen} title={editing ? 'Edit Service Type' : 'Add Service Type'} onClose={() => setModalOpen(false)}>
                 <form className="modal-content" onSubmit={submit}>
                     <div className="form-group">
-                        <label>Category</label>
-                        <select className="form-control" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
-                            <option value="">No category</option>
+                        <label>Category *</label>
+                        <select className="form-control" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
+                            <option value="">Select category</option>
                             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>

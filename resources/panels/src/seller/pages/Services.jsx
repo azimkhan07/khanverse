@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Edit2, Trash2, Eye, PackageCheck, PackageOpen } from 'lucide-react';
+import { Plus, Edit2, Trash2, Eye, PackageCheck, PackageOpen, Tags } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DataTable from '../../shared/components/DataTable';
 import api from '../../shared/api';
@@ -53,7 +53,11 @@ function Services() {
                     <h1>My Services</h1>
                     <p>Manage your listed services.</p>
                 </div>
-                <Link to="/services/new">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <Link to="/services/offered" className="btn btn-secondary">
+                        <Tags size={15} /> Manage Offered Services
+                    </Link>
+                    <Link to="/services/new">
                     <motion.span
                         className="btn btn-primary"
                         style={{ position: 'relative', overflow: 'hidden', display: 'inline-flex', alignItems: 'center', gap: 6 }}
@@ -64,6 +68,7 @@ function Services() {
                         <Plus size={16} /> Add Service
                     </motion.span>
                 </Link>
+                </div>
             </motion.div>
 
             <motion.div variants={fadeUp} custom={1}>
