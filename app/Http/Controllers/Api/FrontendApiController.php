@@ -18,14 +18,40 @@ use App\Models\Setting;
 use App\Models\Tutorial;
 use App\Models\BrandPartner;
 use App\Models\TeamMember;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FrontendApiController extends Controller
 {
     private function storageUrl($path)
     {
         return $path ? url('storage/' . $path) : null;
+    }
+
+    /**
+     * Validate optional lat/lng/radius_km search params.
+     * Returns [lat, lng, radiusKm] with lat/lng null when absent/invalid.
+     */
+    private function geoSearchParams(Request $request): array
+    {
+        $lat = $request->query('lat');
+        $lng = $request->query('lng');
+        $radiusKm = (float) ($request->query('radius_km') ?? 30);
+        if ($radiusKm <= 0 || $radiusKm > 500) {
+            $radiusKm = 30;
+        }
+
+        if (! is_numeric($lat) || ! is_numeric($lng)
+            || (float) $lat < -90 || (float) $lat > 90
+            || (float) $lng < -180 || (float) $lng > 180) {
+            return [null, null, $radiusKm];
+        }
+
+        return [(float) $lat, (float) $lng, $radiusKm];
     }
 
     /* ------------------------------------------------------------------ */
@@ -86,9 +112,79 @@ class FrontendApiController extends Controller
         $categories = Category::withCount('services')
             ->where('status', true)
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(fn($c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+                'icon' => $c->icon,
+                'services_count' => $c->services_count,
+                'category_type' => $c->category_type,
+                'form_fields' => $c->form_fields,
+            ]);
 
         return response()->json($categories);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Geo lookup (dependent dropdowns: country -> state -> city)          */
+    /* ------------------------------------------------------------------ */
+    public function countries(): JsonResponse
+    {
+        $items = Country::where('status', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'iso2', 'phone_code', 'emoji']);
+
+        return response()->json(['data' => $items]);
+    }
+
+    public function states(int $country): JsonResponse
+    {
+        $items = State::where('country_id', $country)
+            ->where('status', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'state_code']);
+
+        return response()->json(['data' => $items]);
+    }
+
+    public function cities(int $state): JsonResponse
+    {
+        $items = City::where('state_id', $state)
+            ->where('status', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return response()->json(['data' => $items]);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Service Types (catalog)                                             */
+    /* ------------------------------------------------------------------ */
+    public function serviceTypes(Request $request): JsonResponse
+    {
+        $query = \App\Models\ServiceType::query()->with('category')->where('is_active', true);
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->integer('category_id'));
+        }
+
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
+        }
+
+        $types = $query->orderBy('name')->get();
+
+        return response()->json([
+            'data' => $types->map(fn($t) => [
+                'id' => $t->id,
+                'name' => $t->name,
+                'slug' => $t->slug,
+                'icon' => $t->icon,
+                'category_id' => $t->category_id,
+                'category' => $t->category?->name,
+            ]),
+        ]);
     }
 
     /* ------------------------------------------------------------------ */
@@ -432,6 +528,9 @@ class FrontendApiController extends Controller
                 'price'         => (float)$service->price,
                 'delivery_days' => $service->delivery_days,
                 'revisions'     => $service->revisions,
+                'visit_start_time' => $service->visit_start_time,
+                'visit_end_time' => $service->visit_end_time,
+                'working_days'  => $service->working_days ?: [],
                 'reviews_count' => (int)($service->reviews_count ?? 0),
                 'rating'        => $service->reviews_avg_rating ? round((float)$service->reviews_avg_rating, 1) : null,
                 'total_sales'   => (int)($service->completed_sales ?? 0),
@@ -454,7 +553,9 @@ class FrontendApiController extends Controller
         $categoryId = $request->integer('category_id') ?: null;
         $min = $request->input('min_price') !== '' && $request->input('min_price') !== null ? $request->float('min_price') : null;
         $max = $request->input('max_price') !== '' && $request->input('max_price') !== null ? $request->float('max_price') : null;
-        $sort = in_array($request->query('sort'), ['latest', 'price_asc', 'price_desc', 'rating']) ? $request->query('sort') : 'latest';
+        $sort = in_array($request->query('sort'), ['latest', 'price_asc', 'price_desc', 'rating', 'nearby']) ? $request->query('sort') : 'latest';
+
+        [$lat, $lng, $radiusKm] = $this->geoSearchParams($request);
 
         $query = Service::with(['seller', 'category', 'images'])
             ->withAvg('reviews', 'rating')
@@ -481,6 +582,17 @@ class FrontendApiController extends Controller
             $query->where('price', '<=', $max);
         }
 
+        // Nearby search: services whose seller's current GPS location falls within radius.
+        if ($lat !== null && $lng !== null && ($sort === 'nearby' || (int)$request->query('near') === 1)) {
+            $distanceExpr = "6371 * acos(LEAST(1, GREATEST(-1, cos(radians(?)) * cos(radians(sellers.latitude)) * cos(radians(sellers.longitude) - radians(?)) + sin(radians(?)) * sin(radians(sellers.latitude)))))";
+            $query->select('services.*')
+                ->selectRaw($distanceExpr . ' as distance_km', [$lat, $lng, $lat])
+                ->join('sellers', 'services.seller_id', '=', 'sellers.id')
+                ->whereNotNull('sellers.latitude')
+                ->whereNotNull('sellers.longitude')
+                ->whereRaw($distanceExpr . ' <= ?', [$lat, $lng, $lat, $radiusKm]);
+        }
+
         switch ($sort) {
             case 'price_asc':
                 $query->orderBy('price');
@@ -490,6 +602,13 @@ class FrontendApiController extends Controller
                 break;
             case 'rating':
                 $query->orderByDesc('reviews_avg_rating');
+                break;
+            case 'nearby':
+                if ($lat !== null && $lng !== null) {
+                    $query->orderBy('distance_km');
+                } else {
+                    $query->latest();
+                }
                 break;
             default:
                 $query->latest();
@@ -550,11 +669,15 @@ class FrontendApiController extends Controller
             'price'         => (float)$service->price,
             'delivery_days' => $service->delivery_days,
             'revisions'     => $service->revisions,
+            'visit_start_time' => $service->visit_start_time,
+            'visit_end_time' => $service->visit_end_time,
+            'working_days'  => $service->working_days ?: [],
             'thumbnail'     => $this->storageUrl($thumbnail),
             'image'         => $this->storageUrl($thumbnail),
             'rating'        => round((float)($service->reviews_avg_rating ?? 0), 1),
             'reviews'       => (int)($service->reviews_count ?? 0),
             'sold'          => (int)($service->completed_sales ?? 0),
+            'distance_km'   => $service->distance_km !== null ? round((float)$service->distance_km, 1) : null,
             'level'         => $seller?->experience_level ?: 'New Seller',
             'seller' => $seller ? [
                 'id'               => $seller->id,

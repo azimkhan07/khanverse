@@ -19,12 +19,24 @@ class Service extends Model
         'thumbnail',
         'status',
         'seller_id',
-        'category_id'
+        'category_id',
+        'visit_start_time',
+        'visit_end_time',
+        'working_days',
+    ];
+
+    protected $casts = [
+        'working_days' => 'array',
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function serviceTypes()
+    {
+        return $this->belongsToMany(ServiceType::class, 'service_service_type');
     }
 
     public function images()

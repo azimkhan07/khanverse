@@ -36,4 +36,12 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL') . '/auth/google/callback'),
     ],
 
+    'kyc' => [
+        // Paid Aadhaar/PAN verification provider. Leave empty to use local
+        // format + checksum validation only. Expects a JSON API accepting
+        // {"aadhaar": "..."} and/or {"pan": "..."} returning {"valid": bool}.
+        'url' => env('KYC_PROVIDER_URL'),
+        'key' => env('KYC_PROVIDER_KEY'),
+    ],
+
 ];

@@ -29,8 +29,9 @@ class CreateUsersTable extends Migration
 
             $table->string('password');
 
-            $table->enum('role', ['admin', 'buyer', 'seller'])
-                ->default('buyer');
+            $table->string('role', 20)
+                ->default('user')
+                ->index();
 
             $table->boolean('status')->default(true);
 

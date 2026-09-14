@@ -15,6 +15,7 @@ class MenuSeeder extends Seeder
             ['section' => 'Marketplace', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'admin', 'sort_order' => 1],
             ['section' => 'Marketplace', 'title' => 'Services', 'path' => '/services', 'icon' => 'services', 'panel' => 'admin', 'sort_order' => 2],
             ['section' => 'Marketplace', 'title' => 'Categories', 'path' => '/categories', 'icon' => 'categories', 'panel' => 'admin', 'sort_order' => 3],
+            ['section' => 'Marketplace', 'title' => 'Service Types', 'path' => '/service-types', 'icon' => 'service-types', 'panel' => 'admin', 'sort_order' => 4],
             ['section' => 'Users', 'title' => 'Buyers', 'path' => '/buyers', 'icon' => 'buyers', 'panel' => 'admin', 'sort_order' => 0],
             ['section' => 'Users', 'title' => 'Sellers', 'path' => '/sellers', 'icon' => 'sellers', 'panel' => 'admin', 'sort_order' => 1],
             ['section' => 'Users', 'title' => 'Login Devices', 'path' => '/devices', 'icon' => 'devices', 'panel' => 'admin', 'sort_order' => 2],
@@ -55,8 +56,8 @@ class MenuSeeder extends Seeder
             ['section' => 'Main', 'title' => 'Projects', 'path' => '/projects', 'icon' => 'projects', 'panel' => 'seller', 'sort_order' => 3],
             ['section' => 'Finance', 'title' => 'Wallet', 'path' => '/wallet', 'icon' => 'wallet', 'panel' => 'seller', 'sort_order' => 0],
             ['section' => 'Finance', 'title' => 'Reviews', 'path' => '/reviews', 'icon' => 'reviews', 'panel' => 'seller', 'sort_order' => 1],
-            ['section' => 'Account', 'title' => 'Settings', 'path' => '/settings', 'icon' => 'settings', 'panel' => 'seller', 'sort_order' => 0],
-            ['section' => 'Account', 'title' => 'Notifications', 'path' => '/notifications', 'icon' => 'notifications', 'panel' => 'seller', 'sort_order' => 1],
+            ['section' => 'Account', 'title' => 'Availability', 'path' => '/availability', 'icon' => 'availability', 'panel' => 'seller', 'sort_order' => 0],
+            ['section' => 'Account', 'title' => 'Settings', 'path' => '/settings', 'icon' => 'settings', 'panel' => 'seller', 'sort_order' => 1],
         ];
 
         foreach ($sellerMenus as $menu) {

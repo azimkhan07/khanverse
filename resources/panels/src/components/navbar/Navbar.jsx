@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, ChevronDown, User as UserIcon, Settings as SettingsIcon, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "../common/ThemeToggle";
 import { useTheme } from "../../hooks/useTheme";
@@ -16,6 +16,8 @@ function Navbar() {
     const [menus, setMenus] = useState(navigationStatic);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const profileRef = useRef(null);
 
     useEffect(() => {
         frontendApi
@@ -40,19 +42,40 @@ function Navbar() {
         return () => { document.body.style.overflow = ""; };
     }, [mobileOpen]);
 
+    useEffect(() => {
+        const onClick = (e) => {
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setProfileOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", onClick);
+        return () => document.removeEventListener("mousedown", onClick);
+    }, []);
+
     const visibleMenus = menus
         .filter((m) => m.visible)
         .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-    const getDashboardLink = () => {
-        if (!user) return null;
-        const role = user.role || user.role_id;
-        if (role === "admin" || role === 1) return "/admin";
-        if (role === "seller" || role === 2) return "/seller";
-        return "/buyer";
-    };
+    const profileName = user?.display_name || user?.name || "My Account";
+    const profileAvatar =
+        user?.avatar ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(profileName)}&background=4F46E5&color=fff`;
 
-    const dashboardLink = getDashboardLink();
+    const goToProfile = () => { setProfileOpen(false); setMobileOpen(false); navigate("/profile"); };
+
+    const goToSettings = () => { setProfileOpen(false); setMobileOpen(false); navigate("/account/settings"); };
+
+    const dashboardLink =
+        user?.role === "seller" ? "/seller" :
+        user?.role === "buyer" ? "/buyer" :
+        user?.role === "admin" ? "/admin" : null;
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        setProfileOpen(false);
+        setMobileOpen(false);
+        logout();
+    };
 
     return (
         <>
@@ -106,22 +129,43 @@ function Navbar() {
                         <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
 
                         {user ? (
-                            <>
-                                {dashboardLink && (
-                                    <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-                                        <NavLink to={dashboardLink} className="nav-btn nav-btn-ghost">
-                                            <LayoutDashboard size={16} />
-                                            Dashboard
-                                        </NavLink>
-                                    </motion.div>
-                                )}
-                                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-                                    <button onClick={logout} className="nav-btn nav-btn-ghost">
-                                        <LogOut size={16} />
-                                        Logout
-                                    </button>
-                                </motion.div>
-                            </>
+                            <div className="navbar-profile" ref={profileRef}>
+                                <button
+                                    className="navbar-profile-btn"
+                                    onClick={() => setProfileOpen((o) => !o)}
+                                    aria-label="Account menu"
+                                >
+                                    <img className="navbar-avatar" src={profileAvatar} alt="" />
+                                    <span className="navbar-profile-name">{profileName}</span>
+                                    <ChevronDown size={15} className="navbar-profile-chevron" />
+                                </button>
+                                <AnimatePresence>
+                                    {profileOpen && (
+                                        <motion.div
+                                            className="navbar-profile-dropdown"
+                                            initial={{ opacity: 0, y: -6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -6 }}
+                                            transition={{ duration: 0.15 }}
+                                        >
+                                            <button className="navbar-profile-item" onClick={goToProfile}>
+                                                <UserIcon size={15} /> Profile
+                                            </button>
+                                            <button className="navbar-profile-item" onClick={goToSettings}>
+                                                <SettingsIcon size={15} /> Settings
+                                            </button>
+                                            {dashboardLink && (
+                                                <button className="navbar-profile-item" onClick={() => { setProfileOpen(false); setMobileOpen(false); navigate(dashboardLink); }}>
+                                                    <LayoutDashboard size={15} /> My Dashboard
+                                                </button>
+                                            )}
+                                            <button className="navbar-profile-item danger" onClick={handleLogout}>
+                                                <LogOut size={15} /> Logout
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         ) : (
                             <>
                                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
@@ -213,12 +257,18 @@ function Navbar() {
                         <div className="mobile-actions">
                             {user ? (
                                 <>
+                                    <button onClick={goToProfile} className="nav-btn nav-btn-ghost mobile-btn">
+                                        <UserIcon size={16} /> Profile
+                                    </button>
+                                    <button onClick={goToSettings} className="nav-btn nav-btn-ghost mobile-btn">
+                                        <SettingsIcon size={16} /> Settings
+                                    </button>
                                     {dashboardLink && (
-                                        <NavLink to={dashboardLink} className="nav-btn nav-btn-ghost mobile-btn" onClick={() => setMobileOpen(false)}>
-                                            <LayoutDashboard size={16} /> Dashboard
-                                        </NavLink>
+                                        <button onClick={() => { setMobileOpen(false); navigate(dashboardLink); }} className="nav-btn nav-btn-primary mobile-btn">
+                                            <LayoutDashboard size={16} /> My Dashboard
+                                        </button>
                                     )}
-                                    <button onClick={() => { setMobileOpen(false); logout(); }} className="nav-btn nav-btn-ghost mobile-btn">
+                                    <button onClick={handleLogout} className="nav-btn nav-btn-ghost mobile-btn">
                                         <LogOut size={16} /> Logout
                                     </button>
                                 </>

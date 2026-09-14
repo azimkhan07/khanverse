@@ -27,8 +27,10 @@ import TransactionDetail from './pages/TransactionDetail';
 import Profile from './pages/Profile';
 import SettingsPage from './pages/Settings';
 import Notifications from './pages/Notifications';
+import Availability from './pages/Availability';
 import ConfirmDialog from '../shared/components/ConfirmDialog';
 import DialogHost from '../shared/components/Dialog';
+import ProfileGate from '../shared/components/ProfileGate';
 import InstallAppPrompt from '../components/app/InstallAppPrompt';
 
 const pageTitles = {
@@ -41,6 +43,7 @@ const pageTitles = {
     '/profile': 'My Profile',
     '/settings': 'Account Settings',
     '/notifications': 'Notifications',
+    '/availability': 'Weekly Availability',
 };
 
 function sellerPageTitle(pathname) {
@@ -86,6 +89,7 @@ function AnimatedRoutes({ user }) {
                 <Route path="/profile" element={<Profile user={user} />} />
                 <Route path="/settings" element={<SettingsPage user={user} />} />
                 <Route path="/notifications" element={<Notifications user={user} />} />
+                <Route path="/availability" element={<Availability user={user} />} />
             </Routes>
         </AnimatePresence>
     );
@@ -132,7 +136,9 @@ function SellerLayout({ user, isDark, toggleTheme }) {
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />
                 <div className="page-content kv-velora">
-                    <AnimatedRoutes user={user} />
+                    <ProfileGate base="seller" roleLabel="seller">
+                        <AnimatedRoutes user={user} />
+                    </ProfileGate>
                     <InstallAppPrompt />
                 </div>
             </div>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SkillNest — Server Configuration Roadmap</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Helvetica, Arial, sans-serif; color: #1E293B; margin: 0; padding: 32px 40px; background:#fff; }
+  h1 { font-size: 24px; margin: 0 0 4px; color:#0F172A; }
+  .meta { color:#64748B; font-size: 12px; margin-bottom: 18px; }
+  h2 { font-size: 17px; margin: 24px 0 8px; padding-bottom: 6px; border-bottom: 2px solid #E2E8F0; color:#1C2434; }
+  h3 { font-size: 13.5px; margin: 14px 0 6px; color:#4F46E5; }
+  p, li { font-size: 12.3px; line-height: 1.65; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 11.5px; }
+  th, td { border: 1px solid #E2E8F0; padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background:#F1F5F9; font-size: 11px; text-transform: uppercase; letter-spacing:.4px; color:#475569; }
+  code { background:#F1F5F9; padding:1px 5px; border-radius:4px; font-size:11px; color:#0F172A; }
+  .why { color:#64748B; font-size: 11.5px; }
+</style>
+</head>
+<body>
+ <h1>SkillNest — Server Configuration Roadmap</h1>
+ <div class="meta">Everything to configure on the server for Phase 1 (mostly already required for production) → Phase 2, with the <strong>reason</strong> each item exists. Follow in order to avoid missed steps.</div>
+
+ <h2>Phase 1 — production hardening (do before real users)</h2>
+
+ <h3>1. PHP 8.2 runtime (requires compiled extensions)</h3>
+ <table>
+  <tr><th style="width:34%">Extension</th><th>Why</th></tr>
+  <tr><td><code>pdo_mysql</code>, <code>mysqlnd</code></td><td>Database access (P1 uses MySQL).</td></tr>
+  <tr><td><code>bcmath</code></td><td>Currency math (orders, fees, wallet, payments) — avoids float rounding.</td></tr>
+  <tr><td><code>gd</code> (or imagick)</td><td>Image uploads/resizing (avatars, service images, KYC doc previews).</td></tr>
+  <tr><td><code>fileinfo</code>, <code>mbstring</code>, <code>xml</code>, <code>curl</code>, <code>openssl</code>, <code>zip</code>, <code>ctype</code>, <code>tokenizer</code></td><td>Required by Laravel core + DomPDF (invoices, privacy PDF), file uploads, PDF/image libs, HTTP outbound (AI/payment/webhook later).</td></tr>
+  <tr><td><code>intl</code></td><td>Laravel number/date formatting; needed by framework validators on some ops.</td></tr>
+  <tr><td><code>opcache</code> (enable in prod)</td><td>~2–3× PHP speed; critical for any traffic. <code>opcache.enable=1</code>, memory ≥128M, validate_timestamps=0 when code is deployed cleanly.</td></tr>
+  <tr><td>(P2) <code>redis</code> ext.</td><td>Queue + cache + session + webhooks (P1 keeps queue=sync / cache=file but that must change in P2).</td></tr>
+ </table>
+
+ <h3>2. Nginx</h3>
+ <ul>
+  <li>Serve Laravel via PHP-FPM (root → <code>public/</code>, try_files to <code>index.php</code>).</li>
+  <li><strong>Static asset caching</strong> for <code>public/build</code> (Vite hashed files) — cache headers via <code>immutable</code>; this is where the 4 apps (main/admin/seller/buyer) get fast.</li>
+  <li>Gzip/Brotli on JS/CSS/JSON; proper <code>expires</code> on images/docs thumbnails.</li>
+  <li><code>client_max_body_size 25m</code> + matching <code>upload_max_filesize</code> / <code>post_max_size</code> in php-fpm — buyers upload order requirements docs, sellers upload KYC (Aadhaar/PAN) and gallery images.</li>
+  <li>Redirect www→apex, HTTP→HTTPS.</li>
+ </ul>
+ <h3>3. HTTPS (Let's Encrypt)</h3>
+ <p class="why">Payments (CCAvenue), login, KYC docs, OTP, webhooks all need TLS. Install <code>certbot</code>, auto-renew cron, HSTS + secure headers (CSP, X-Frame-Options, Referrer-Policy) at Nginx level.</p>
+
+ <h3>4. MySQL tuning</h3>
+ <ul>
+  <li>MariaDB/MySQL 8.x; UTF8MB4 default (Hindi/local names), <code>innodb_buffer_pool_size ≈ 50–70% RAM</code>.</li>
+  <li>Slow query log during load; index hot tables (orders.status, orders.payment_status, services.status/category, users.role).</li>
+  <li>Backups: nightly <code>mysqldump</code>/XtraBackup to off-box storage + test-restore (money data!).</li>
+ </ul>
+ <h3>5. Laravel prod bootstrapping</h3>
+ <ul>
+  <li><code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, real <code>APP_KEY</code>, fresh <code>APP_URL</code>.</li>
+  <li><code>php artisan storage:link</code> — public images (avatars, service images, order docs, KYC uploads stored on the <code>public</code> disk are referenced via <code>/storage/...</code>). <em>Required or uploads 404.</em></li>
+  <li>Cache: <code>php artisan config:cache</code>, <code>route:cache</code>, <code>view:cache</code> after each deploy (currently config/route NOT cached).</li>
+  <li>Migration on deploy: <code>php artisan migrate --force</code> (NOT migrate:fresh on live).</li>
+ </ul>
+ <h3>6. Scheduler cron</h3>
+ <p><code>* * * * * cd /var/www/skillnest &amp;&amp; php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code></p>
+ <p class="why">P1 already has time-based logic needs (auto-accept timers, invoice numbering safety, KYC reminders in P2). Even with zero tasks today, install the cron now so future tasks just work.</p>
+
+ <h3>7. SMTP (real email)</h3>
+ <p>Admin currently configures SMTP inside the app (MailService + db settings). Production needs: real SMTP provider (SendGrid/Mailgun/Postmark or transactional SMTP), DNS SPF+DKIM+DMARC so welcome/KYC/OTP mails don't land in spam.</p>
+
+ <h3>8. Security basics</h3>
+ <ul>
+  <li>Fail2ban on SSH/payment endpoints; firewall only 80/443/22; disable root login.</li>
+  <li>Deploy user owns files (no world-writable storage/session folders); <code>.env</code> out of web root.</li>
+  <li>Session/queue/lock perms — <code>storage</code> writable by www-data only.</li>
+ </ul>
+
+ <h2>Phase 2 — scale infrastructure (when pushing webhooks/microservices/AI)</h2>
+
+ <h3>9. Redis server (+ php ext)</h3>
+ <p class="why">Reliable async so DO webhooks/AI/SMS don't block users. Set <code>QUEUE_CONNECTION=redis</code>, <code>CACHE_STORE=redis</code>, <code>SESSION_DRIVER=redis</code>. Add AUTH + memory allocation, persistence (AOF) if cache-only can use RDB.</p>
+
+ <h3>10. Queue workers (Supervisor)</h3>
+ <p>Supervisor config for <code>queue:work redis</code> (workers=countCPU*2; restarts on crash), plus separate workers for <code>webhooks</code>/<code>ai</code>/<code>notifications</code> queues to isolate load. Optional Horizon dashboard (L9-compatible): <code>horizon:up</code>.</p>
+
+ <h3>11. Webhook delivery daemon + retries</h3>
+ <p>Outgoing webhooks get their own queue + retry/backoff + signature (HMAC-SHA256 of payload) + <code>webhook_deliveries</code> table. DoS-safe incoming endpoints with secret validation + idempotency keys.</p>
+
+ <h3>12. Search service (Meilisearch / OpenSearch)</h3>
+ <p>Run on same box (small) or separate VPS; seed from services/sellers via jobs; geo filters for local "near me" hits. Search is "nice in P2, required for the local marketplace feel".</p>
+
+ <h3>13. Object storage / CDN</h3>
+ <p>Move uploads to MinIO/S3-compatible (KYC docs, order docs, gig media) with CDN (Cloudflare/Bunny) for images. Keep <code>public</code> disk fallback for avatars if cost matters.</p>
+
+ <h3>14. AI gateway host</h3>
+ <p>Where ai-service lives (FastAPI, Python 3.10+, GPU box optional for local LLaMA/Whisper). Secure: API-key auth, queue-delivered jobs, separate from main app to avoid LLM call latency blocking web.</p>
+
+ <h3>15. Notification channel providers</h3>
+ <ul>
+  <li>SMS gateway credentials (MSG91/Fast2SMS) — env secrets.<br>
+  <li>WhatsApp Business API (Gupshup/360dialog) — webhook URL internal + IPN.<br>
+  <li>SMTP stays from #7.</li>
+ </ul>
+ <p class="why">India-first delivery: email alone insufficient for local/non-technical sellers; notifications are the #1 retention lever.</p>
+
+ <h3>16. Monitoring / observability</h3>
+ <ul>
+  <li>Error tracking: Sentry or Flare (Laravel SDK).</li>
+  <li>Health: Laravel PULSE equivalent for L9 (spatie/laravel-health / cache + queue dashboards); UptimeRobot for public + webhook endpoint URLs.</li>
+  <li><strong>Logs</strong>: JSON logs with request_id, shipped to Loki/ELK or S3 for later analysis (needed to debug webhook chains + AI usage).</li>
+ </ul>
+
+ <h3>17. CI/CD + deployments</h3>
+ <p>GitHub Actions: php-cs/lint, <code>php artisan test</code> (or at least route:list + migrate check), npm build (4 apps) + fix-manifest, then deploy via SSH/rsync or Docker image. Deploy script runs: maintenance-mode → git pull → composer install --no-dev --optimize-autoloader → migrate --force → config/route/view cache → queue:restart → up.</p>
+
+ <h3>18. Optional: gateway / message broker for microservices</h3>
+ <p>If services split wide: event bus = Redis Streams or RabbitMQ, plus API gateway (Nginx or Laravel routes forwarding to service domains). Only needed when team >1 / true deployment independence; the roadmap assumes events-first monolith → extract services one at a time.</p>
+
+ <h3>19. Environment secrets inventory (new in P2)</h3>
+ <table>
+  <tr><th>Secret</th><th>Used by</th></tr>
+  <tr><td>REDIS_HOST/AUTH</td><td>queue/cache/session</td></tr>
+  <tr><td>OPENAI (or ANTHROPIC/GEMINI) key</td><td>ai-service LLM</td></tr>
+  <tr><td>MEILI_MASTER_KEY / OpenSearch creds</td><td>search-service</td></tr>
+  <tr><td>MINIO (or AWS) keys</td><td>object storage</td></tr>
+  <tr><td>MSG91 / Fast2SMS keys</td><td>SMS</td></tr>
+  <tr><td>WABA phone_number_id + token</td><td>WhatsApp</td></tr>
+  <tr><td>CCAvenue keys already (P1)</td><td>payments</td></tr>
+  <tr><td>DIGILOCKER (client id/secret)</td><td>eKYC (P2)</td></tr>
+  <tr><td>Sentry DSN</td><td>errors</td></tr>
+ </table>
+
+ <div class="why">Order to follow: 1→8 (Phase 1 go-live), then 9→19 for Phase 2. If you use a managed DB / managed Redis (Aiven, PlanetScale, Upstash) many of the tuning items become config-only — still keep #5, #7, #8.</div>
+</body>
+</html>

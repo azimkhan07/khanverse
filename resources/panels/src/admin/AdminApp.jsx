@@ -15,6 +15,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
 import Categories from './pages/Categories';
+import ServiceTypes from './pages/ServiceTypes';
 import Buyers from './pages/Buyers';
 import BuyerDetail from './pages/BuyerDetail';
 import Sellers from './pages/Sellers';
@@ -66,7 +67,7 @@ function NotFound() {
 
 const adminPageTitles = {
     '/': 'Dashboard', '/orders': 'Orders', '/projects': 'Projects',
-    '/services': 'Services', '/categories': 'Categories', '/buyers': 'Buyers',
+    '/services': 'Services', '/categories': 'Categories', '/service-types': 'Service Types', '/buyers': 'Buyers',
     '/sellers': 'Sellers', '/roles': 'Roles', '/settings': 'Settings',
     '/menus': 'Menus', '/permissions': 'Permissions',
     '/profile': 'My Profile',
@@ -176,6 +177,7 @@ function AdminLayout({ user, isDark, toggleTheme }) {
                         <Route path="/services" element={<Services />} />
                         <Route path="/services/:id" element={<ServiceDetail />} />
                         <Route path="/categories" element={<Categories />} />
+                        <Route path="/service-types" element={<ServiceTypes />} />
                         <Route path="/buyers" element={<Buyers />} />
                         <Route path="/buyers/:id" element={<BuyerDetail />} />
                         <Route path="/sellers" element={<Sellers />} />

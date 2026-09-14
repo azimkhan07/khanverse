@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import {
     Bell, CheckCheck, PanelLeft, Settings, User, LockKeyhole, LogOut,
@@ -74,6 +75,9 @@ function LockScreen({ user }) {
 
     useEffect(() => {
         if (inputRef.current) inputRef.current.focus();
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = prev; };
     }, []);
 
     const unlock = async () => {
@@ -216,7 +220,7 @@ function UserMenu({ user, base }) {
             </div>
 
             {locked && (
-                <LockScreen user={user} />
+                createPortal(<LockScreen user={user} />, document.body)
             )}
         </>
     );

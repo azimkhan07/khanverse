@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'order_number', 'project_id', 'buyer_id', 'seller_id', 'service_id', 'amount', 'platform_fee', 'status', 'requirements', 'requirements_title', 'requirements_type', 'requirements_docs', 'delivery_date', 'decline_reason', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'order_number', 'project_id', 'buyer_id', 'seller_id', 'service_id', 'amount', 'platform_fee', 'status', 'payment_status', 'payment_method', 'transaction_id', 'paid_at', 'gateway_id', 'requirements', 'requirements_title', 'requirements_type', 'requirements_docs', 'delivery_date', 'decline_reason', 'created_at', 'updated_at'];
+
+    protected $casts = [
+        'amount' => 'float',
+        'platform_fee' => 'float',
+        'paid_at' => 'datetime',
+    ];
 
     public function invoices()
     {
@@ -42,5 +48,10 @@ class Order extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(OrderPayment::class);
     }
 }

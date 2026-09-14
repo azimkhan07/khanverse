@@ -33,6 +33,7 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'profile_image',
     ];
 
     /**
@@ -157,6 +158,10 @@ class User extends Authenticatable
 
         if ($this->role == 'seller' && $this->seller && $this->seller->profile_image) {
             return asset('storage/' . $this->seller->profile_image);
+        }
+
+        if ($this->profile_image) {
+            return asset('storage/' . $this->profile_image);
         }
 
         return asset('admin/assets/images/avatar-4.jpg');

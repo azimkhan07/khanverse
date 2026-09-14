@@ -121,7 +121,8 @@ HTML;
         string $key,
         string|array $to,
         array $data = [],
-        array $replyTo = []
+        array $replyTo = [],
+        array $attachments = []
     ): bool {
         $template = EmailTemplate::where('key', $key)->where('is_active', true)->first();
 
@@ -136,11 +137,25 @@ HTML;
         $html = self::wrapper($template, $body);
 
         try {
-            Mail::html($html, function (Message $message) use ($to, $subject, $replyTo) {
+            Mail::html($html, function (Message $message) use ($to, $subject, $replyTo, $attachments) {
                 $message->to($to)->subject($subject);
 
                 if (isset($replyTo['address']) && $replyTo['address']) {
                     $message->replyTo($replyTo['address'], $replyTo['name'] ?? null);
+                }
+
+                foreach ($attachments as $attachment) {
+                    if (is_array($attachment) && isset($attachment['path'])) {
+                        $message->attach(
+                            $attachment['path'],
+                            array_filter([
+                                'as' => $attachment['as'] ?? null,
+                                'mime' => $attachment['mime'] ?? null,
+                            ])
+                        );
+                    } elseif (is_string($attachment) && is_file($attachment)) {
+                        $message->attach($attachment);
+                    }
                 }
             });
 

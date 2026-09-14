@@ -12,7 +12,7 @@
             'name' => $user->name,
             'email' => $user->email,
             'role' => $user->role,
-            'avatar' => $user->profile_photo_path ?? null,
+            'avatar' => $user->display_image,
         ] : null;
     @endphp
     @vite(['resources/panels/src/main.jsx'])

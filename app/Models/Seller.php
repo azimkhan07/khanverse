@@ -21,6 +21,16 @@ class Seller extends Model
         'available_for_work',
         'country',
         'city',
+        'latitude',
+        'longitude',
+        'location_source',
+        'location_updated_at',
+        'aadhaar_number',
+        'aadhaar_document',
+        'pan_number',
+        'pan_document',
+        'kyc_status',
+        'kyc_rejection_reason',
         'created_at',
         'updated_at',
     ];
@@ -33,6 +43,11 @@ class Seller extends Model
     public function services()
     {
         return $this->hasMany(Service::class);
+    }
+
+    public function serviceTypes()
+    {
+        return $this->belongsToMany(ServiceType::class, 'seller_service_type');
     }
 
     public function projects()
@@ -133,5 +148,15 @@ class Seller extends Model
     public function profile()
     {
         return $this->hasOne(SellerProfile::class);
+    }
+
+    public function availability()
+    {
+        return $this->hasMany(SellerAvailability::class);
+    }
+
+    public function categoryDetail()
+    {
+        return $this->hasOne(SellerCategoryDetail::class);
     }
 }

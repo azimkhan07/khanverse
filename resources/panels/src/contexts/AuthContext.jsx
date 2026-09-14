@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import frontendApi from "../shared/frontendApi";
 
+const PROMPT_KEY_PREFIX = "profile_prompt_";
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -10,8 +12,10 @@ export function AuthProvider({ children }) {
     const fetchUser = useCallback(async () => {
         try {
             const res = await frontendApi.get("/user");
-            if (res.data) {
-                setUser(res.data);
+            if (res.data?.user) {
+                setUser(res.data.user);
+            } else {
+                setUser(null);
             }
         } catch {
             setUser(null);
@@ -30,8 +34,15 @@ export function AuthProvider({ children }) {
         } catch {
             // silent
         } finally {
+            try {
+                Object.keys(sessionStorage).forEach((k) => {
+                    if (k.startsWith(PROMPT_KEY_PREFIX)) sessionStorage.removeItem(k);
+                });
+            } catch {
+                // silent
+            }
             setUser(null);
-            window.location.href = "/login";
+            window.location.href = "/";
         }
     }, []);
 

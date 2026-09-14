@@ -26,6 +26,8 @@ import frontendApi from "../../shared/frontendApi";
 import { useAuth } from "../../contexts/AuthContext";
 import Modal from "../../shared/components/Modal";
 import { showDialog } from "../../shared/components/Dialog";
+import ProfileStep from "../../shared/components/ProfileStep";
+import { runOrderFlow } from "../../shared/orderModalFlow";
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -137,6 +139,10 @@ function ServiceDetail() {
     };
 
     const placeOrder = async () => {
+        if (user && !user.complete) {
+            await showDialog({ type: "warning", title: "Complete your profile", message: "Please complete the profile section above to place your order.", confirmText: "OK" });
+            return;
+        }
         if (!reqTitle.trim()) {
             await showDialog({ type: "warning", title: "Title required", message: "Please enter a title for your requirement.", confirmText: "OK" });
             return;
@@ -147,28 +153,19 @@ function ServiceDetail() {
         }
         setSubmitting(true);
         try {
-            const fd = new FormData();
-            fd.append("service_id", service?.id);
-            fd.append("package", selectedPackage.key || "basic");
-            fd.append("requirements", requirements);
-            fd.append("requirements_title", reqTitle);
-            fd.append("requirements_type", reqType);
-            if (reqDoc) fd.append("requirements_docs", reqDoc);
-            const res = await frontendApi.post("/buyer/orders", fd, { headers: { "Content-Type": "multipart/form-data" } });
-            await showDialog({
-                type: "success",
-                title: "Order Placed",
-                message: res.data?.message || "Your order has been placed and is awaiting seller approval.",
-                confirmText: "View Orders",
+            await runOrderFlow((force) => {
+                const fd = new FormData();
+                fd.append("service_id", service?.id);
+                fd.append("package", selectedPackage.key || "basic");
+                fd.append("requirements", requirements);
+                fd.append("requirements_title", reqTitle);
+                fd.append("requirements_type", reqType);
+                if (reqDoc) fd.append("requirements_docs", reqDoc);
+                if (force) fd.append("force", "1");
+                return frontendApi.post("/buyer/orders", fd, { headers: { "Content-Type": "multipart/form-data" } });
             });
-            window.location.href = "/buyer/orders";
-        } catch (err) {
-            await showDialog({
-                type: "danger",
-                title: "Order Failed",
-                message: err.response?.data?.message || "Could not place the order. Please try again.",
-                confirmText: "OK",
-            });
+        } catch {
+            // handled inside runOrderFlow
         } finally {
             setSubmitting(false);
             setOrdering(false);
@@ -647,6 +644,7 @@ function ServiceDetail() {
                         <div className="detail-row"><span className="label">Package</span><span className="value">{selectedPackage.name}</span></div>
                         <div className="detail-row"><span className="label">Price</span><span className="value">₹{Number(selectedPackage.price).toLocaleString("en-IN")}</span></div>
                     </div>
+                    <ProfileStep />
                     <form onSubmit={(e) => { e.preventDefault(); placeOrder(); }}>
                         <div className="form-group">
                             <label>Requirement Title <span style={{ color: "var(--danger,#EF4444)" }}>*</span></label>

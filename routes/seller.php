@@ -6,7 +6,6 @@ use App\Http\Controllers\Seller\ProjectController;
 use App\Http\Controllers\Seller\OrderController;
 use App\Http\Controllers\Seller\ServiceController;
 use App\Http\Controllers\Seller\WalletController;
-use App\Http\Controllers\Seller\NotificationController;
 use App\Http\Controllers\Seller\SettingController;
 
 /*

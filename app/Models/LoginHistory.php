@@ -9,6 +9,8 @@ class LoginHistory extends Model
     protected $fillable = [
         'user_id',
         'ip_address',
+        'latitude',
+        'longitude',
         'user_agent',
         'browser',
         'device',

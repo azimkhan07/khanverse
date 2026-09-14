@@ -36,13 +36,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-        "classmap": [
-            "app/Http/Controllers/Admin/NotificationController.php"
-        ],
         "files": [
-            "app/Helpers/sidebar/admin.php",
-            "app/Helpers/sidebar/seller.php",
-            "app/Helpers/sidebar/buyer.php",
             "app/Helpers/setting.php",
             "app/Helpers/menu.php",
             "app/Helpers/permission_helper.php"

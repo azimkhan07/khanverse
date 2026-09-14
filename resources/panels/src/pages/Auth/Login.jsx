@@ -22,6 +22,21 @@ function Login() {
         if (apiError) setApiError("");
     };
 
+    const captureGeo = async () => {
+        if (typeof navigator === "undefined" || !navigator.geolocation) return null;
+        try {
+            const pos = await Promise.race([
+                new Promise((resolve, reject) =>
+                    navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 4000, maximumAge: 300000 })
+                ),
+                new Promise((resolve) => setTimeout(() => resolve(null), 4500)),
+            ]);
+            return pos ? { latitude: pos.coords.latitude, longitude: pos.coords.longitude } : null;
+        } catch {
+            return null;
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -29,10 +44,12 @@ function Login() {
         setApiError("");
 
         try {
+            const geo = await captureGeo();
             const res = await frontendApi.post("/login", {
                 email: form.email,
                 password: form.password,
                 remember: form.remember,
+                ...(geo ? { latitude: geo.latitude, longitude: geo.longitude } : {}),
             });
 
             if (res.data.status) {
@@ -63,7 +80,7 @@ function Login() {
                         <input
                             type="email"
                             name="email"
-                            placeholder="Email Address"
+                            placeholder="Email or Username"
                             value={form.email}
                             onChange={handleChange}
                             required
@@ -107,7 +124,11 @@ function Login() {
 
                 <div className="divider"><span>OR</span></div>
 
-                <button className="google-btn" disabled>
+                <button
+                    type="button"
+                    className="google-btn"
+                    onClick={() => (window.location.href = "/auth/google/redirect")}
+                >
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20" height="20" />
                     Continue with Google
                 </button>

@@ -16,6 +16,10 @@ class Buyer extends Model
         'profile_image',
         'country',
         'city',
+        'verification_document',
+        'verification_status',
+        'verification_rejection_reason',
+        'is_consultancy',
         'created_at',
         'updated_at',
     ];

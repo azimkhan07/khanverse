@@ -19,5 +19,8 @@ class VerifyCsrfToken extends Middleware
         'api/forgot-password',
         'api/reset-password',
         'api/verify-email',
+        'api/payment/webhook/*',
+        'api/payment/demo/return/*',
+        'api/payment/cancel/*',
     ];
 }

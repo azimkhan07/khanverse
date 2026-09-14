@@ -49,7 +49,7 @@ class ProfileController extends Controller
         ));
     }
 
-    public function update(Request $request)
+    public function updateProfile(Request $request)
     {
         $buyer = Buyer::where('user_id', Auth::id())->firstOrFail();
 
@@ -154,6 +154,37 @@ class ProfileController extends Controller
         $user->save();
 
         return back()->with('success', 'Password changed successfully.');
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $buyer = Buyer::where('user_id', Auth::id())->firstOrFail();
+
+        if ($buyer->profile_image && Storage::disk('public')->exists($buyer->profile_image)) {
+            Storage::disk('public')->delete($buyer->profile_image);
+        }
+
+        $buyer->profile_image = $request->file('profile_image')->store('buyers/profile', 'public');
+        $buyer->save();
+
+        return back()->with('success', 'Profile photo updated successfully.');
+    }
+
+    public function deletePhoto(Request $request)
+    {
+        $buyer = Buyer::where('user_id', Auth::id())->firstOrFail();
+
+        if ($buyer->profile_image) {
+            Storage::disk('public')->delete($buyer->profile_image);
+            $buyer->profile_image = null;
+            $buyer->save();
+        }
+
+        return back()->with('success', 'Profile photo removed successfully.');
     }
 
     public function getStates($country)

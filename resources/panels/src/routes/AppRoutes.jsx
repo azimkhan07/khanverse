@@ -28,6 +28,8 @@ import Tutorials from "../pages/Tutorials/Tutorials";
 import AppDownload from "../pages/AppDownload/AppDownload";
 import Search from "../pages/Search/Search";
 import Compare from "../pages/Compare/Compare";
+import PublicProfile from "../pages/Profile/PublicProfile";
+import AccountSettings from "../pages/Account/Settings";
 
 function pageTitle(pathname) {
     const titles = {
@@ -45,6 +47,7 @@ function pageTitle(pathname) {
         '/compare': 'Compare Services',
         '/tutorials': 'Tutorials',
         '/app': 'Download App',
+        '/account/settings': 'Account Settings',
         '/login': 'Sign In',
         '/register': 'Create Account',
         '/forgot-password': 'Forgot Password',
@@ -90,6 +93,8 @@ function AppRoutes() {
                     <Route path="/compare" element={<Compare />} />
                     <Route path="/tutorials" element={<Tutorials />} />
                     <Route path="/app" element={<AppDownload />} />
+                    <Route path="/profile" element={<PublicProfile />} />
+                    <Route path="/account/settings" element={<AccountSettings />} />
                 </Route>
                 <Route element={<GuestLayout />}>
                     <Route path="/login" element={<Login />} />

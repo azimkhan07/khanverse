@@ -5,7 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\FrontendApiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PublicProfileController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\AiController;
+use App\Http\Controllers\Admin\Api\ServiceTypeApiController as AdminServiceTypeApiController;
 use App\Http\Controllers\Admin\Api\DashboardApiController as AdminDashboardApiController;
 use App\Http\Controllers\Admin\Api\OrderApiController as AdminOrderApiController;
 use App\Http\Controllers\Admin\Api\ProjectApiController as AdminProjectApiController;
@@ -39,7 +43,9 @@ use App\Http\Controllers\Seller\Api\ProjectApiController as SellerProjectApiCont
 use App\Http\Controllers\Seller\Api\ReviewApiController as SellerReviewApiController;
 use App\Http\Controllers\Seller\Api\WalletApiController as SellerWalletApiController;
 use App\Http\Controllers\Seller\Api\AccountApiController as SellerAccountApiController;
+use App\Http\Controllers\Seller\Api\AvailabilityApiController as SellerAvailabilityApiController;
 use App\Http\Controllers\Api\ChatApiController;
+use App\Http\Controllers\Api\AccountSettingsController;
 
 use App\Http\Controllers\Buyer\Api\DashboardApiController as BuyerDashboardApiController;
 use App\Http\Controllers\Buyer\Api\OrderApiController as BuyerOrderApiController;
@@ -69,6 +75,10 @@ Route::get('/auth-settings', [AuthController::class, 'authSettings'])->name('api
 Route::prefix('frontend')->name('frontend.')->group(function () {
     Route::get('/home', [FrontendApiController::class, 'home'])->name('home');
     Route::get('/categories', [FrontendApiController::class, 'categories'])->name('categories');
+    Route::get('/service-types', [FrontendApiController::class, 'serviceTypes'])->name('service-types');
+    Route::get('/countries', [FrontendApiController::class, 'countries'])->name('countries');
+    Route::get('/states/{country}', [FrontendApiController::class, 'states'])->name('states')->where('country', '[0-9]+');
+    Route::get('/cities/{state}', [FrontendApiController::class, 'cities'])->name('cities')->where('state', '[0-9]+');
     Route::get('/faqs', [FrontendApiController::class, 'faqs'])->name('faqs');
     Route::get('/testimonials', [FrontendApiController::class, 'testimonials'])->name('testimonials');
     Route::get('/tutorials', [FrontendApiController::class, 'tutorials'])->name('tutorials');
@@ -109,6 +119,15 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/user', [AuthController::class, 'user'])->name('api.user');
     Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('api.verification.send');
 
+    Route::get('/profile', [PublicProfileController::class, 'show'])->name('api.profile.show');
+    Route::post('/profile', [PublicProfileController::class, 'update'])->name('api.profile.update');
+
+    Route::prefix('account')->name('api.account.')->group(function () {
+        Route::get('/settings', [AccountSettingsController::class, 'index'])->name('settings');
+        Route::post('/settings', [AccountSettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/password', [AccountSettingsController::class, 'updatePassword'])->name('settings.password');
+    });
+
     Route::post('/become-seller', [AuthController::class, 'becomeSeller'])->name('api.become-seller');
     Route::post('/become-buyer', [AuthController::class, 'becomeBuyer'])->name('api.become-buyer');
     Route::get('/role-record', [AuthController::class, 'currentRoleRecord'])->name('api.role-record');
@@ -134,6 +153,21 @@ Route::middleware(['web', 'auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::post('/contact', [ContactController::class, 'store'])->name('api.contact');
+
+/*
+|--------------------------------------------------------------------------
+| Payment Gateway Webhook / Return Routes (CSRF-exempt)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('web')->group(function () {
+    Route::post('/payment/webhook/{gateway}', [PaymentController::class, 'webhook'])->name('api.payment.webhook');
+    Route::match(['get', 'post'], '/payment/demo/return/{gateway}', [PaymentController::class, 'demoReturn'])->name('api.payment.demo.return');
+    Route::get('/payment/cancel/{gateway}', [PaymentController::class, 'cancel'])->name('api.payment.cancel');
+});
+
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::post('/ai/suggest-services', [AiController::class, 'suggestServices'])->name('api.ai.suggest-services');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -166,6 +200,15 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::put('/{id}', [AdminCategoryApiController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdminCategoryApiController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/status', [AdminCategoryApiController::class, 'toggleStatus'])->name('status');
+    });
+
+    Route::prefix('service-types')->name('service-types.')->group(function () {
+        Route::get('/', [AdminServiceTypeApiController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminServiceTypeApiController::class, 'show'])->name('show');
+        Route::post('/', [AdminServiceTypeApiController::class, 'store'])->name('store');
+        Route::put('/{id}', [AdminServiceTypeApiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminServiceTypeApiController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/status', [AdminServiceTypeApiController::class, 'toggleStatus'])->name('status');
     });
 
     Route::prefix('users')->name('users.')->group(function () {
@@ -430,6 +473,11 @@ Route::middleware(['web', 'auth:web', 'role:seller'])->prefix('seller')->name('s
 
     Route::get('/notifications', [SellerAccountApiController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/read-all', [SellerAccountApiController::class, 'markAllRead'])->name('notifications.read-all');
+
+    Route::prefix('availability')->name('availability.')->group(function () {
+        Route::get('/', [SellerAvailabilityApiController::class, 'index'])->name('index');
+        Route::post('/', [SellerAvailabilityApiController::class, 'update'])->name('update');
+    });
 });
 
 /*
@@ -444,7 +492,10 @@ Route::middleware(['web', 'auth:web', 'role:buyer'])->prefix('buyer')->name('buy
         Route::get('/', [BuyerOrderApiController::class, 'index'])->name('index');
         Route::post('/', [BuyerOrderApiController::class, 'store'])->name('store');
         Route::get('/{id}', [BuyerOrderApiController::class, 'show'])->name('show');
+        Route::post('/{id}/cancel', [BuyerOrderApiController::class, 'cancel'])->name('cancel');
     });
+
+    Route::post('/orders/{id}/pay', [PaymentController::class, 'initiate'])->name('orders.pay');
 
     Route::prefix('projects')->name('projects.')->group(function () {
         Route::get('/', [BuyerProjectApiController::class, 'index'])->name('index');

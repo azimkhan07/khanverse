@@ -9,13 +9,18 @@ use App\Models\Buyer;
 use App\Models\BuyerProfile;
 use App\Models\LoginHistory;
 use App\Models\Seller;
+use App\Models\SellerCategoryDetail;
 use App\Models\SellerProfile;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserDevice;
 use App\Support\UserAgentParser;
+use App\Services\MailService;
 use App\Services\NotificationService;
 use App\Services\OtpService;
+use App\Services\PdfService;
+use App\Services\KycVerificationService;
+use App\Services\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,18 +59,20 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $role = $request->role ?? 'buyer';
+        $role = $request->role ?? 'user';
 
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username ?: $this->generateUsername($request->email, $request->name),
+            'username' => Str::lower(trim((string) ($request->username ?: $this->generateUsername($request->email, $request->name)))),
             'phone' => $request->phone,
-            'email' => $request->email,
+            'email' => Str::lower(trim((string) $request->email)),
             'role' => $role,
             'password' => Hash::make($request->password),
         ]);
 
-        $this->createRoleRecord($user, $role, $request);
+        if ($role === 'seller' || $role === 'buyer') {
+            $this->createRoleRecord($user, $role, $request);
+        }
 
         event(new Registered($user));
 
@@ -76,9 +83,9 @@ class AuthController extends Controller
         NotificationService::send(
             $user->id,
             'Welcome to SkillNest',
-            'Your ' . $role . ' account was created successfully. Complete your profile to get started.',
+            'Your account was created successfully. Complete your profile and choose whether you want to buy or sell services.',
             'auth',
-            route($role . '.dashboard'),
+            '/profile',
         );
 
         return response()->json([
@@ -145,16 +152,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'username' => $user->username,
-                'phone' => $user->phone,
-                'email' => $user->email,
-                'role' => $user->role,
-                'has_seller' => (bool) $user->seller,
-                'has_buyer' => (bool) $user->buyer,
-            ],
+            'user' => ProfileService::data($user),
         ]);
     }
 
@@ -291,6 +289,7 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate([
+            'privacy_policy' => ['required', 'accepted'],
             'full_name' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:5000'],
             'skills' => ['nullable', 'string', 'max:500'],
@@ -307,7 +306,19 @@ class AuthController extends Controller
             'postal_code' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'available_for_work' => ['nullable', 'boolean'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'category_id' => ['nullable', 'integer'],
+            'category_details' => ['nullable', 'array'],
+            'aadhaar_number' => ['nullable', 'string', 'max:20', $this->kycAadhaarRule()],
+            'pan_number' => ['nullable', 'string', 'max:20', $this->kycPanRule()],
+            'aadhaar_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'pan_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ]);
+
+        $aadhaarDoc = $request->hasFile('aadhaar_document') ? $request->file('aadhaar_document')->store('seller-kyc', 'public') : null;
+        $panDoc = $request->hasFile('pan_document') ? $request->file('pan_document')->store('seller-kyc', 'public') : null;
+        $previous = $user->seller;
 
         $seller = Seller::updateOrCreate(
             ['user_id' => $user->id],
@@ -321,8 +332,26 @@ class AuthController extends Controller
                 'hourly_rate' => $validated['hourly_rate'] ?? null,
                 'experience_level' => $validated['experience_level'] ?? 'junior',
                 'available_for_work' => $validated['available_for_work'] ?? true,
+                'aadhaar_number' => $validated['aadhaar_number'] ?? $previous?->aadhaar_number ?? null,
+                'pan_number' => $validated['pan_number'] ?? $previous?->pan_number ?? null,
+                'aadhaar_document' => $aadhaarDoc ?? $previous?->aadhaar_document ?? null,
+                'pan_document' => $panDoc ?? $previous?->pan_document ?? null,
+                'kyc_status' => ($aadhaarDoc || $panDoc) ? 'submitted' : ($previous?->kyc_status ?? 'pending'),
             ]
         );
+
+        $this->applySellerGeo($seller, $validated, 'registration');
+
+        if (! empty($validated['category_details']) || ! empty($validated['category_id'])) {
+            SellerCategoryDetail::updateOrCreate(
+                ['seller_id' => $seller->id],
+                [
+                    'seller_id' => $seller->id,
+                    'category_id' => $validated['category_id'] ?? $seller->categoryDetail?->category_id ?? null,
+                    'data' => $validated['category_details'] ?? $seller->categoryDetail?->data ?? null,
+                ]
+            );
+        }
 
         SellerProfile::updateOrCreate(
             ['seller_id' => $seller->id],
@@ -352,10 +381,13 @@ class AuthController extends Controller
             route('seller.services.index'),
         );
 
+        $this->sendRoleWelcomeEmail($user, 'seller');
+
         return response()->json([
             'status' => true,
             'message' => 'You are now a seller.',
             'redirect' => '/seller',
+            'profile' => ProfileService::data($user->fresh()),
         ]);
     }
 
@@ -372,6 +404,7 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate([
+            'privacy_policy' => ['required', 'accepted'],
             'full_name' => ['nullable', 'string', 'max:255'],
             'company_name' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:120'],
@@ -385,7 +418,14 @@ class AuthController extends Controller
             'postal_code' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'bio' => ['nullable', 'string'],
+            'is_consultancy' => ['nullable', 'boolean'],
+            'verification_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
+
+        $verificationDoc = $request->hasFile('verification_document') ? $request->file('verification_document')->store('buyer-verification', 'public') : null;
+        $previous = $user->buyer;
 
         $buyer = Buyer::updateOrCreate(
             ['user_id' => $user->id],
@@ -395,6 +435,11 @@ class AuthController extends Controller
                 'company_name' => $validated['company_name'] ?? null,
                 'country' => $validated['country'] ?? null,
                 'city' => $validated['city'] ?? null,
+                'is_consultancy' => $request->has('is_consultancy')
+                    ? $request->boolean('is_consultancy')
+                    : (bool) ($previous?->is_consultancy ?? false),
+                'verification_document' => $verificationDoc ?? $previous?->verification_document ?? null,
+                'verification_status' => $verificationDoc ? 'submitted' : ($previous?->verification_status ?? 'pending'),
             ]
         );
 
@@ -427,11 +472,47 @@ class AuthController extends Controller
             '/buyer',
         );
 
+        $this->sendRoleWelcomeEmail($user, 'buyer');
+
         return response()->json([
             'status' => true,
             'message' => 'You are now a buyer.',
             'redirect' => '/buyer',
+            'profile' => ProfileService::data($user->fresh()),
         ]);
+    }
+
+    protected function sendRoleWelcomeEmail(User $user, string $role): void
+    {
+        $key = $role === 'seller' ? 'role_welcome_seller' : 'role_welcome_buyer';
+
+        try {
+            $pdfPath = PdfService::privacyPolicyFile([
+                'user_name' => $user->name,
+                'role' => ucfirst($role),
+            ]);
+
+            MailService::sendTemplate(
+                $key,
+                $user->email,
+                [
+                    'name' => $user->name,
+                    'app_name' => config('app.name', 'SkillNest'),
+                    'privacy_url' => url('/privacy-policy'),
+                    'dashboard_url' => url('/' . $role),
+                ],
+                [],
+                [[
+                    'path' => $pdfPath,
+                    'as' => 'privacy-policy-' . $role . '.pdf',
+                    'mime' => 'application/pdf',
+                ]]
+            );
+
+            @unlink($pdfPath);
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     public function currentRoleRecord(Request $request): JsonResponse
@@ -453,6 +534,10 @@ class AuthController extends Controller
             'role' => $user->role,
             'has_seller' => (bool) $user->seller,
             'has_buyer' => (bool) $user->buyer,
+            'complete' => ProfileService::isComplete($user),
+            'missing' => ProfileService::completeness($user)['missing'],
+            'avatar' => $user->display_image,
+            'display_name' => $user->display_name,
             'record' => $record,
             'profile' => $profile,
         ]);
@@ -466,9 +551,13 @@ class AuthController extends Controller
 
             $info = UserAgentParser::parse($userAgent);
 
+            $this->syncSellerLocation($user, $request, 'login');
+
             LoginHistory::create([
                 'user_id'       => $user->id,
                 'ip_address'    => $ip,
+                'latitude'      => $this->requestLat($request),
+                'longitude'     => $this->requestLng($request),
                 'user_agent'    => $userAgent,
                 'browser'       => $info['browser'],
                 'device'        => $info['device'],
@@ -563,6 +652,76 @@ class AuthController extends Controller
         }
     }
 
+    private function kycAadhaarRule(): \Closure
+    {
+        return function ($attribute, $value, $fail) {
+            if (empty($value)) {
+                return;
+            }
+            $result = app(KycVerificationService::class)->aadhaar($value);
+            if (! $result['valid']) {
+                $fail($result['message'] ?? 'Aadhaar number is not valid.');
+            }
+        };
+    }
+
+    private function kycPanRule(): \Closure
+    {
+        return function ($attribute, $value, $fail) {
+            if (empty($value)) {
+                return;
+            }
+            $result = app(KycVerificationService::class)->pan($value);
+            if (! $result['valid']) {
+                $fail($result['message'] ?? 'PAN is not valid.');
+            }
+        };
+    }
+
+    private function requestLat(Request $request)
+    {
+        $lat = $request->input('latitude');
+        return is_numeric($lat) && $lat >= -90 && $lat <= 90 ? (float)$lat : null;
+    }
+
+    private function requestLng(Request $request)
+    {
+        $lng = $request->input('longitude');
+        return is_numeric($lng) && $lng >= -180 && $lng <= 180 ? (float)$lng : null;
+    }
+
+    private function applySellerGeo(Seller $seller, array $validated, string $source): void
+    {
+        $lat = $validated['latitude'] ?? null;
+        $lng = $validated['longitude'] ?? null;
+        if (is_numeric($lat) && is_numeric($lng)) {
+            $seller->update([
+                'latitude' => (float)$lat,
+                'longitude' => (float)$lng,
+                'location_source' => $source,
+                'location_updated_at' => now(),
+            ]);
+        }
+    }
+
+    private function syncSellerLocation(User $user, Request $request, string $source): void
+    {
+        try {
+            $lat = $this->requestLat($request);
+            $lng = $this->requestLng($request);
+            if (is_numeric($lat) && is_numeric($lng) && $user->seller) {
+                $user->seller->update([
+                    'latitude' => (float)$lat,
+                    'longitude' => (float)$lng,
+                    'location_source' => $source,
+                    'location_updated_at' => now(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
     private function generateUsername(string $email, ?string $name = null): string
     {
         $base = $name ? Str::slug($name) : Str::before($email, '@');
@@ -584,8 +743,8 @@ class AuthController extends Controller
         }
         return match ($user->role) {
             'admin' => route('admin.dashboard'),
-            'seller' => '/seller',
-            'buyer' => '/buyer',
+            'seller' => '/',
+            'buyer' => '/',
             default => '/',
         };
     }

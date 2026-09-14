@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Briefcase } from 'lucide-react';
+import { ArrowLeft, Save, Briefcase, Sparkles } from 'lucide-react';
 import api from '../../shared/api';
 import { showDialog } from '../../shared/components/Dialog';
+import SearchableMultiSelect from '../../shared/components/SearchableMultiSelect';
 
 const emptyForm = {
     title: '', slug: '', description: '', price: '', delivery_days: 1, revisions: 0,
     delivery_method: 'digital', category_id: '', status: 'draft',
+    visit_start_time: '', visit_end_time: '', working_days: [],
 };
+
+const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const fadeUp = {
     hidden: { opacity: 0, y: 28 },
@@ -30,6 +34,10 @@ function ServiceForm() {
 
     const [form, setForm] = useState(emptyForm);
     const [categories, setCategories] = useState([]);
+    const [serviceTypes, setServiceTypes] = useState([]);
+    const [serviceTypeIds, setServiceTypeIds] = useState([]);
+    const [typesLoading, setTypesLoading] = useState(false);
+    const [aiLoading, setAiLoading] = useState(false);
     const [thumbnail, setThumbnail] = useState(null);
     const [currentThumb, setCurrentThumb] = useState(null);
     const [saving, setSaving] = useState(false);
@@ -42,6 +50,15 @@ function ServiceForm() {
         }).catch(() => {});
     }, []);
 
+    const loadServiceTypes = (categoryId, keep) => {
+        if (!categoryId) { if (!keep) setServiceTypes([]); return; }
+        setTypesLoading(true);
+        api.get('/frontend/service-types', { params: { category_id: categoryId } })
+            .then(({ data: res }) => setServiceTypes(Array.isArray(res.data) ? res.data : []))
+            .catch(() => { if (!keep) setServiceTypes([]); })
+            .finally(() => setTypesLoading(false));
+    };
+
     useEffect(() => {
         if (!isEdit) return;
         api.get(`/seller/services/${id}`).then(({ data }) => {
@@ -50,7 +67,13 @@ function ServiceForm() {
                 price: data.price ?? '', delivery_days: data.delivery_days || 1, revisions: data.revisions || 0,
                 delivery_method: data.delivery_method || 'digital',
                 category_id: data.category_id || data.category?.id || '', status: data.status || 'draft',
+                visit_start_time: data.visit_start_time || '', visit_end_time: data.visit_end_time || '',
+                working_days: Array.isArray(data.working_days) ? data.working_days : [],
             });
+            const existing = Array.isArray(data.service_types)
+                ? data.service_types.map((t) => (typeof t === 'object' ? t.id : t))
+                : [];
+            setServiceTypeIds(existing);
             setCurrentThumb(data.thumbnail || null);
             setLoading(false);
         }).catch(() => setLoading(false));
@@ -66,13 +89,70 @@ function ServiceForm() {
                 slug: value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
             }));
         }
+        if (name === 'category_id') {
+            setServiceTypeIds([]);
+            loadServiceTypes(value);
+        }
+    };
+
+    const toggleDay = (day) => {
+        setForm((prev) => {
+            const days = Array.isArray(prev.working_days) ? prev.working_days : [];
+            const next = days.includes(day) ? days.filter((d) => d !== day) : [...days, day];
+            return { ...prev, working_days: next };
+        });
+    };
+
+    const selectedCat = categories.find((c) => String(c.id) === String(form.category_id));
+    const isFieldCategory = selectedCat?.category_type === 'field';
+
+    const runAiSuggest = async () => {
+        if (!form.title.trim() || !form.category_id) {
+            await showDialog({
+                type: 'danger',
+                title: 'AI Suggest',
+                message: 'Add a service title and pick a category first — the AI uses them to suggest matching services.',
+            });
+            return;
+        }
+        setAiLoading(true);
+        try {
+            const { data: res } = await api.post('/ai/suggest-services', {
+                title: form.title,
+                description: form.description,
+                category_id: form.category_id,
+            });
+            const suggested = Array.isArray(res.data) ? res.data : [];
+            if (!suggested.length) {
+                await showDialog({ type: 'warning', title: 'AI Suggest', message: 'No matching services were found. Adjust your keywords and try again.' });
+                return;
+            }
+            const merged = [];
+            suggested.forEach((s) => {
+                if (!merged.some((m) => m.id === s.id)) merged.push(s);
+                setServiceTypes((prev) => (prev.some((p) => p.id === s.id) ? prev : [...prev, { id: s.id, name: s.name, category_id: s.category_id, category: s.category }]));
+            });
+            setServiceTypeIds((prev) => [...new Set([...prev, ...merged.map((m) => m.id)])]);
+            await showDialog({ type: 'success', title: 'AI Suggest', message: `${suggested.length} matching services suggested (from catalog).` });
+        } catch (err) {
+            await showDialog({ type: 'danger', title: 'AI Suggest', message: err.response?.data?.message || 'AI suggestion failed. Try again.' });
+        } finally {
+            setAiLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
         const payload = new FormData();
-        Object.entries(form).forEach(([k, v]) => payload.append(k, String(v)));
+        Object.entries(form).forEach(([k, v]) => {
+            if (Array.isArray(v)) return;
+            payload.append(k, String(v));
+        });
+        if (Array.isArray(form.working_days) && form.working_days.length) {
+            form.working_days.forEach((d) => payload.append('working_days[]', d));
+        }
+        serviceTypeIds.forEach((id) => payload.append('service_type_ids[]', String(id)));
         if (thumbnail) payload.append('thumbnail', thumbnail);
 
         try {
@@ -145,6 +225,39 @@ function ServiceForm() {
                         <textarea className="form-input" name="description" rows={5} value={form.description} onChange={handleChange} required placeholder="Describe what buyers get…" />
                     </motion.div>
 
+                    <motion.div className="kv-field full" variants={fadeUp}>
+                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                            <span>Services (searchable tags)</span>
+                            <button
+                                type="button"
+                                className="btn btn-sm"
+                                onClick={runAiSuggest}
+                                disabled={aiLoading || !form.category_id}
+                                style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                                    background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                                    color: '#fff', border: 'none', borderRadius: 10, padding: '5px 12px',
+                                    fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                                }}
+                            >
+                                <Sparkles size={13} />
+                                {aiLoading ? 'Thinking…' : 'AI Suggest'}
+                            </button>
+                        </label>
+                        <p className="hint" style={{ marginTop: 2 }}>
+                            Pick the services this gig covers (e.g. carpenter, painter, plumber, logo design…). Type to search — like LinkedIn skills.
+                        </p>
+                        <SearchableMultiSelect
+                            options={serviceTypes}
+                            selected={serviceTypeIds}
+                            onChange={setServiceTypeIds}
+                            loading={typesLoading}
+                            disabled={!form.category_id}
+                            placeholder={form.category_id ? 'Search services in this category…' : 'Select a category first'}
+                            emptyText={form.category_id ? 'No services in this category yet.' : 'Select a category to load services.'}
+                        />
+                    </motion.div>
+
                     <motion.div className="kv-field" variants={fadeUp}>
                         <label>Price (₹)</label>
                         <input className="form-input" name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} required placeholder="500" />
@@ -178,6 +291,65 @@ function ServiceForm() {
                             transition={{ duration: 0.3 }}
                         >
                             Hosting services use a secure delivery-key handover flow and require the buyer to submit hosting credentials.
+                        </motion.div>
+                    )}
+
+                    {isFieldCategory && (
+                        <motion.div
+                            className="kv-field full"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            style={{ borderTop: '1px solid rgba(99,102,241,.15)', paddingTop: 16, marginTop: 8 }}
+                        >
+                            <label>Working Hours (show to buyers)</label>
+                            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                                <div style={{ flex: '1 1 160px' }}>
+                                    <label className="hint" style={{ display: 'block', marginBottom: 4 }}>Starts at</label>
+                                    <input
+                                        className="form-input"
+                                        type="time"
+                                        name="visit_start_time"
+                                        value={form.visit_start_time}
+                                        onChange={handleChange}
+                                        required={isFieldCategory}
+                                    />
+                                </div>
+                                <div style={{ flex: '1 1 160px' }}>
+                                    <label className="hint" style={{ display: 'block', marginBottom: 4 }}>Ends at</label>
+                                    <input
+                                        className="form-input"
+                                        type="time"
+                                        name="visit_end_time"
+                                        value={form.visit_end_time}
+                                        onChange={handleChange}
+                                        required={isFieldCategory}
+                                    />
+                                </div>
+                            </div>
+                            <label className="hint" style={{ display: 'block', margin: '10px 0 6px' }}>
+                                Working days
+                            </label>
+                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                                {weekDays.map((day) => {
+                                    const active = Array.isArray(form.working_days) && form.working_days.includes(day);
+                                    return (
+                                        <button
+                                            key={day}
+                                            type="button"
+                                            onClick={() => toggleDay(day)}
+                                            style={{
+                                                padding: '5px 12px', borderRadius: 999, border: active ? '1px solid #4F46E5' : '1px solid #d1d5db',
+                                                background: active ? 'rgba(79,70,229,.12)' : '#fff', color: active ? '#4F46E5' : '#6b7280',
+                                                fontSize: 12, fontWeight: active ? 700 : 500, cursor: 'pointer', fontFamily: 'inherit',
+                                            }}
+                                        >
+                                            {day}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </motion.div>
                     )}
 

@@ -156,6 +156,106 @@
   box-shadow: 0 8px 28px rgba(79, 70, 229, 0.40);
 }
 
+/* --- Profile dropdown (logged in) --- */
+.navbar-profile {
+  position: relative;
+}
+
+.navbar-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color, rgba(226, 232, 240, 0.6));
+  background: var(--bg-card, rgba(255, 255, 255, 0.85));
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-profile-btn:hover {
+  border-color: var(--accent, #4f46e5);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.14);
+}
+
+.navbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-badge, #f1f5f9);
+  flex-shrink: 0;
+}
+
+.navbar-profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-profile-chevron {
+  color: var(--text-muted, #64748b);
+  transition: transform 0.25s ease;
+}
+
+.navbar-profile-btn[aria-expanded="true"] .navbar-profile-chevron,
+.navbar-profile:hover .navbar-profile-chevron {
+  transform: rotate(180deg);
+}
+
+.navbar-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 200px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 16px 44px rgba(15, 23, 42, 0.16);
+  z-index: 12000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navbar-profile-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navbar-profile-item:hover {
+  background: var(--accent-light, rgba(79, 70, 229, 0.07));
+  color: var(--accent, #4f46e5);
+}
+
+.navbar-profile-item.danger {
+  color: var(--danger, #ef4444);
+}
+
+.navbar-profile-item.danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger, #ef4444);
+}
+
 /* --- Hamburger --- */
 .navbar-hamburger {
   display: none;

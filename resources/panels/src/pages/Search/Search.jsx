@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Search as SearchIcon, PackageSearch, SlidersHorizontal, X } from "lucide-react";
+import { Search as SearchIcon, PackageSearch, SlidersHorizontal, X, MapPin, Loader2 } from "lucide-react";
 import GigCard from "../../components/cards/GigCard";
 import { ScrollRevealGroup } from "../../shared/components/ScrollReveal";
 import frontendApi from "../../shared/frontendApi";
 import { useAuth } from "../../contexts/AuthContext";
 import Modal from "../../shared/components/Modal";
 import { showDialog } from "../../shared/components/Dialog";
+import ProfileStep from "../../shared/components/ProfileStep";
+import { runOrderFlow } from "../../shared/orderModalFlow";
 
 const sortOptions = [
     { value: "latest", label: "Newest First" },
@@ -28,6 +30,13 @@ function Search() {
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [nearby, setNearby] = useState(false);
+    const [geoPos, setGeoPos] = useState(null);
+    const [geoStatus, setGeoStatus] = useState("idle");
+    const [radiusKm, setRadiusKm] = useState(() => {
+        const r = Number(params.get("radius_km"));
+        return r > 0 && r <= 500 ? r : 30;
+    });
 
     const [ordering, setOrdering] = useState(null);
     const [requirements, setRequirements] = useState("");
@@ -43,13 +52,18 @@ function Search() {
 
     const run = (p) => {
         setServices(null);
+        const useNearby = nearby && geoPos;
         frontendApi.get("/frontend/search", {
             params: {
                 q: q || undefined,
                 category_id: categoryId || undefined,
                 min_price: minPrice === "" ? undefined : minPrice,
                 max_price: maxPrice === "" ? undefined : maxPrice,
-                sort: sort || undefined,
+                sort: useNearby ? "nearby" : sort || undefined,
+                near: useNearby ? 1 : undefined,
+                lat: useNearby ? geoPos.lat : undefined,
+                lng: useNearby ? geoPos.lng : undefined,
+                radius_km: useNearby ? radiusKm : undefined,
                 per_page: perPage,
                 page: p,
             },
@@ -75,8 +89,39 @@ function Search() {
         setMinPrice("");
         setMaxPrice("");
         setSort("latest");
+        setNearby(false);
+        setGeoPos(null);
+        setGeoStatus("idle");
         setServices([]);
         setTotal(0);
+    };
+
+    const toggleNearby = () => {
+        if (nearby) {
+            setNearby(false);
+            setGeoPos(null);
+            setGeoStatus("idle");
+            run(1);
+            return;
+        }
+        if (typeof navigator === "undefined" || !navigator.geolocation) {
+            setGeoStatus("error");
+            return;
+        }
+        setGeoStatus("locating");
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                setGeoPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                setNearby(true);
+                setGeoStatus("ready");
+                run(1);
+            },
+            () => {
+                setGeoStatus("error");
+                setNearby(false);
+            },
+            { timeout: 10000, maximumAge: 300000 }
+        );
     };
 
     const openOrder = (gig) => {
@@ -91,13 +136,19 @@ function Search() {
 
     const placeOrder = async () => {
         if (!ordering) return;
+        if (user && !user.complete) {
+            await showDialog({ type: "warning", title: "Complete your profile", message: "Please complete the profile section above to place your order.", confirmText: "OK" });
+            return;
+        }
         setSubmitting(true);
         try {
-            const res = await frontendApi.post("/buyer/orders", { service_id: ordering.id, requirements });
-            await showDialog({ type: "success", title: "Order Placed", message: res.data?.message || "Your order has been placed and is awaiting seller approval.", confirmText: "View Orders" });
-            window.location.href = "/buyer/orders";
-        } catch (err) {
-            await showDialog({ type: "danger", title: "Order Failed", message: err.response?.data?.message || "Could not place the order. Please try again.", confirmText: "OK" });
+            await runOrderFlow((force) => frontendApi.post("/buyer/orders", {
+                service_id: ordering.id,
+                requirements,
+                force: force || undefined,
+            }));
+        } catch {
+            // handled inside runOrderFlow
         } finally {
             setSubmitting(false);
             setOrdering(null);
@@ -138,6 +189,14 @@ function Search() {
                 .sp-price { display: flex; align-items: center; gap: 6px; }
                 .sp-price-input { width: 110px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--border-color,#E2E8F0); background: var(--bg-input,#fff); font-size: 13.5px; color: var(--text-primary,#0F172A); outline: none; }
                 .sp-reset { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: none; border: none; color: var(--accent,#4F46E5); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+                .sp-nearby {
+                    display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; border-radius: 12px;
+                    border: 1.5px dashed var(--border-color,#CBD5E1); background: var(--bg-input,#fff);
+                    color: var(--text-secondary,#475569); font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+                }
+                .sp-nearby:hover { border-color: var(--accent,#4F46E5); color: var(--accent,#4F46E5); }
+                .sp-nearby.on { border-style: solid; border-color: transparent; background: linear-gradient(135deg,#4F46E5,#7C3AED); color: #fff; box-shadow: 0 6px 16px rgba(79,70,229,.25); }
+                .sp-nearby:disabled { opacity: .55; cursor: progress; }
 
                 .sp-result-count { font-size: 13.5px; color: var(--text-muted,#64748B); margin-bottom: 18px; }
                 .sp-result-count strong { color: var(--text-primary,#0F172A); }
@@ -197,13 +256,27 @@ function Search() {
                             <option key={o.value} value={o.value}>{o.label}</option>
                         ))}
                     </select>
+                    <button type="button" className={`sp-nearby ${nearby ? "on" : ""}`} onClick={toggleNearby} disabled={geoStatus === "locating"}>
+                        {geoStatus === "locating" ? <Loader2 size={15} className="spin" /> : <MapPin size={15} />}
+                        {nearby ? "Near You" : geoStatus === "error" ? "Location blocked" : "Near Me"}
+                    </button>
+                    {nearby && geoPos && (
+                        <select className="sp-select" value={radiusKm} onChange={(e) => { setRadiusKm(Number(e.target.value)); run(1); }}>
+                            {[5, 10, 15, 30, 50, 100].map((r) => (
+                                <option key={r} value={r}>Within {r} km</option>
+                            ))}
+                        </select>
+                    )}
                     <button className="sp-reset" onClick={reset}><X size={13} /> Reset</button>
                 </div>
 
                 <div className="sp-result-count">
                     {services === null
                         ? <span>Searching...</span>
-                        : <span>Showing <strong>{services.length}</strong> of <strong>{total}</strong> results</span>}
+                        : <>
+                            <span>Showing <strong>{services.length}</strong> of <strong>{total}</strong> results</span>
+                            {nearby && geoPos && <span style={{ marginLeft: 12 }}>📍 services within <strong>{radiusKm} km</strong> of your location</span>}
+                        </>}
                 </div>
 
                 {services !== null && services.length === 0 ? (
@@ -262,6 +335,7 @@ function Search() {
                             <div className="detail-row"><span className="label">Seller</span><span className="value">{ordering.seller}</span></div>
                             <div className="detail-row"><span className="label">Price</span><span className="value">₹{Number(ordering.price).toLocaleString("en-IN")}</span></div>
                         </div>
+                        <ProfileStep />
                         <form onSubmit={(e) => { e.preventDefault(); placeOrder(); }}>
                             <div className="form-group">
                                 <label>Requirements</label>

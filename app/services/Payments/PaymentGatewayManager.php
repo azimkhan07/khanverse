@@ -4,6 +4,8 @@ namespace App\Services\Payments;
 
 use App\Models\PaymentGateway;
 use App\Services\Payments\Contracts\PaymentGatewayDriver;
+use App\Services\Payments\Drivers\CcaPaymentDriver;
+use App\Services\Payments\Drivers\DemoPaymentDriver;
 use App\Services\Payments\Drivers\GenericRedirectDriver;
 use App\Services\Payments\Drivers\RazorpayDriver;
 
@@ -22,6 +24,8 @@ class PaymentGatewayManager
     {
         $this->drivers = $drivers ?: [
             'razorpay' => RazorpayDriver::class,
+            'ccavenue' => CcaPaymentDriver::class,
+            'demo' => DemoPaymentDriver::class,
         ];
     }
 

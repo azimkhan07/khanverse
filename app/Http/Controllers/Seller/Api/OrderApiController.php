@@ -53,6 +53,12 @@ class OrderApiController extends Controller
         $order = Order::with(['buyer', 'service'])->where('seller_id', $seller->id)->findOrFail($id);
 
         if ($request->status === 'active' && $order->status === 'pending') {
+            if ($order->payment_status !== 'paid') {
+                return response()->json([
+                    'message' => 'This order has not been paid yet. Accept it only after the buyer completes payment.',
+                ], 422);
+            }
+
             $order->update(['status' => 'active']);
 
             $project = $this->createProjectForOrder($order, $seller);

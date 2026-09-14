@@ -19,7 +19,7 @@ class RegisterRequest extends FormRequest
             'username' => ['nullable', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:20', 'unique:users,phone'],
-            'role' => ['nullable', 'in:buyer,seller'],
+            'role' => ['nullable', 'in:user,buyer,seller'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'bio' => ['nullable', 'string'],
             'skills' => ['nullable', 'string', 'max:500'],

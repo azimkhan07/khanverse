@@ -87,6 +87,9 @@ function GigCard({ gig, onOrder }) {
                     </div>
                     <div className="gig-footer">
                         <span className="gig-delivery">🕐 {gig.delivery || "3 days"}</span>
+                        {typeof gig.distance_km === "number" && (
+                            <span className="gig-delivery">📍 {gig.distance_km} km away</span>
+                        )}
                         <div className="gig-price">
                             <small>Starting at</small>
                             <strong>₹{Number(gig.price).toLocaleString("en-IN")}</strong>

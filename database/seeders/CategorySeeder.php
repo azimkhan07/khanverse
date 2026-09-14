@@ -83,6 +83,17 @@ class CategorySeeder extends Seeder
             // Admin & Support
             ['name' => 'Admin & Customer Support', 'slug' => 'admin-customer-support', 'icon' => 'fas fa-user-headset', 'status' => true],
             ['name' => 'E-commerce', 'slug' => 'ecommerce', 'icon' => 'fas fa-shopping-cart', 'status' => true],
+
+            // Non-technical / Home Services
+            ['name' => 'Carpentry & Furniture', 'slug' => 'carpentry-furniture', 'icon' => 'fas fa-hammer', 'status' => true],
+            ['name' => 'Painting & Renovation', 'slug' => 'painting-renovation', 'icon' => 'fas fa-paint-roller', 'status' => true],
+            ['name' => 'Plumbing', 'slug' => 'plumbing', 'icon' => 'fas fa-wrench', 'status' => true],
+            ['name' => 'Masonry & Construction', 'slug' => 'masonry-construction', 'icon' => 'fas fa-bricks', 'status' => true],
+            ['name' => 'Electrical Services', 'slug' => 'electrical-services', 'icon' => 'fas fa-bolt', 'status' => true],
+            ['name' => 'Home Cleaning & Pest Control', 'slug' => 'home-cleaning-pest-control', 'icon' => 'fas fa-broom', 'status' => true],
+            ['name' => 'Appliance & Repair Services', 'slug' => 'appliance-repair-services', 'icon' => 'fas fa-tools', 'status' => true],
+            ['name' => 'Moving & Packing', 'slug' => 'moving-packing', 'icon' => 'fas fa-truck-moving', 'status' => true],
+            ['name' => 'Gardening & Landscaping', 'slug' => 'gardening-landscaping', 'icon' => 'fas fa-seedling', 'status' => true],
         ];
 
         foreach ($categories as $category) {

@@ -12,11 +12,23 @@ class Category extends Model
         'name',
         'slug',
         'icon',
-        'status'
+        'status',
+        'category_type',
+        'form_fields'
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'form_fields' => 'array',
     ];
 
     public function services()
     {
         return $this->hasMany(Service::class);
+    }
+
+    public function serviceTypes()
+    {
+        return $this->hasMany(ServiceType::class);
     }
 }

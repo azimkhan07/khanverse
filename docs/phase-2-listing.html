@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SkillNest — Phase 2 Checklist (Listing)</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Helvetica, Arial, sans-serif; color: #1E293B; margin: 0; padding: 32px 40px; background:#fff; }
+  h1 { font-size: 24px; margin: 0 0 4px; color:#0F172A; }
+  .meta { color:#64748B; font-size: 12px; margin-bottom: 20px; }
+  h2 { font-size: 17px; margin: 26px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #E2E8F0; color:#1C2434; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11.5px; }
+  th, td { border: 1px solid #E2E8F0; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #F1F5F9; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color:#475569; }
+  .cat { font-weight: 800; color:#4F46E5; }
+  .detail { font-size: 11px; color:#64748B; }
+  .p1 { background:#EEF2FF; }
+  .foot { margin-top: 26px; padding-top: 12px; border-top: 1px solid #E2E8F0; color:#94A3B8; font-size: 10px; }
+</style>
+</head>
+<body>
+  <h1>SkillNest — Phase 2 Technical Checklist</h1>
+  <div class="meta">What is required after Phase 1 · Target: unique, local (India-first), impressive beyond Fiverr/Upwork</div>
+
+  <h2>A. Infra &amp; DevOps (foundation)</h2>
+  <table>
+    <tr><th style="width:26%">Item</th><th>Why (business reason)</th><th style="width:24%">How</th><th style="width:12%">Effort</th></tr>
+    <tr class="p1"><td class="cat">1. Production queue (DB → Redis) + workers</td><td>Emails, webhooks, AI jobs, notifications block the request today (queue=sync). Needed for reliable order mail, PDFs, scoring.</td><td>Enable Redis (Laravel 9 native), set QUEUE_CONNECTION=redis, run <code>php artisan queue:work</code> under Supervisor; optional Horizon (L9 supports Horizon for Redis).</td><td>M</td></tr>
+    <tr class="p1"><td class="cat">2. Scheduler (cron)</td><td>Auto escrow release timers, seller availability day rollover, KYC reminder, wallet settlement, invoice reminders.</td><td><code>* * * * * php artisan schedule:run</code>; write task classes in app/Console.</td><td>S</td></tr>
+    <tr class="p1"><td class="cat">3. Webhook relay (outgoing)</td><td>Push order/payment events to Telegram/Slack/Discord for seller alerts; post to client's system.</td><td>Custom WebhookDeliveryService with retry + signature; or Laravel 9 outbound package; DB table webhook_deliveries.</td><td>M</td></tr>
+    <tr><td class="cat">4. Webhook ingress (incoming)</td><td>Accept third-party callbacks: payment IPN (CCAvenue), eKYC/Digilocker, SMS DLR, WhatsApp status.</td><td>Signed routes + VerifyCsrfToken whitelist; HMAC/secret validation; idempotent processing jobs.</td><td>M</td></tr>
+    <tr><td class="cat">5. Object storage / CDN</td><td>Uploads (KYC docs, order docs, media) scale beyond one disk; public CDN for images.</td><td>MinIO self-host or S3-compatible (q 2026: AWS/GCS/B2); keep local disk fallback.</td><td>M</td></tr>
+    <tr><td class="cat">6. Search engine</td><td>Replace slow LIKE search on gigs for typo-tolerant, fast results (jobs, services, sellers).</td><td>Meilisearch (easy; PHP client) or OpenSearch. Sync via jobs on service save.</td><td>M</td></tr>
+    <tr><td class="cat">7. AI Gateway</td><td>Single place to call LLM providers (OpenAI / Claude / Gemini / local) for suggestions, matching, moderation, translation.</td><td>Laravel `Ai` microservice OR curated package; config API keys; rate limits + cost guardrails.</td><td>S-M</td></tr>
+    <tr><td class="cat">8. Monitoring &amp; alerting</td><td>Know when payments/webhooks break; error tracking in prod.</td><td>Sentry or Flare; Laravel PULSE for queue/cache (L9: use spatie/laravel-health or pulse alternative); UptimeRobot.</td><td>S</td></tr>
+    <tr><td class="cat">9. Cache + session to Redis</td><td>Multi-server ready, faster settings/catalog reads (currently cache=file, session=file).</td><td>REDIS_HOST/port config; SESSION_DRIVER=redis, CACHE_STORE=redis.</td><td>S</td></tr>
+    <tr><td class="cat">10. CI/CD pipeline</td><td>Release webhooks/microservices/AI safely instead of manual deploy.</td><td>GitHub Actions (lint, migrate check, build, tests) + deploy via rsync/Enovadeployer or Docker.</td><td>M</td></tr>
+    <tr><td class="cat">11. Logging pipeline</td><td>Correlate requests across monolith + microservices (trace id).</td><td>JSON logs → single file or Loki/S3; add request_id middleware.</td><td>S</td></tr>
+  </table>
+
+  <h2>B. Microservices (when do they split out)</h2>
+  <table>
+    <tr><th style="width:26%">Service</th><th>Responsibility</th><th style="width:24%">Stack</th><th style="width:12%">Comms</th></tr>
+    <tr><td class="cat">notification-service</td><td>Email + SMS + WhatsApp + push, single deliverable API (de-dup, receipt); takes load off main app.</td><td>Laravel or Node; MSG91/Fast2SMS, WhatsApp Business API, Expo/OneSignal push.</td><td>HTTP + Redis queue</td></tr>
+    <tr><td class="cat">ai-service</td><td>Translation (EN/HI), recommendation/matching, quote suggestion, moderation, chat assistant.</td><td>Python FastAPI; FastText/Whisper for local, LLM APIs for heavy.</td><td>HTTPS JSON + async jobs</td></tr>
+    <tr><td class="cat">search-service (optional)</td><td>Index &amp; query gigs/sellers; typo-tolerance, geo filters.</td><td>Meilisearch/OpenSearch behind small API.</td><td>HTTP</td></tr>
+    <tr><td class="cat">media-service (optional)</td><td>Image/PDF processing at scale (thumbnails, watermarks, KYC doc optimization).</td><td>ImageMagick/ffmpeg workers or imagedelivery (Cloudflare).</td><td>Queue</td></tr>
+    <tr><td class="cat">payment-service (optional)</td><td>Extract current PaymentService + drivers into independent deployable; multi-currency later.</td><td>Laravel, kept same shape (PaymentGatewayManager).</td><td>HTTP/webhooks</td></tr>
+  </table>
+
+  <h2>C. AI Capabilities (features + what's needed)</h2>
+  <table>
+    <tr><th style="width:26%">AI Feature</th><th>Why unique/valuable</th><th style="width:30%">Requirement</th><th style="width:10%">Effort</th></tr>
+    <tr><td class="cat">Service suggestions</td><td>Already planned in P1 (api.ai.suggest-services) — enhance with buyer profile + history.</td><td>ai-service + redis user profile cache.</td><td>M</td></tr>
+    <tr><td class="cat">Auto-quote assistant</td><td>Buyer pastes requirement → seller gets fair price + scope + delivery estimate (huge for non-tech local services).</td><td>LLM prompt + service catalog context + price history of similar orders.</td><td>M</td></tr>
+    <tr><td class="cat">Local language (Hinglish/Hindi)</td><td>India-first; massive gap vs Fiverr/Upwork. Translate listings, requirements, chat.</td><td>LLM translation call or IndicTrans lib; store t on demand, cache.</td><td>M</td></tr>
+    <tr><td class="cat">Voice-to-requirement</td><td>Non-technical users (maids, plumbers) can speak the job; app converts to text/structured job.</td><td>Whisper (local) or cloud STT; attach to order requirement builder.</td><td>M</td></tr>
+    <tr><td class="cat">Smart matching / recommendation</td><td>Buyer sees best sellers for job; boosts conversion.</td><td>RAG over services+sellers, click/conv signals, rankings.</td><td>L</td></tr>
+    <tr><td class="cat">AI moderation &amp; fraud triage</td><td>Detect scammy gigs, chats, reviews before humans; auto-dispute "first look".</td><td>Classifiers on listings/chat/reviews; escalate to admin.</td><td>M</td></tr>
+    <tr><td class="cat">Pricing intelligence</td><td>Seller gets suggested price from category/market data (gold for non-tech sellers).</td><td>Aggregate completed orders + analytics service.</td><td>M</td></tr>
+    <tr><td class="cat">Super-customer support copilot</td><td>Answer FAQs / disputes instantly (India support cost killer).</td><td>Support KB + LLM (chat UI + agent inbox).</td><td>M</td></tr>
+  </table>
+
+  <h2>D. Webhook / Integration Events (Phase 2 wiring)</h2>
+  <table>
+    <tr><th style="width:26%">Event</th><th>Trigger</th><th style="width:30%">Destination / use</th><th style="width:10%">Type</th></tr>
+    <tr><td class="cat">order.created</td><td>Buyer places order (incl. `force` while seller offline)</td><td>Telegram/Discord seller alert, client CRM (outgoing).</td><td>out</td></tr>
+    <tr><td class="cat">order.paid / payment.captured</td><td>Gateway callback (CCAvenue/Demo) marks paid</td><td>Seller notify + webhook to client; escrow release start.</td><td>in+out</td></tr>
+    <tr><td class="cat">order.accepted / delivered / cancelled</td><td>Seller/buyer transitions</td><td>SMS/WhatsApp buyer + webhook.</td><td>out</td></tr>
+    <tr><td class="cat">project.milestone</td><td>Milestone delivered</td><td>Buyer timeline push + webhook.</td><td>out</td></tr>
+    <tr><td class="cat">kyc.status</td><td>Admin verifies/rejects</td><td>Notify seller; re-upload flow.</td><td>in</td></tr>
+    <tr><td class="cat">sms.dlr / whatsapp.delivery</td><td>Provider status callbacks</td><td>Re-send/retry logic in notification-service.</td><td>in</td></tr>
+    <tr><td class="cat">ekyc.webhook</td><td>Digilocker / UIDAI consent result</td><td>Auto-fill + verify seller KYC (Aadhaar eKYC) — big trust differentiator.</td><td>in</td></tr>
+  </table>
+
+  <h2>E. Third-party Integrations</h2>
+  <table>
+    <tr><th style="width:26%">Integration</th><th>Purpose</th><th style="width:30%">Provider options</th><th style="width:12%">Effort</th></tr>
+    <tr><td class="cat">SMS / transactional</td><td>Order + OTP alerts (email alone misses local sellers).</td><td>MSG91, Fast2SMS, Twilio</td><td>S</td></tr>
+    <tr><td class="cat">WhatsApp Business API</td><td>Seller/buyer chat + order notifications — India primary channel.</td><td>Meta WABA via Gupshup/360dialog/GreenAPI</td><td>M</td></tr>
+    <tr><td class="cat">Payments (expand)</td><td>UPI auto-collect, cards, netbanking, EMI; settlement.</td><td>CCAvenue (P1), Razorpay, Cashfree, Stripe for intl.</td><td>M</td></tr>
+    <tr><td class="cat">eKYC (Aadhaar/Digilocker)</td><td>Digital seller verification w/ consent — huge trust + conversion.</td><td>DigiLocker API, UIDAI eKYC (licensed partner)</td><td>M</td></tr>
+    <tr><td class="cat">E-tax / invoicing</td><td>GST invoices, TDS handling for services.</td><td>IRP (e-invoice), Zoho Books custom</td><td>M</td></tr>
+    <tr><td class="cat">AI providers</td><td>LLM for AI features.</td><td>OpenAI / Anthropic / Gemini / local Ollama on GPU box</td><td>S</td></tr>
+  </table>
+
+  <div class="foot">Generated docs/phase-2-listing.html · Companion docs: phase-2-roadmap.html (big-picture plan) &amp; server-configuration-roadmap.html (&lt;what + why&gt;). E=Eye estimates: S&lt;1 wk, M 1–3 wk, L 4–8 wk per feature, sequential team-of-one.</div>
+</body>
+</html>

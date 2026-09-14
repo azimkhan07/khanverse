@@ -29,6 +29,8 @@ import frontendApi from "../../shared/frontendApi";
 import { useAuth } from "../../contexts/AuthContext";
 import Modal from "../../shared/components/Modal";
 import { showDialog } from "../../shared/components/Dialog";
+import ProfileStep from "../../shared/components/ProfileStep";
+import { runOrderFlow } from "../../shared/orderModalFlow";
 
 const iconMap = {
     "web-development": Code2,
@@ -176,26 +178,19 @@ function ServiceListing() {
 
     const placeOrder = async () => {
         if (!ordering) return;
+        if (user && !user.complete) {
+            await showDialog({ type: "warning", title: "Complete your profile", message: "Please complete the profile section above to place your order.", confirmText: "OK" });
+            return;
+        }
         setSubmitting(true);
         try {
-            const res = await frontendApi.post("/buyer/orders", {
+            await runOrderFlow((force) => frontendApi.post("/buyer/orders", {
                 service_id: ordering.id,
                 requirements,
-            });
-            await showDialog({
-                type: "success",
-                title: "Order Placed",
-                message: res.data?.message || "Your order has been placed and is awaiting seller approval.",
-                confirmText: "View Orders",
-            });
-            window.location.href = "/buyer/orders";
-        } catch (err) {
-            await showDialog({
-                type: "danger",
-                title: "Order Failed",
-                message: err.response?.data?.message || "Could not place the order. Please try again.",
-                confirmText: "OK",
-            });
+                force: force || undefined,
+            }));
+        } catch {
+            // handled inside runOrderFlow
         } finally {
             setSubmitting(false);
             setOrdering(null);
@@ -621,6 +616,7 @@ function ServiceListing() {
                             <div className="detail-row"><span className="label">Seller</span><span className="value">{ordering.seller}</span></div>
                             <div className="detail-row"><span className="label">Price</span><span className="value">₹{Number(ordering.price).toLocaleString("en-IN")}</span></div>
                         </div>
+                        <ProfileStep />
                         <form onSubmit={(e) => { e.preventDefault(); placeOrder(); }}>
                             <div className="form-group">
                                 <label>Requirements</label>

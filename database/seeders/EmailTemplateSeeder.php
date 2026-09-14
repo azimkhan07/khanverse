@@ -45,6 +45,20 @@ class EmailTemplateSeeder extends Seeder
                 'description' => 'Sent with a one-time password for email verification.',
                 'content' => '<h2>Hi {user_name},</h2><p>Your one-time verification code is:</p><p style="font-size:28px; font-weight:800; letter-spacing:6px; color:#4F46E5; background:#EEF2FF; display:inline-block; padding:12px 22px; border-radius:10px;">{otp}</p><p>This code is valid for <strong>{expiry}</strong>. If you didn&apos;t request this, you can safely ignore this email.</p>',
             ],
+            [
+                'key' => 'role_welcome_seller',
+                'name' => 'Seller Welcome',
+                'subject' => 'Welcome to the {app_name} seller community!',
+                'description' => 'Sent when an account becomes a seller.',
+                'content' => '<h2>Congratulations, {name}!</h2><p>You are now a <strong>seller</strong> on {app_name}. Complete your service list, set your weekly availability, and start receiving orders.</p><p><a href="{dashboard_url}" style="background:#4F46E5; color:#fff; padding:12px 22px; border-radius:10px; text-decoration:none; display:inline-block;">Go to your dashboard</a></p><p>Your privacy policy copy is attached to this email. You can also read it anytime at <a href="{privacy_url}">{privacy_url}</a>.</p>',
+            ],
+            [
+                'key' => 'role_welcome_buyer',
+                'name' => 'Buyer Welcome',
+                'subject' => 'Welcome aboard {app_name}, {name}!',
+                'description' => 'Sent when an account becomes a buyer.',
+                'content' => '<h2>Hi {name},</h2><p>You are now a <strong>buyer</strong> on {app_name}. Browse services, request quotes, and manage your orders from one place.</p><p><a href="{dashboard_url}" style="background:#4F46E5; color:#fff; padding:12px 22px; border-radius:10px; text-decoration:none; display:inline-block;">Go to your dashboard</a></p><p>Consultancy buyers must attach a verification document while requesting large/consultancy services. Your privacy policy copy is attached to this email.</p>',
+            ],
         ];
 
         foreach ($templates as $template) {

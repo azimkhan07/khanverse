@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Seller\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Service;
 use App\Models\ServiceImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ServiceApiController extends Controller
 {
@@ -16,7 +18,7 @@ class ServiceApiController extends Controller
     {
         $seller = Auth::user()->seller;
 
-        $query = Service::with(['category', 'images'])
+        $query = Service::with(['category', 'images', 'serviceTypes'])
             ->where('seller_id', $seller->id);
 
         if ($request->status) {
@@ -32,7 +34,7 @@ class ServiceApiController extends Controller
     {
         $seller = Auth::user()->seller;
 
-        $service = Service::with(['category', 'images'])
+        $service = Service::with(['category', 'images', 'serviceTypes'])
             ->where('seller_id', $seller->id)
             ->findOrFail($id);
 
@@ -52,9 +54,17 @@ class ServiceApiController extends Controller
             'revisions' => 'required|integer|min:0',
             'delivery_method' => 'sometimes|in:digital,hosting',
             'category_id' => 'required|exists:categories,id',
+            'service_type_ids' => 'nullable|array',
+            'service_type_ids.*' => 'integer|exists:service_types,id',
             'thumbnail' => 'nullable|image|max:2048',
             'status' => 'boolean',
+            'visit_start_time' => 'nullable|date_format:H:i',
+            'visit_end_time' => 'nullable|date_format:H:i',
+            'working_days' => 'nullable|array',
+            'working_days.*' => 'in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
         ]);
+
+        $this->requireTimingForFieldCategory($validated, $validated['category_id']);
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('services', 'public');
@@ -64,9 +74,13 @@ class ServiceApiController extends Controller
 
         $service = Service::create($validated);
 
+        if (!empty($validated['service_type_ids'])) {
+            $service->serviceTypes()->sync($validated['service_type_ids']);
+        }
+
         return response()->json([
             'message' => 'Service created successfully.',
-            'service' => $service,
+            'service' => $service->fresh(['category', 'serviceTypes']),
         ], 201);
     }
 
@@ -85,9 +99,17 @@ class ServiceApiController extends Controller
             'revisions' => 'sometimes|required|integer|min:0',
             'delivery_method' => 'sometimes|in:digital,hosting',
             'category_id' => 'sometimes|required|exists:categories,id',
+            'service_type_ids' => 'nullable|array',
+            'service_type_ids.*' => 'integer|exists:service_types,id',
             'thumbnail' => 'nullable|image|max:2048',
             'status' => 'boolean',
+            'visit_start_time' => 'nullable|date_format:H:i',
+            'visit_end_time' => 'nullable|date_format:H:i',
+            'working_days' => 'nullable|array',
+            'working_days.*' => 'in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
         ]);
+
+        $this->requireTimingForFieldCategory($validated, $validated['category_id'] ?? $service->category_id);
 
         if ($request->hasFile('thumbnail')) {
             if ($service->thumbnail) {
@@ -98,10 +120,37 @@ class ServiceApiController extends Controller
 
         $service->update($validated);
 
+        if (array_key_exists('service_type_ids', $validated)) {
+            $service->serviceTypes()->sync($validated['service_type_ids'] ?? []);
+        }
+
         return response()->json([
             'message' => 'Service updated successfully.',
-            'service' => $service,
+            'service' => $service->fresh(['category', 'serviceTypes']),
         ]);
+    }
+
+    private function requireTimingForFieldCategory(array $validated, $categoryId): void
+    {
+        $category = Category::find($categoryId);
+        if (! $category || $category->category_type !== 'field') {
+            return;
+        }
+
+        $errors = [];
+        if (empty($validated['visit_start_time'])) {
+            $errors['visit_start_time'] = ['Working hours start time is required for this service category.'];
+        }
+        if (empty($validated['visit_end_time'])) {
+            $errors['visit_end_time'] = ['Working hours end time is required for this service category.'];
+        }
+        if (empty($validated['working_days']) || count($validated['working_days']) === 0) {
+            $errors['working_days'] = ['Select at least one working day for this service category.'];
+        }
+
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
     }
 
     public function destroy($id): JsonResponse

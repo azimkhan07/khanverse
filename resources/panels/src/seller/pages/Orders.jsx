@@ -23,6 +23,7 @@ const fallbackData = [
 ];
 
 const statusBadgeMap = { pending: 'badge-warning', active: 'badge-primary', delivered: 'badge-info', completed: 'badge-success', cancelled: 'badge-danger' };
+const paymentBadgeMap = { pending: 'badge-warning', paid: 'badge-success', failed: 'badge-danger' };
 
 const statusLabels = {
     pending: 'Accept Pending',
@@ -31,6 +32,8 @@ const statusLabels = {
     completed: 'Completed',
     cancelled: 'Cancelled',
 };
+
+const paymentLabels = { pending: 'Unpaid', paid: 'Paid', failed: 'Failed' };
 
 const fadeUp = {
     hidden: { opacity: 0, y: 28 },
@@ -83,6 +86,7 @@ function Orders() {
                         { key: 'buyer', label: 'Buyer' },
                         { key: 'amount', label: 'Amount' },
                         { key: 'status', label: 'Status' },
+                        { key: 'payment', label: 'Payment' },
                         { key: 'date', label: 'Delivery' },
                         { key: 'action', label: 'Action' },
                     ]}
@@ -106,6 +110,11 @@ function Orders() {
                                 >
                                     {statusLabels[row.status] || row.status}
                                 </motion.span>
+                            </td>
+                            <td>
+                                <span className={`badge ${paymentBadgeMap[row.payment_status] || 'badge-warning'}`}>
+                                    {paymentLabels[row.payment_status] || row.payment_status || 'Unpaid'}
+                                </span>
                             </td>
                             <td>{row.delivery_date || row.delivery_days ? `${row.delivery_days ?? ''}d` : '-'}</td>
                             <td><Link to={`/orders/${row.id}`} className="btn btn-secondary btn-sm"><Eye size={14} /> View</Link></td>

@@ -36,6 +36,9 @@ class AccountApiController extends Controller
             'city' => $seller->city,
             'hourly_rate' => $seller->hourly_rate,
             'experience_level' => $seller->experience_level,
+            'service_types' => $seller->serviceTypes()->get(['service_types.id', 'service_types.name', 'service_types.category_id']),
+            'service_type_ids' => $seller->serviceTypes()->pluck('service_types.id'),
+            'hire_me' => $seller->available_for_work ?? true,
         ]);
     }
 
@@ -53,6 +56,8 @@ class AccountApiController extends Controller
             'country' => 'nullable|string|max:120',
             'city' => 'nullable|string|max:120',
             'hourly_rate' => 'nullable|numeric|min:0',
+            'service_type_ids' => 'nullable|array',
+            'service_type_ids.*' => 'integer|exists:service_types,id',
             'avatar' => 'nullable|image|max:2048',
         ]);
 
@@ -64,7 +69,15 @@ class AccountApiController extends Controller
         }
 
         unset($validated['avatar']);
+
+        $serviceTypeIds = $validated['service_type_ids'] ?? null;
+        unset($validated['service_type_ids']);
+
         $seller->update($validated);
+
+        if (is_array($serviceTypeIds)) {
+            $seller->serviceTypes()->sync($serviceTypeIds);
+        }
 
         return response()->json([
             'message' => 'Profile updated successfully.',

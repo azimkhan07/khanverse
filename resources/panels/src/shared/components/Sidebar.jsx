@@ -3,6 +3,18 @@ import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 function Sidebar({ logo, menus, role, collapsed, onToggle, hidden, mobileOpen, onNavigate }) {
     const hiddenMode = typeof hidden === 'boolean';
+
+    const cleanMenus = (menus || [])
+        .map((section) => ({
+            ...section,
+            items: (section.items || []).filter(
+                (item) =>
+                    !/notification/i.test(item.label || '') &&
+                    !/notification/i.test(item.path || '')
+            ),
+        }))
+        .filter((section) => (section.items || []).length > 0);
+
     return (
         <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${hidden ? "hidden" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
             <div className="sidebar-logo">
@@ -14,7 +26,7 @@ function Sidebar({ logo, menus, role, collapsed, onToggle, hidden, mobileOpen, o
                 </button>
             </div>
             <nav className="sidebar-nav">
-                {menus.map((section, si) => (
+                {cleanMenus.map((section, si) => (
                     <div className="sidebar-section" key={si}>
                         {section.title && <div className="sidebar-section-title">{collapsed ? "···" : section.title}</div>}
                         {section.items.map((item) => (

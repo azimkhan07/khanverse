@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Send, FolderOpen, FileDown, Eye, FileText, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Send, FolderOpen, FileDown, Eye, FileText, XCircle, CreditCard, Clock3 } from 'lucide-react';
 import api from '../../shared/api';
 import { showDialog } from '../../shared/components/Dialog';
 
@@ -12,6 +12,7 @@ const fallbackOrder = {
 };
 
 const statusBadgeMap = { pending: 'badge-warning', active: 'badge-primary', delivered: 'badge-info', completed: 'badge-success', cancelled: 'badge-danger', disputed: 'badge-danger' };
+const paymentBadgeMap = { pending: 'badge-warning', paid: 'badge-success', failed: 'badge-danger' };
 
 const statusLabels = {
     pending: 'Accept Pending',
@@ -21,6 +22,8 @@ const statusLabels = {
     cancelled: 'Cancelled',
     disputed: 'Disputed',
 };
+
+const paymentLabels = { pending: 'Payment Pending', paid: 'Paid', failed: 'Payment Failed' };
 
 const fadeUp = {
     hidden: { opacity: 0, y: 28 },
@@ -134,6 +137,18 @@ function OrderDetail() {
                     <h3>Order Information</h3>
                     <div className="detail-row"><span className="label">Service</span><span className="value">{order.service?.title || '-'}</span></div>
                     <div className="detail-row"><span className="label">Amount</span><span className="value">₹{Number(order.amount || order.total_amount).toLocaleString('en-IN')}</span></div>
+                    <div className="detail-row">
+                        <span className="label">Payment</span>
+                        <span className="value">
+                            <span className={`badge ${paymentBadgeMap[order.payment_status] || 'badge-warning'}`}>
+                                {order.payment_status === 'paid' ? <CheckCircle2 size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} /> : <Clock3 size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />}
+                                {paymentLabels[order.payment_status] || order.payment_status || 'Payment Pending'}
+                            </span>
+                            {order.payment_status === 'paid' && order.transaction_id ? (
+                                <span style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginTop: 4, fontStyle: 'italic' }}>Ref: {order.transaction_id}</span>
+                            ) : null}
+                        </span>
+                    </div>
                     <div className="detail-row"><span className="label">Placed</span><span className="value">{order.created_at ? new Date(order.created_at).toLocaleDateString() : '-'}</span></div>
                     <div className="detail-row"><span className="label">Delivery</span><span className="value">{order.delivery_date ? new Date(order.delivery_date).toLocaleDateString() : '-'}</span></div>
 
@@ -195,16 +210,23 @@ function OrderDetail() {
                     transition={{ duration: 0.25 }}
                 >
                     <div className="card-header"><h3>Order Confirmation</h3></div>
+                    {order.payment_status !== 'paid' && (
+                        <div className="alert alert-warning" style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <CreditCard size={15} />
+                            <span>This order is <strong>not paid yet</strong>. You can accept it once the buyer completes payment — the accept button will unlock automatically.</span>
+                        </div>
+                    )}
                     <p style={{ color: 'var(--text-muted)', marginBottom: 12, fontSize: 14 }}>Accepting this order will automatically create a linked project. Review the buyer&apos;s requirements above before deciding.</p>
                     <div className="status-form">
                         <motion.button
                             className="btn btn-primary"
-                            disabled={busy}
+                            disabled={busy || order.payment_status !== 'paid'}
                             onClick={() => doTransition('active', 'Accept Order', 'Accept this order and start a project?')}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={order.payment_status !== 'paid' ? {} : { scale: 1.03 }}
+                            whileTap={order.payment_status !== 'paid' ? {} : { scale: 0.97 }}
+                            title={order.payment_status !== 'paid' ? 'Awaiting buyer payment' : ''}
                         >
-                            <CheckCircle2 size={16} /> {busy ? 'Processing...' : 'Accept & Start Project'}
+                            <CheckCircle2 size={16} /> {busy ? 'Processing...' : order.payment_status !== 'paid' ? 'Awaiting Payment' : 'Accept & Start Project'}
                         </motion.button>
                         <motion.button
                             className="btn btn-danger"

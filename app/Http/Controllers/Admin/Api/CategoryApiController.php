@@ -27,10 +27,17 @@ class CategoryApiController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
+$validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:categories,slug',
             'icon' => 'nullable|string|max:255',
+            'category_type' => 'sometimes|in:technical,field',
+            'form_fields' => 'nullable|array',
+            'form_fields.*.key' => 'required|string',
+            'form_fields.*.label' => 'required|string',
+            'form_fields.*.type' => 'required|in:text,number,textarea,select,multiselect,checkbox,tel',
+            'form_fields.*.required' => 'sometimes|boolean',
+            'form_fields.*.options' => 'sometimes|array',
             'status' => 'boolean',
         ]);
 
@@ -46,10 +53,17 @@ class CategoryApiController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        $validated = $request->validate([
+$validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'slug' => 'sometimes|required|string|max:255|unique:categories,slug,' . $id,
             'icon' => 'nullable|string|max:255',
+            'category_type' => 'sometimes|in:technical,field',
+            'form_fields' => 'nullable|array',
+            'form_fields.*.key' => 'required|string',
+            'form_fields.*.label' => 'required|string',
+            'form_fields.*.type' => 'required|in:text,number,textarea,select,multiselect,checkbox,tel',
+            'form_fields.*.required' => 'sometimes|boolean',
+            'form_fields.*.options' => 'sometimes|array',
             'status' => 'boolean',
         ]);
 

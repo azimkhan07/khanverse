@@ -13,12 +13,16 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
+            CategoryFieldSeeder::class,
+            ServiceTypeSeeder::class,
             ServiceSeeder::class,
             SettingSeeder::class,
             AuthSettingsSeeder::class,
             MenuSeeder::class,
             ContentSeeder::class,
             EmailTemplateSeeder::class,
+            PaymentGatewaySeeder::class,
+            GeoSeeder::class,
         ]);
     }
 }

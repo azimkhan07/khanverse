@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ReviewController;
 use App\Http\Controllers\Buyer\WalletController;
 use App\Http\Controllers\Buyer\ProfileController;

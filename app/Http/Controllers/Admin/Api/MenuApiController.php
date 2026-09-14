@@ -54,6 +54,10 @@ class MenuApiController extends Controller
         $items = MenuItem::where('panel', $panel)
             ->where('is_active', 1)
             ->whereNotNull('path')
+            ->where(function ($q) {
+                $q->whereRaw('LOWER(title) NOT LIKE ?', ['%notification%'])
+                    ->whereRaw('LOWER(path) NOT LIKE ?', ['%notification%']);
+            })
             ->orderBy('sort_order')
             ->get();
 

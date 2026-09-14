@@ -39,7 +39,7 @@ class GoogleController extends Controller
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
                     'email_verified_at' => now(),
-                    'role' => 'buyer',
+                    'role' => 'user',
                     'is_verified' => true,
                 ]);
             }
@@ -72,7 +72,7 @@ class GoogleController extends Controller
                 return redirect('/seller');
             }
 
-            return redirect('/buyer');
+            return redirect('/');
 
         } catch (\Exception $e) {
             return redirect()->route('login')->with('error', 'Google authentication failed. Please try again.');

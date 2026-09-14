@@ -9,10 +9,12 @@ import api from '../shared/api';
 
 import ConfirmDialog from '../shared/components/ConfirmDialog';
 import DialogHost from '../shared/components/Dialog';
+import ProfileGate from '../shared/components/ProfileGate';
 import InstallAppPrompt from '../components/app/InstallAppPrompt';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
+import Checkout from './pages/Checkout';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import Reviews from './pages/Reviews';
@@ -34,6 +36,7 @@ function AnimatedRoutes({ user }) {
                 <Route path="/dashboard" element={<Navigate to="/" replace />} />
                 <Route path="/orders" element={<Orders user={user} />} />
                 <Route path="/orders/:id" element={<OrderDetail user={user} />} />
+                <Route path="/checkout/:id" element={<Checkout user={user} />} />
                 <Route path="/projects" element={<Projects user={user} />} />
                 <Route path="/projects/:id" element={<ProjectDetail user={user} />} />
                 <Route path="/reviews" element={<Reviews user={user} />} />
@@ -55,6 +58,8 @@ function buyerPageTitle(pathname) {
     let title = 'Buyer Dashboard';
     if (pathname === '/orders') title = 'Orders';
     else if (pathname.startsWith('/orders/')) title = 'Order Details';
+    else if (pathname === '/checkout') title = 'Checkout';
+    else if (pathname.startsWith('/checkout/')) title = 'Checkout';
     else if (pathname === '/projects') title = 'Projects';
     else if (pathname.startsWith('/projects/')) title = 'Project Details';
     else if (pathname === '/reviews') title = 'Reviews';
@@ -110,7 +115,9 @@ function BuyerLayout({ user, isDark, toggleTheme }) {
             <div className="main-content">
                 <TopNav title={title} user={user} isDark={isDark} toggleTheme={toggleTheme} sidebarHidden={!mobileNav} onToggleSidebar={() => setMobileNav((o) => !o)} />
                 <div className="page-content kv-velora">
-                    <AnimatedRoutes user={user} />
+                    <ProfileGate base="buyer" roleLabel="buyer">
+                        <AnimatedRoutes user={user} />
+                    </ProfileGate>
                     <InstallAppPrompt />
                 </div>
             </div>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, Star, FolderKanban, FileDown, Eye, Info } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Star, FolderKanban, FileDown, Eye, Info, CreditCard, CheckCircle2, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../shared/api';
+import { showDialog } from '../../shared/components/Dialog';
 
 const fallbackOrder = {
     id: 1001, seller: { full_name: 'Sara Ali' }, service: { title: 'Logo Design' },
@@ -12,6 +13,7 @@ const fallbackOrder = {
 };
 
 const statusBadgeMap = { pending: 'badge-warning', active: 'badge-primary', delivered: 'badge-info', completed: 'badge-success', cancelled: 'badge-danger' };
+const paymentBadgeMap = { pending: 'badge-warning', paid: 'badge-success', failed: 'badge-danger' };
 
 const statusLabels = {
     pending: 'Accept Pending',
@@ -20,6 +22,8 @@ const statusLabels = {
     completed: 'Completed',
     cancelled: 'Cancelled',
 };
+
+const paymentLabels = { pending: 'Payment Pending', paid: 'Paid', failed: 'Payment Failed' };
 
 const container = {
     hidden: {},
@@ -45,6 +49,24 @@ function OrderDetail() {
         api.get(`/buyer/orders/${id}`).then(({ data }) => setOrder(data)).catch(() => {});
     }, [id]);
 
+    const cancelOrder = async () => {
+        const ok = await showDialog({
+            type: 'confirm',
+            title: 'Cancel Order',
+            message: `Cancel order #${order.id}? This can only be done while the order is still pending and unpaid.`,
+            confirmText: 'Yes, Cancel',
+            cancelText: 'Keep Order',
+        });
+        if (!ok) return;
+        try {
+            const res = await api.post(`/buyer/orders/${id}/cancel`);
+            setOrder((prev) => ({ ...prev, status: 'cancelled' }));
+            await showDialog({ type: 'success', title: 'Order Cancelled', message: res.data?.message || 'Your order has been cancelled.', confirmText: 'OK' });
+        } catch (err) {
+            await showDialog({ type: 'error', title: 'Cancellation Failed', message: err.response?.data?.message || 'Could not cancel this order.', confirmText: 'OK' });
+        }
+    };
+
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
             <motion.div className="page-heading page-toolbar" variants={fadeUp} initial="hidden" animate="show">
@@ -63,6 +85,7 @@ function OrderDetail() {
                     <div className="detail-row"><span className="label">Service</span><span className="value">{order.service?.title || '-'}</span></div>
                     <div className="detail-row"><span className="label">Seller</span><span className="value">{order.seller?.full_name || '-'}</span></div>
                     <div className="detail-row"><span className="label">Amount</span><span className="value">₹{Number(order.amount).toLocaleString('en-IN')}</span></div>
+                    <div className="detail-row"><span className="label">Payment</span><span className="value"><span className={`badge ${paymentBadgeMap[order.payment_status] || 'badge-warning'}`}>{paymentLabels[order.payment_status] || order.payment_status || 'Unpaid'}</span></span></div>
                     <div className="detail-row"><span className="label">Placed</span><span className="value">{order.created_at ? new Date(order.created_at).toLocaleDateString() : '-'}</span></div>
                     <div className="detail-row"><span className="label">Delivery</span><span className="value">{order.delivery_date ? new Date(order.delivery_date).toLocaleDateString() : '-'}</span></div>
 
@@ -104,6 +127,25 @@ function OrderDetail() {
                 <motion.div className="detail-box" variants={fadeUp}>
                     <h3>Actions</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        {(order.payment_status === 'pending' || order.payment_status === 'failed') && (
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                <Link to={`/checkout/${order.id}`} className="btn btn-primary" style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+                                    <CreditCard size={16} /> {order.payment_status === 'failed' ? 'Retry Payment' : 'Pay Now'}
+                                </Link>
+                            </motion.div>
+                        )}
+                        {order.status === 'pending' && order.payment_status !== 'paid' && (
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                <button onClick={cancelOrder} className="btn btn-danger" style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+                                    <XCircle size={16} /> Cancel Order
+                                </button>
+                            </motion.div>
+                        )}
+                        {order.payment_status === 'paid' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--success,#16A34A)', fontWeight: 600, fontSize: 13 }}>
+                                <CheckCircle2 size={16} /> Payment confirmed{order.transaction_id ? ` · Ref ${order.transaction_id}` : ''}
+                            </div>
+                        )}
                         {order.project && (
                             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                                 <Link to={`/projects/${order.project.id}`} className="btn btn-secondary" style={{ display: 'flex', width: '100%', justifyContent: 'center' }}><FolderKanban size={16} /> View Project</Link>

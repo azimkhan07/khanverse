@@ -147,7 +147,7 @@
   background: var(--bg-card, #fff);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 28px;
+  border-radius: 18px;
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.03),
     0 24px 72px rgba(15, 23, 42, 0.08);
@@ -155,13 +155,13 @@
   position: relative;
   z-index: 5;
   transition: background 0.4s ease, border-color 0.4s ease;
-  padding: 36px 36px;
+  padding: 24px 26px;
   animation: authFadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .auth-card--wide {
   max-width: 560px;
-  padding: 32px 44px;
+  padding: 22px 28px;
 }
 
 /* --- Brand block (badge + hero heading) — no longer used --- */
@@ -179,19 +179,19 @@
    ========================================== */
 
 .auth-card h2 {
-  font-size: 32px;
+  font-size: 22px;
   color: var(--text-primary, #0F172A);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   transition: color 0.3s ease;
 }
 
 .auth-card-body > p {
   color: var(--text-muted, #64748B);
-  margin-bottom: 36px;
-  line-height: 1.75;
-  font-size: 15px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+  font-size: 12px;
   transition: color 0.3s ease;
 }
 
@@ -199,7 +199,7 @@
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 10px;
 }
 
 /* ==========================================
@@ -210,15 +210,15 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 11px;
 }
 
 .input-group > svg {
   position: absolute;
-  left: 18px;
+  left: 13px;
   color: var(--text-light, #94A3B8);
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   transition: color 0.3s ease;
   pointer-events: none;
   z-index: 2;
@@ -226,12 +226,12 @@
 
 .input-group input {
   width: 100%;
-  height: 54px;
-  padding: 0 50px;
+  height: 40px;
+  padding: 0 42px;
   border: 1.5px solid var(--border-color, #E2E8F0);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--bg-input, #F8FAFC);
-  font-size: 15px;
+  font-size: 12px;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   outline: none;
   color: var(--text-primary, #0F172A);
@@ -248,9 +248,9 @@
 .input-group textarea {
   width: 100%;
   border: 1.5px solid var(--border-color, #E2E8F0);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--bg-input, #F8FAFC);
-  font-size: 15px;
+  font-size: 12px;
   color: var(--text-primary, #0F172A);
   font-family: inherit;
   outline: none;
@@ -260,22 +260,22 @@
 }
 
 .input-group select {
-  height: 54px;
-  padding: 0 18px;
+  height: 40px;
+  padding: 0 14px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 16px center;
+  background-position: right 14px center;
 }
 
 .input-group textarea {
-  padding: 16px 18px;
+  padding: 10px 12px;
   resize: vertical;
   line-height: 1.5;
 }
 
 .input-group select,
 .input-group textarea {
-  padding-left: 50px;
+  padding-left: 40px;
 }
 
 .input-group select:focus,
@@ -286,7 +286,7 @@
 }
 
 .auth-check {
-  height: 54px;
+  height: 40px;
   margin: 0;
   align-items: center;
   padding-left: 4px;
@@ -309,7 +309,7 @@
 
 .password-toggle {
   position: absolute;
-  right: 18px;
+  right: 13px;
   cursor: pointer;
   color: var(--text-light, #94A3B8);
   transition: color 0.3s;
@@ -331,22 +331,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
-  font-size: 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
 }
 
 .auth-options label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--text-secondary, #475569);
   cursor: pointer;
   user-select: none;
 }
 
 .auth-options input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   accent-color: var(--accent, #4F46E5);
   cursor: pointer;
 }
@@ -367,19 +367,19 @@
 .checkbox {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 8px;
+  margin-bottom: 14px;
   color: var(--text-muted, #64748B);
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 12px;
+  line-height: 1.5;
   cursor: pointer;
   user-select: none;
 }
 
 .checkbox input {
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
   accent-color: var(--accent, #4F46E5);
   cursor: pointer;
   flex-shrink: 0;
@@ -391,18 +391,18 @@
 
 .auth-btn {
   width: 100%;
-  height: 54px;
+  height: 42px;
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #4F46E5 0%, #6366F1 50%, #7C3AED 100%);
   color: #fff;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   font-family: inherit;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
@@ -439,7 +439,7 @@
 .divider {
   position: relative;
   text-align: center;
-  margin: 30px 0;
+  margin: 14px 0;
 }
 
 .divider::before {
@@ -468,22 +468,27 @@
 
 .google-btn {
   width: 100%;
-  height: 54px;
+  height: 42px;
   border: 1.5px solid var(--border-color, #E2E8F0);
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--bg-card, #fff);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   font-family: inherit;
   color: var(--text-primary, #0F172A);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.google-btn img {
+  width: 16px;
+  height: 16px;
 }
 
 .google-btn:hover {
@@ -498,10 +503,10 @@
    ========================================== */
 
 .bottom-link {
-  margin-top: 30px;
+  margin-top: 16px;
   text-align: center;
   color: var(--text-muted, #64748B);
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .bottom-link a {
@@ -530,9 +535,9 @@
 }
 
 .verify-icon {
-  width: 104px;
-  height: 104px;
-  margin: 0 auto 30px;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -543,15 +548,15 @@
 }
 
 .verify-card h2 {
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .verify-card p {
   max-width: 340px;
-  margin: 0 auto 30px;
+  margin: 0 auto 16px;
   color: var(--text-muted, #64748B);
-  line-height: 1.85;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 12px;
 }
 
 /* ==========================================
@@ -561,20 +566,20 @@
 .auth-error {
   background: #FEF2F2;
   color: #DC2626;
-  padding: 16px 20px;
-  border-radius: 14px;
-  font-size: 14px;
-  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-bottom: 12px;
   border: 1px solid #FECACA;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .auth-error::before {
   content: "!";
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #FEE2E2;
   display: flex;
@@ -588,22 +593,22 @@
 .auth-success {
   background: #F0FDF4;
   color: #16A34A;
-  padding: 16px 20px;
-  border-radius: 14px;
-  font-size: 14px;
-  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-bottom: 12px;
   border: 1px solid #BBF7D0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .field-error {
   display: block;
   color: #DC2626;
-  font-size: 13px;
-  margin-top: -12px;
-  margin-bottom: 16px;
+  font-size: 12px;
+  margin-top: -7px;
+  margin-bottom: 9px;
   padding-left: 6px;
 }
 
@@ -725,15 +730,15 @@ input::placeholder {
   }
 
   .auth-card {
-    padding: 30px 24px;
+    padding: 22px 20px;
   }
 
   .auth-card--wide {
-    padding: 28px 24px;
+    padding: 20px 20px;
   }
 
   .auth-card h2 {
-    font-size: 28px;
+    font-size: 20px;
   }
 
   .row {
@@ -748,26 +753,26 @@ input::placeholder {
 
   .auth-card,
   .auth-card--wide {
-    border-radius: 22px;
-    padding: 26px 20px;
+    border-radius: 16px;
+    padding: 20px 16px;
   }
 
   .auth-card h2 {
-    font-size: 26px;
+    font-size: 19px;
   }
 
   .input-group input {
-    height: 52px;
-    font-size: 14px;
+    height: 42px;
+    font-size: 12px;
   }
 
   .auth-btn,
   .google-btn {
-    height: 52px;
+    height: 42px;
   }
 
   .verify-icon {
-    width: 88px;
-    height: 88px;
+    width: 64px;
+    height: 64px;
   }
 }
