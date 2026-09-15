@@ -24,8 +24,8 @@
       "_vendor-react-CaXxysPe.js"
     ]
   },
-  "_dashboard-CkoMDfUl.js": {
-    "file": "assets/dashboard-CkoMDfUl.js",
+  "_dashboard-D27ZUKqG.js": {
+    "file": "assets/dashboard-D27ZUKqG.js",
     "name": "dashboard",
     "imports": [
       "_rolldown-runtime-B0Z9INg1.js",
@@ -77,15 +77,15 @@
       "assets/useTheme-DuhEjjtp.css"
     ]
   },
-  "_velora-Bkji8pGd.js": {
-    "file": "assets/velora-Bkji8pGd.js",
+  "_velora-DQCPtvHW.js": {
+    "file": "assets/velora-DQCPtvHW.js",
     "name": "velora",
     "imports": [
       "_rolldown-runtime-B0Z9INg1.js",
       "_vendor-gJ0iUnqS.js",
       "_Dialog-DC4_rXzH.js",
       "_vendor-react-CaXxysPe.js",
-      "_dashboard-CkoMDfUl.js"
+      "_dashboard-D27ZUKqG.js"
     ],
     "css": [
       "assets/velora-Kij2gnjH.css"
@@ -119,7 +119,7 @@
     ]
   },
   "src/admin/main.jsx": {
-    "file": "assets/admin-iPAPcwsn.js",
+    "file": "assets/admin-C2ZER8tF.js",
     "name": "admin",
     "src": "src/admin/main.jsx",
     "isEntry": true,
@@ -130,14 +130,14 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_toastr-STC9XRK_.js",
-      "_dashboard-CkoMDfUl.js"
+      "_dashboard-D27ZUKqG.js"
     ],
     "css": [
       "assets/admin-MKKLZRuJ.css"
     ]
   },
   "resources/panels/src/admin/main.jsx": {
-    "file": "assets/admin-iPAPcwsn.js",
+    "file": "assets/admin-C2ZER8tF.js",
     "name": "admin",
     "src": "src/admin/main.jsx",
     "isEntry": true,
@@ -148,14 +148,14 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_toastr-STC9XRK_.js",
-      "_dashboard-CkoMDfUl.js"
+      "_dashboard-D27ZUKqG.js"
     ],
     "css": [
       "assets/admin-MKKLZRuJ.css"
     ]
   },
   "src/buyer/main.jsx": {
-    "file": "assets/buyer-BeN1bimx.js",
+    "file": "assets/buyer-BGTzTjnP.js",
     "name": "buyer",
     "src": "src/buyer/main.jsx",
     "isEntry": true,
@@ -167,12 +167,12 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_toastr-STC9XRK_.js",
-      "_dashboard-CkoMDfUl.js",
-      "_velora-Bkji8pGd.js"
+      "_dashboard-D27ZUKqG.js",
+      "_velora-DQCPtvHW.js"
     ]
   },
   "resources/panels/src/buyer/main.jsx": {
-    "file": "assets/buyer-BeN1bimx.js",
+    "file": "assets/buyer-BGTzTjnP.js",
     "name": "buyer",
     "src": "src/buyer/main.jsx",
     "isEntry": true,
@@ -184,12 +184,12 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_toastr-STC9XRK_.js",
-      "_dashboard-CkoMDfUl.js",
-      "_velora-Bkji8pGd.js"
+      "_dashboard-D27ZUKqG.js",
+      "_velora-DQCPtvHW.js"
     ]
   },
   "src/main.jsx": {
-    "file": "assets/main-BVzUrosG.js",
+    "file": "assets/main-DrNX82S9.js",
     "name": "main",
     "src": "src/main.jsx",
     "isEntry": true,
@@ -204,7 +204,7 @@
       "_SearchableMultiSelect-D7T3h7ck.js"
     ],
     "css": [
-      "assets/main-DB5xDpzv.css"
+      "assets/main-Br9Sa5y9.css"
     ],
     "assets": [
       "assets/4-tBCX1Hs1.jpg",
@@ -213,7 +213,7 @@
     ]
   },
   "resources/panels/src/main.jsx": {
-    "file": "assets/main-BVzUrosG.js",
+    "file": "assets/main-DrNX82S9.js",
     "name": "main",
     "src": "src/main.jsx",
     "isEntry": true,
@@ -228,7 +228,7 @@
       "_SearchableMultiSelect-D7T3h7ck.js"
     ],
     "css": [
-      "assets/main-DB5xDpzv.css"
+      "assets/main-Br9Sa5y9.css"
     ],
     "assets": [
       "assets/4-tBCX1Hs1.jpg",
@@ -237,7 +237,7 @@
     ]
   },
   "src/seller/main.jsx": {
-    "file": "assets/seller-CjS1JG8G.js",
+    "file": "assets/seller-BkRHJZ48.js",
     "name": "seller",
     "src": "src/seller/main.jsx",
     "isEntry": true,
@@ -249,12 +249,12 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_SearchableMultiSelect-D7T3h7ck.js",
-      "_dashboard-CkoMDfUl.js",
-      "_velora-Bkji8pGd.js"
+      "_dashboard-D27ZUKqG.js",
+      "_velora-DQCPtvHW.js"
     ]
   },
   "resources/panels/src/seller/main.jsx": {
-    "file": "assets/seller-CjS1JG8G.js",
+    "file": "assets/seller-BkRHJZ48.js",
     "name": "seller",
     "src": "src/seller/main.jsx",
     "isEntry": true,
@@ -266,8 +266,8 @@
       "_vendor-react-CaXxysPe.js",
       "_useTheme-mzceVMAZ.js",
       "_SearchableMultiSelect-D7T3h7ck.js",
-      "_dashboard-CkoMDfUl.js",
-      "_velora-Bkji8pGd.js"
+      "_dashboard-D27ZUKqG.js",
+      "_velora-DQCPtvHW.js"
     ]
   },
   "src/theme/images/2.jpg": {

@@ -255,6 +255,9 @@ function Navbar() {
                         </nav>
 
                         <div className="mobile-actions">
+                            <div className="mobile-theme-toggle">
+                                <ThemeToggle isDark={isDark} onToggle={toggleTheme} size="small" />
+                            </div>
                             {user ? (
                                 <>
                                     <button onClick={goToProfile} className="nav-btn nav-btn-ghost mobile-btn">

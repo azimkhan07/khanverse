@@ -264,3 +264,24 @@
     white-space: nowrap;
   }
 }
+
+@media (max-width: 480px) {
+  .cta-box {
+    padding: 32px 14px;
+    border-radius: 18px;
+  }
+  .cta-box h2 { font-size: 22px; margin-bottom: 12px; }
+  .cta-box p { font-size: 13px; margin-bottom: 24px; }
+  .cta-actions a,
+  .cta-actions button {
+    padding: 11px 8px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+  .cta-primary,
+  .cta-secondary {
+    padding: 11px 20px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+}

@@ -1,9 +1,9 @@
 import { Search, ArrowRight, Sparkles, Shield, Zap, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import frontendApi from "../../shared/frontendApi";
+import useSiteSections from "../../hooks/useSiteSections";
 import "../../theme/css/hero.css";
 import heroImg from "../../theme/images/4.jpg";
 import heroBg from "../../theme/images/hero.png";
@@ -33,7 +33,11 @@ function Hero() {
     const navigate = useNavigate();
     const ref = useRef(null);
     const [query, setQuery] = useState("");
-    const [stats, setStats] = useState(null);
+    const { stats, sections } = useSiteSections();
+
+    const heroSection = sections.hero;
+    const cardImage = heroSection?.image_url || heroImg;
+    const bgImage = heroSection?.background_image_url || heroBg;
 
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -49,16 +53,6 @@ function Hero() {
     const floatingY = useTransform(scrollYProgress, [0, 1], [0, -40]);
     const bgScale = useTransform(scrollYProgress, [0, 1], [1.2, 1]);
     const bgY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
-    useEffect(() => {
-        frontendApi
-            .get("/frontend/home")
-            .then((res) => {
-                const s = res.data?.stats;
-                if (s) setStats(s);
-            })
-            .catch(() => {});
-    }, []);
 
     const submitSearch = (e) => {
         e.preventDefault();
@@ -78,7 +72,7 @@ function Hero() {
         <section className="hero" ref={ref}>
             <motion.div
                 className="hero-bg"
-                style={{ backgroundImage: `url(${heroBg})`, scale: bgScale, y: bgY }}
+                style={{ backgroundImage: `url(${bgImage})`, scale: bgScale, y: bgY }}
             />
             <div className="hero-overlay" />
             <motion.div className="hero-aurora aurora-1" style={{ y: auroraY }} />
@@ -174,7 +168,7 @@ function Hero() {
                 >
                     <div className="hero-card">
                         <motion.img
-                            src={heroImg}
+                            src={cardImage}
                             alt="SkillNest Platform"
                             initial={{ opacity: 0, scale: 1.05 }}
                             animate={{ opacity: 1, scale: 1 }}

@@ -46,6 +46,7 @@ const iconMap = {
     homepage: Globe, globe: Globe, website: Globe,
     faqs: MessageSquareText, 'message-square-text': MessageSquareText,
     testimonials: FileText, 'file-text': FileText,
+    blog: BookOpen, 'blog-posts': BookOpen,
     tutorials: PlayCircle, 'play-circle': PlayCircle,
     'brand-partners': Handshake, handshake: Handshake,
     'team-members': Users, 'user-check': UserCheck, 'users': Users,

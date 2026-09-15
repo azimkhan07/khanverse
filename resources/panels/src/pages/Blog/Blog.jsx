@@ -5,6 +5,7 @@ import PageHero from "../../components/common/PageHero";
 import PageContainer from "../../components/common/PageContainer";
 import SectionHeading from "../../components/common/SectionHeading";
 
+import useBlogPosts from "../../hooks/useBlogPosts";
 import blog from "../../data/blog";
 
 import "../../theme/css/blog.css";
@@ -25,6 +26,9 @@ const cardVariants = {
 };
 
 function Blog() {
+
+    const { posts, loading } = useBlogPosts();
+    const list = (posts && posts.length) ? posts : blog;
 
     return (
 
@@ -51,78 +55,71 @@ function Blog() {
                     viewport={{ once: true, margin: "-60px" }}
                 >
 
-                    {
+                    {list.map((item) => (
 
-                        blog.map((item) => (
+                        <motion.div
+                            className="blog-card"
+                            key={item.id}
+                            variants={cardVariants}
+                            whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                        >
 
-                            <motion.div
-                                className="blog-card"
-                                key={item.id}
-                                variants={cardVariants}
-                                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                            >
+                            <div className="blog-image">
 
-                                <div className="blog-image">
+                                <img src={item.image} alt={item.title} />
 
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                    />
+                            </div>
 
-                                </div>
+                            <div className="blog-content">
 
-                                <div className="blog-content">
+                                <span className="blog-category">
 
-                                    <span className="blog-category">
+                                    {item.category}
 
-                                        {item.category}
+                                </span>
+
+                                <h3>
+
+                                    {item.title}
+
+                                </h3>
+
+                                <p>
+
+                                    {item.description}
+
+                                </p>
+
+                                <div className="blog-footer">
+
+                                    <span>
+
+                                        {item.author}
 
                                     </span>
 
-                                    <h3>
+                                    <span>
 
-                                        {item.title}
+                                        {item.date}
 
-                                    </h3>
-
-                                    <p>
-
-                                        {item.description}
-
-                                    </p>
-
-                                    <div className="blog-footer">
-
-                                        <span>
-
-                                            {item.author}
-
-                                        </span>
-
-                                        <span>
-
-                                            {item.date}
-
-                                        </span>
-
-                                    </div>
-
-                                    <Link
-                                        to={`/blog/${item.slug}`}
-                                        className="blog-btn"
-                                    >
-
-                                        Read More
-
-                                    </Link>
+                                    </span>
 
                                 </div>
 
-                            </motion.div>
+                                <Link
+                                    to={`/blog/${item.slug}`}
+                                    className="blog-btn"
+                                >
 
-                        ))
+                                    Read More
 
-                    }
+                                </Link>
+
+                            </div>
+
+                        </motion.div>
+
+                    ))}
 
                 </motion.div>
 

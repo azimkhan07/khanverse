@@ -336,32 +336,41 @@
 .mobile-link {
   text-decoration: none;
   color: var(--text-secondary, #475569);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
-  padding: 14px 18px;
-  border-radius: 14px;
+  padding: 11px 14px;
+  border-radius: 10px;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .mobile-link:hover,
 .mobile-link.active {
   color: var(--accent, #4F46E5);
-  background: var(--accent-light, rgba(79, 70, 229, 0.08));
+  background: var(--accent-light, rgba(79, 70, 229, 0.06));
   font-weight: 600;
 }
 
 .mobile-actions {
-  padding: 18px 24px;
+  padding: 14px 18px;
   border-top: 1px solid var(--border-color, #E2E8F0);
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mobile-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mobile-btn {
   flex: 1;
   justify-content: center;
   text-align: center;
-  padding: 14px;
+  padding: 11px;
+  font-size: 13px;
 }
 
 /* ==========================================

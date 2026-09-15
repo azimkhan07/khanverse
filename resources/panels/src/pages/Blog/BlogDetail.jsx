@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Calendar, User } from "lucide-react";
 import PageHero from "../../components/common/PageHero";
 import PageContainer from "../../components/common/PageContainer";
 
-import blog from "../../data/blog";
+import useBlogPosts from "../../hooks/useBlogPosts";
 
 import "../../theme/css/blog.css";
 
@@ -19,9 +19,21 @@ const container = {
     show: { transition: { staggerChildren: 0.12 } },
 };
 
+function renderBody(content) {
+    if (Array.isArray(content)) {
+        return content.map((p, i) => <p key={i} style={{ marginBottom: 20 }}>{p}</p>);
+    }
+    if (typeof content === "string" && content.trim()) {
+        return <div className="blog-content-html" dangerouslySetInnerHTML={{ __html: content }} />;
+    }
+    return null;
+}
+
 function BlogDetail() {
     const { slug } = useParams();
-    const item = blog.find((b) => b.slug === slug);
+    const { posts } = useBlogPosts();
+
+    const item = posts.find((b) => b.slug === slug);
 
     if (!item) {
         return (
@@ -38,7 +50,7 @@ function BlogDetail() {
         );
     }
 
-    const related = blog.filter((b) => b.slug !== item.slug).slice(0, 3);
+    const related = posts.filter((b) => b.slug !== item.slug).slice(0, 3);
     const paragraphs = Array.isArray(item.content) && item.content.length
         ? item.content
         : [item.description];
@@ -80,7 +92,7 @@ function BlogDetail() {
                         variants={fadeUp}
                         style={{ maxWidth: 820, margin: "40px auto 0", color: "var(--text-secondary, #334155)", lineHeight: 1.85, fontSize: 16 }}
                     >
-                        {paragraphs.map((p, i) => (
+                        {renderBody(item.content) || paragraphs.map((p, i) => (
                             <p key={i} style={{ marginBottom: 20 }}>{p}</p>
                         ))}
                     </motion.div>

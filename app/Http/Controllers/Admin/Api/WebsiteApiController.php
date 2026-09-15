@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\BlogPost;
 use App\Models\Faq;
 use App\Models\HomepageSection;
 use App\Models\MaintenanceSetting;
@@ -368,6 +369,89 @@ class WebsiteApiController extends Controller
     {
         $section->update(['status' => !$section->status]);
         return response()->json(['status' => true, 'message' => 'Section status updated.', 'section' => $section]);
+    }
+
+/* ------------------------------------------------------------------ */
+    /* Blog Posts                                                          */
+    /* ------------------------------------------------------------------ */
+    public function blogPosts(Request $request)
+    {
+        $posts = BlogPost::query()
+            ->when($request->search, fn($q) => $q->where('title', 'like', "%$request->search%")->orWhere('category', 'like', "%$request->search%")->orWhere('author', 'like', "%$request->search%"))
+            ->when($request->status !== null && $request->status !== '', fn($q) => $q->where('status', $request->status))
+            ->latest()
+            ->paginate($request->per_page ?? 10);
+        $posts->getCollection()->transform(fn($p) => $p->setAttribute('cover_image_url', $this->storageUrl($p->cover_image)));
+        return response()->json($posts);
+    }
+
+    public function blogPostShow(BlogPost $blogPost)
+    {
+        $blogPost->setAttribute('cover_image_url', $this->storageUrl($blogPost->cover_image));
+        return response()->json(['status' => true, 'blog_post' => $blogPost]);
+    }
+
+    public function blogPostsStore(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|max:255',
+            'slug' => 'nullable|unique:blog_posts,slug',
+            'category' => 'nullable|max:255',
+            'author' => 'nullable|max:255',
+            'excerpt' => 'nullable',
+            'content' => 'nullable',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'published_at' => 'nullable|date',
+            'meta_title' => 'nullable|max:255',
+            'meta_keywords' => 'nullable',
+            'meta_description' => 'nullable',
+            'status' => 'boolean',
+        ]);
+        $data['slug'] = $data['slug'] ?? Str::slug($data['title']);
+        $data['status'] = $request->boolean('status', true);
+        if ($request->hasFile('cover_image')) $data['cover_image'] = $this->uploadFile($request->file('cover_image'), 'blog');
+        $post = BlogPost::create($data);
+        $post->setAttribute('cover_image_url', $this->storageUrl($post->cover_image));
+        return response()->json(['status' => true, 'message' => 'Blog post created successfully.', 'blog_post' => $post], 201);
+    }
+
+    public function blogPostsUpdate(Request $request, BlogPost $blogPost)
+    {
+        $data = $request->validate([
+            'title' => 'sometimes|required|max:255',
+            'slug' => 'nullable|unique:blog_posts,slug,' . $blogPost->id,
+            'category' => 'nullable|max:255',
+            'author' => 'nullable|max:255',
+            'excerpt' => 'nullable',
+            'content' => 'nullable',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'published_at' => 'nullable|date',
+            'meta_title' => 'nullable|max:255',
+            'meta_keywords' => 'nullable',
+            'meta_description' => 'nullable',
+            'status' => 'boolean',
+        ]);
+        if ($request->hasFile('cover_image')) {
+            $this->deleteFile($blogPost->cover_image);
+            $data['cover_image'] = $this->uploadFile($request->file('cover_image'), 'blog');
+        }
+        if ($request->has('status')) $data['status'] = $request->boolean('status');
+        $blogPost->update($data);
+        $blogPost->setAttribute('cover_image_url', $this->storageUrl($blogPost->cover_image));
+        return response()->json(['status' => true, 'message' => 'Blog post updated successfully.', 'blog_post' => $blogPost]);
+    }
+
+    public function blogPostsDestroy(BlogPost $blogPost)
+    {
+        $this->deleteFile($blogPost->cover_image);
+        $blogPost->delete();
+        return response()->json(['status' => true, 'message' => 'Blog post deleted successfully.']);
+    }
+
+    public function blogPostsToggle(BlogPost $blogPost)
+    {
+        $blogPost->update(['status' => !$blogPost->status]);
+        return response()->json(['status' => true, 'message' => 'Blog post status updated.', 'blog_post' => $blogPost]);
     }
 
     /* ------------------------------------------------------------------ */

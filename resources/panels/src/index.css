@@ -47,6 +47,36 @@ body {
     .container-narrow {
         padding: 0 16px;
     }
+    .page-hero {
+        padding: 72px 16px 48px;
+    }
+    .page-hero h1 {
+        font-size: clamp(28px, 7vw, 38px);
+    }
+    .page-hero p {
+        font-size: 15px;
+    }
+    .page-section {
+        padding: 28px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-primary,
+    .btn-secondary {
+        padding: 11px 22px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    .page-hero {
+        padding: 60px 14px 36px;
+    }
+    .page-hero h1 {
+        font-size: clamp(24px, 8vw, 32px);
+    }
+    .page-hero p {
+        font-size: 14px;
+    }
 }
 
 a {

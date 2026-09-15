@@ -35,6 +35,7 @@ import WebsiteBanners from './pages/WebsiteBanners';
 import WebsiteFaqs from './pages/WebsiteFaqs';
 import WebsiteTestimonials from './pages/WebsiteTestimonials';
 import WebsitePages from './pages/WebsitePages';
+import BlogPosts from './pages/BlogPosts';
 import WebsiteHomepage from './pages/WebsiteHomepage';
 import WebsiteSeo from './pages/WebsiteSeo';
 import WebsiteMaintenance from './pages/WebsiteMaintenance';
@@ -42,6 +43,7 @@ import WebsiteBannersForm from './pages/WebsiteBannersForm';
 import WebsiteFaqsForm from './pages/WebsiteFaqsForm';
 import WebsiteTestimonialsForm from './pages/WebsiteTestimonialsForm';
 import WebsitePagesForm from './pages/WebsitePagesForm';
+import BlogPostsForm from './pages/BlogPostsForm';
 import WebsiteHomepageForm from './pages/WebsiteHomepageForm';
 import WebsiteSeoForm from './pages/WebsiteSeoForm';
 import Notifications from './pages/Notifications';
@@ -76,6 +78,7 @@ const adminPageTitles = {
     '/website/banners': 'Banners', '/website/homepage': 'Homepage',
     '/website/pages': 'Pages', '/website/faqs': 'FAQs',
     '/website/testimonials': 'Testimonials', '/website/seo': 'SEO',
+    '/website/blog-posts': 'Blog Posts',
     '/website/maintenance': 'Maintenance', '/notifications': 'Notifications',
     '/brand-partners': 'Brand Partners',
     '/team-members': 'Team Members',
@@ -103,6 +106,8 @@ function adminPageTitle(pathname) {
     else if (pathname.startsWith('/website/faqs/')) title = 'Edit FAQ';
     else if (pathname.startsWith('/website/testimonials/new')) title = 'Add Testimonial';
     else if (pathname.startsWith('/website/testimonials/')) title = 'Edit Testimonial';
+    else if (pathname.startsWith('/website/blog-posts/new')) title = 'Add Blog Post';
+    else if (pathname.startsWith('/website/blog-posts/')) title = 'Edit Blog Post';
     else if (pathname.startsWith('/website/seo/new')) title = 'Add SEO Setting';
     else if (pathname.startsWith('/website/seo/')) title = 'Edit SEO Setting';
     return title;
@@ -205,6 +210,9 @@ function AdminLayout({ user, isDark, toggleTheme }) {
                         <Route path="/website/testimonials" element={<WebsiteTestimonials />} />
                         <Route path="/website/testimonials/new" element={<WebsiteTestimonialsForm />} />
                         <Route path="/website/testimonials/:id" element={<WebsiteTestimonialsForm />} />
+                        <Route path="/website/blog-posts" element={<BlogPosts />} />
+                        <Route path="/website/blog-posts/new" element={<BlogPostsForm />} />
+                        <Route path="/website/blog-posts/:id" element={<BlogPostsForm />} />
                         <Route path="/website/seo" element={<WebsiteSeo />} />
                         <Route path="/website/seo/new" element={<WebsiteSeoForm />} />
                         <Route path="/website/seo/:id" element={<WebsiteSeoForm />} />

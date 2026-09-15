@@ -1,17 +1,22 @@
 import { motion } from "framer-motion";
 import heroBg from "../../theme/images/hero.png";
+import useSiteSections from "../../hooks/useSiteSections";
 
 function PageHero({
     title,
     subtitle,
     background
 }) {
+    const { sections } = useSiteSections();
+    const defaultBg = sections.hero?.background_image_url || heroBg;
+    const bg = background || defaultBg;
+
     return (
         <section
             className="page-hero"
             style={
                 {
-                    backgroundImage: `url(${background || heroBg})`,
+                    backgroundImage: `url(${bg})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }

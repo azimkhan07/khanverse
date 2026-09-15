@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import storyImg from "../../theme/images/4.jpg";
 import { CheckCircle } from "lucide-react";
+import useHomeStats from "./useHomeStats";
 
 function AboutStory() {
+    const { sections } = useHomeStats();
+    const storySection = sections.story || sections.about;
+    const storyImage = storySection?.image_url || storyImg;
     return (
         <section className="about-story">
 
@@ -19,7 +23,7 @@ function AboutStory() {
                     >
 
                         <img
-                            src={storyImg}
+                            src={storyImage}
                             alt="Our Story"
                         />
 

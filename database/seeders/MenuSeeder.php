@@ -40,6 +40,7 @@ class MenuSeeder extends Seeder
             ['section' => 'Website', 'title' => 'Tutorial Videos', 'path' => '/tutorials', 'icon' => 'tutorials', 'panel' => 'admin', 'sort_order' => 7],
             ['section' => 'Website', 'title' => 'Brand Partners', 'path' => '/brand-partners', 'icon' => 'brand-partners', 'panel' => 'admin', 'sort_order' => 8],
             ['section' => 'Website', 'title' => 'Team Members', 'path' => '/team-members', 'icon' => 'team-members', 'panel' => 'admin', 'sort_order' => 9],
+            ['section' => 'Website', 'title' => 'Blog Posts', 'path' => '/website/blog-posts', 'icon' => 'blog-posts', 'panel' => 'admin', 'sort_order' => 10],
         ];
 
         foreach ($adminMenus as $menu) {

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AuthSettingsSeeder::class,
             MenuSeeder::class,
             ContentSeeder::class,
+            BlogPostSeeder::class,
             EmailTemplateSeeder::class,
             PaymentGatewaySeeder::class,
             GeoSeeder::class,

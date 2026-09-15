@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import heroImg from "../../theme/images/4.jpg";
+import heroBg from "../../theme/images/hero.png";
 import useHomeStats from "./useHomeStats";
 
 const staggerContainer = {
@@ -23,7 +24,14 @@ const fadeUp = {
 };
 
 function AboutHero() {
-    const { stats } = useHomeStats();
+    const { stats, sections } = useHomeStats();
+
+    const aboutSection = sections.about || sections.hero;
+    const aboutImage = aboutSection?.image_url || heroImg;
+    const aboutBg =
+        aboutSection?.background_image_url ||
+        sections.hero?.background_image_url ||
+        heroBg;
 
     const heroStats = [
         { value: stats.sellers, label: "Freelancers" },
@@ -34,7 +42,10 @@ function AboutHero() {
     return (
         <section className="about-hero">
 
-            <div className="about-bg"></div>
+            <div
+                className="about-bg"
+                style={{ backgroundImage: `url(${aboutBg})` }}
+            ></div>
             <div className="about-overlay"></div>
 
             <div className="container">
@@ -97,7 +108,7 @@ function AboutHero() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <img src={heroImg} alt="About SkillNest" />
+                    <img src={aboutImage} alt="About SkillNest" />
                 </motion.div>
 
             </div>

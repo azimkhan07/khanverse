@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Faq;
 use App\Models\Testimonial;
+use App\Models\BlogPost;
 use App\Models\HomepageSection;
 use App\Models\Banner;
 use App\Models\Service;
@@ -61,7 +62,12 @@ class FrontendApiController extends Controller
     {
         $sections = HomepageSection::where('status', true)
             ->orderBy('sort_order')
-            ->get();
+            ->get()
+            ->map(function ($s) {
+                $s->setAttribute('image_url', $this->storageUrl($s->image));
+                $s->setAttribute('background_image_url', $this->storageUrl($s->background_image));
+                return $s;
+            });
 
         $banners = Banner::where('status', true)
             ->orderBy('sort_order')
@@ -398,6 +404,24 @@ class FrontendApiController extends Controller
             });
 
         return response()->json($testimonials);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Blog posts (public)                                                 */
+    /* ------------------------------------------------------------------ */
+    public function blog(): JsonResponse
+    {
+        $posts = BlogPost::where('status', true)
+            ->orderByRaw('(published_at IS NULL) asc')
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->get()
+            ->map(function ($p) {
+                $p->setAttribute('cover_image_url', $this->storageUrl($p->cover_image));
+                return $p;
+            });
+
+        return response()->json($posts);
     }
 
     /* ------------------------------------------------------------------ */

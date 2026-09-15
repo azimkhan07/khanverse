@@ -82,6 +82,7 @@ Route::prefix('frontend')->name('frontend.')->group(function () {
     Route::get('/faqs', [FrontendApiController::class, 'faqs'])->name('faqs');
     Route::get('/testimonials', [FrontendApiController::class, 'testimonials'])->name('testimonials');
     Route::get('/tutorials', [FrontendApiController::class, 'tutorials'])->name('tutorials');
+    Route::get('/blog', [FrontendApiController::class, 'blog'])->name('blog');
     Route::get('/app-settings', [FrontendApiController::class, 'appSettings'])->name('app.settings');
     Route::get('/trusted-companies', [FrontendApiController::class, 'trustedCompanies'])->name('trusted.companies');
     Route::get('/team', [FrontendApiController::class, 'team'])->name('team');
@@ -349,6 +350,13 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::put('/homepage-sections/{section}', [AdminWebsiteApiController::class, 'homepageSectionsUpdate'])->name('homepage-sections.update');
         Route::delete('/homepage-sections/{section}', [AdminWebsiteApiController::class, 'homepageSectionsDestroy'])->name('homepage-sections.destroy');
         Route::post('/homepage-sections/{section}/status', [AdminWebsiteApiController::class, 'homepageSectionsToggle'])->name('homepage-sections.status');
+
+        Route::get('/blog-posts', [AdminWebsiteApiController::class, 'blogPosts'])->name('blog-posts');
+        Route::get('/blog-posts/{blogPost}', [AdminWebsiteApiController::class, 'blogPostShow'])->name('blog-posts.show');
+        Route::post('/blog-posts', [AdminWebsiteApiController::class, 'blogPostsStore'])->name('blog-posts.store');
+        Route::put('/blog-posts/{blogPost}', [AdminWebsiteApiController::class, 'blogPostsUpdate'])->name('blog-posts.update');
+        Route::delete('/blog-posts/{blogPost}', [AdminWebsiteApiController::class, 'blogPostsDestroy'])->name('blog-posts.destroy');
+        Route::post('/blog-posts/{blogPost}/status', [AdminWebsiteApiController::class, 'blogPostsToggle'])->name('blog-posts.status');
 
         Route::get('/seo', [AdminWebsiteApiController::class, 'seoSettings'])->name('seo');
         Route::get('/seo/{seoSetting}', [AdminWebsiteApiController::class, 'seoSettingShow'])->name('seo.show');
