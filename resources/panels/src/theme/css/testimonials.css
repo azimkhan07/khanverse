@@ -250,6 +250,28 @@
   font-weight: 500;
 }
 
+/* --- Stats marquee (mobile-only carousel, mirrors testimonials marquee) --- */
+.trusted-stats-marquee {
+  display: none;
+}
+
+@keyframes trustedStatsMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.trusted-stats-track {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  width: max-content;
+  animation: trustedStatsMarquee 32s linear infinite;
+}
+
+.trusted-stats-track:hover {
+  animation-play-state: paused;
+}
+
 /* ==========================================
    RESPONSIVE
    ========================================== */
@@ -313,6 +335,52 @@
   .trusted-stat p {
     font-size: 12px;
   }
+
+  /* Mobile: hide static grid, show stats carousel (marquee) instead */
+  .trusted-stats {
+    display: none;
+  }
+
+  .trusted-stats-marquee {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    margin: 0;
+    padding: 8px 0 28px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .trusted-stats-track {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    width: max-content;
+    animation: trustedStatsMarquee 32s linear infinite;
+  }
+
+  .trusted-stats-track:hover {
+    animation-play-state: paused;
+  }
+
+  .trusted-stats-track .trusted-stat {
+    flex: 0 0 auto;
+    min-width: 138px;
+    padding: 14px 14px;
+  }
+
+  .trusted-stats-track .trusted-stat h3 {
+    font-size: 18px;
+    line-height: 1.15;
+    white-space: nowrap;
+    letter-spacing: 0;
+    margin-bottom: 5px;
+  }
+
+  .trusted-stats-track .trusted-stat p {
+    font-size: 11px;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 500px) {
@@ -324,9 +392,16 @@
 }
 
 @media (max-width: 480px) {
-  .trusted-stats {
-    grid-template-columns: 1fr;
-    max-width: 300px;
-    margin: 0 auto;
+  .trusted-stats-track .trusted-stat {
+    min-width: 124px;
+    padding: 12px 12px;
+  }
+
+  .trusted-stats-track .trusted-stat h3 {
+    font-size: 17px;
+  }
+
+  .trusted-stats-track .trusted-stat p {
+    font-size: 10.5px;
   }
 }

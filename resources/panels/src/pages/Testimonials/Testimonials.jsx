@@ -142,26 +142,50 @@ function Testimonials() {
                 </div>
 
                 {stats.length > 0 && (
-                    <motion.div
-                        className="trusted-stats"
-                        variants={statsContainerVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-40px" }}
-                    >
-                        {stats.map((stat, i) => {
-                            const Icon = stat.icon;
-                            return (
-                                <motion.div className="trusted-stat" key={i} variants={statVariants}>
-                                    <div className="trusted-stat-icon">
-                                        <Icon size={22} />
-                                    </div>
-                                    <h3>{Number(stat.number).toLocaleString("en-IN")}+</h3>
-                                    <p>{stat.label}</p>
-                                </motion.div>
-                            );
-                        })}
-                    </motion.div>
+                    <>
+                        <motion.div
+                            className="trusted-stats"
+                            variants={statsContainerVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, margin: "-40px" }}
+                        >
+                            {stats.map((stat, i) => {
+                                const Icon = stat.icon;
+                                return (
+                                    <motion.div className="trusted-stat" key={i} variants={statVariants}>
+                                        <div className="trusted-stat-icon">
+                                            <Icon size={22} />
+                                        </div>
+                                        <h3>{Number(stat.number).toLocaleString("en-IN")}+</h3>
+                                        <p>{stat.label}</p>
+                                    </motion.div>
+                                );
+                            })}
+                        </motion.div>
+
+                        <div className="trusted-stats-marquee">
+                            <motion.div
+                                className="trusted-stats-track"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, margin: "-40px" }}
+                            >
+                                {[...stats, ...stats].map((stat, idx) => {
+                                    const Icon = stat.icon;
+                                    return (
+                                        <motion.div className="trusted-stat" key={`${stat.label}-${idx}`} variants={statVariants}>
+                                            <div className="trusted-stat-icon">
+                                                <Icon size={18} />
+                                            </div>
+                                            <h3>{Number(stat.number).toLocaleString("en-IN")}+</h3>
+                                            <p>{stat.label}</p>
+                                        </motion.div>
+                                    );
+                                })}
+                            </motion.div>
+                        </div>
+                    </>
                 )}
             </div>
         </section>
