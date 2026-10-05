@@ -73,14 +73,7 @@ const footer = {
                 { label: "Contact Us", url: "/contact" },
                 { label: "Privacy Policy", url: "/privacy-policy" },
                 { label: "Terms", url: "/terms-conditions" },
-                { label: "FAQs", url: "/faq" }
-            ]
-        },
-
-        {
-            id: 4,
-            title: "Account",
-            links: [
+                { label: "FAQs", url: "/faq" },
                 { label: "Sign In", url: "/login" },
                 { label: "Create Account", url: "/register" },
                 { label: "Download App", url: "/app" }
