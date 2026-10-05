@@ -1,4 +1,4 @@
-import { ArrowUp, ShieldCheck } from "lucide-react";
+﻿import { ArrowUp, ShieldCheck } from "lucide-react";
 import {
     FaFacebookF,
     FaInstagram,
@@ -148,7 +148,7 @@ function Footer() {
                             <h4>{footer.sub_brand.tagline || `${footer.sub_brand.name} family`}</h4>
                             <p>
                                 SkillNest is a product of {footer.sub_brand.name}
-                                {footer.sub_brand.since ? ` — trusted since ${footer.sub_brand.since}` : ""}.
+                                {footer.sub_brand.since ? ` â€” trusted since ${footer.sub_brand.since}` : ""}.
                                 {" "}{footer.sub_brand.description || ""}
                             </p>
                         </div>
