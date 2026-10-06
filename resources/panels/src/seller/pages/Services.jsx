@@ -50,8 +50,8 @@ function Services() {
         <motion.div initial="hidden" animate="visible" variants={stagger}>
             <motion.div className="page-heading page-toolbar" variants={fadeUp}>
                 <div>
-                    <h1>My Services</h1>
-                    <p>Manage your listed services.</p>
+                    <h1 style={{ fontSize: 20 }}>My Services</h1>
+                    <p style={{ fontSize: 13 }}>Manage your listed services.</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                     <Link to="/services/offered" className="btn btn-secondary">
