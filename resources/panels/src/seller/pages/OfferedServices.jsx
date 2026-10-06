@@ -106,13 +106,12 @@ function OfferedServices() {
         <motion.div initial="hidden" animate="visible" variants={stagger}>
             <motion.div className="page-heading page-toolbar" variants={fadeUp}>
                 <div>
-                    <h1 style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <Briefcase size={22} style={{ color: 'var(--accent,#4F46E5)' }} />
+                    <h1 style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 20 }}>
+                        <Briefcase size={18} style={{ color: 'var(--accent,#4F46E5)' }} />
                         Offered Services
                     </h1>
-                    <p>
-                        Pick the services you offer from the SkillNest catalog. Admins curate the catalog, so names stay
-                        standard across the site.
+                    <p style={{ fontSize: 13 }}>
+                        Select from admin-managed service types (catalog). Names stay standard.
                     </p>
                 </div>
                 <button className="btn btn-primary" onClick={openAdd} disabled={!categories.length}>
