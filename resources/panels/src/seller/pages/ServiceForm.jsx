@@ -182,25 +182,25 @@ function ServiceForm() {
             animate="visible"
             variants={stagger}
         >
-            <motion.div className="page-heading page-toolbar" variants={fadeUp}>
+            <motion.div className="page-heading page-toolbar" variants={fadeUp} style={{ marginBottom: 10 }}>
                 <div>
-                    <Link to="/services" className="btn btn-secondary btn-sm" style={{ marginBottom: 12 }}>
+                    <Link to="/services" className="btn btn-secondary btn-sm" style={{ marginBottom: 8 }}>
                         <ArrowLeft size={14} /> Back to Services
                     </Link>
-                    <h1>{isEdit ? 'Edit Service' : 'Add New Service'}</h1>
+                    <h1 style={{ fontSize: 20 }}>{isEdit ? 'Edit Service' : 'Add Service'}</h1>
                 </div>
                 <span className="badge badge-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Briefcase size={13} /> {isEdit ? `#${id}` : 'New'}
                 </span>
             </motion.div>
 
-            <motion.div className="kv-form-hero" variants={fadeUp} custom={1}>
-                <h2>{isEdit ? 'Update your service listing' : 'Create a compelling service'}</h2>
-                <p>Showcase your work clearly — buyers decide in seconds.</p>
+            <motion.div className="kv-form-hero" style={{ padding: '14px 18px', marginBottom: 12 }} variants={fadeUp} custom={1}>
+                <h2 style={{ fontSize: 18 }}>{isEdit ? 'Update your service listing' : 'Create a service'}</h2>
+                <p style={{ fontSize: 13, margin: 4 }}>Keep it short and clear.</p>
             </motion.div>
 
-            <motion.form onSubmit={handleSubmit} className="kv-form-card" variants={fadeUp} custom={2}>
-                <motion.div className="kv-form-grid" variants={stagger}>
+            <motion.form onSubmit={handleSubmit} className="kv-form-card" style={{ padding: '18px 20px' }} variants={fadeUp} custom={2}>
+                <motion.div className="kv-form-grid" style={{ gap: '14px 16px' }} variants={stagger}>
                     <motion.div className="kv-field full" variants={fadeUp}>
                         <label>Service Title</label>
                         <input className="form-input" name="title" value={form.title} onChange={handleChange} required placeholder="e.g. Premium Logo Design" />
@@ -222,12 +222,12 @@ function ServiceForm() {
 
                     <motion.div className="kv-field full" variants={fadeUp}>
                         <label>Description</label>
-                        <textarea className="form-input" name="description" rows={5} value={form.description} onChange={handleChange} required placeholder="Describe what buyers get…" />
+                        <textarea className="form-input" name="description" rows={4} value={form.description} onChange={handleChange} required placeholder="Describe what buyers get…"/>
                     </motion.div>
 
                     <motion.div className="kv-field full" variants={fadeUp}>
                         <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-                            <span>Services (searchable tags)</span>
+                            <span>Service Type(s)</span>
                             <button
                                 type="button"
                                 className="btn btn-sm"
@@ -245,7 +245,7 @@ function ServiceForm() {
                             </button>
                         </label>
                         <p className="hint" style={{ marginTop: 2 }}>
-                            Pick the services this gig covers (e.g. carpenter, painter, plumber, logo design…). Type to search — like LinkedIn skills.
+                            Select from admin-managed service types for this category.
                         </p>
                         <SearchableMultiSelect
                             options={serviceTypes}
@@ -253,8 +253,8 @@ function ServiceForm() {
                             onChange={setServiceTypeIds}
                             loading={typesLoading}
                             disabled={!form.category_id}
-                            placeholder={form.category_id ? 'Search services in this category…' : 'Select a category first'}
-                            emptyText={form.category_id ? 'No services in this category yet.' : 'Select a category to load services.'}
+                            placeholder={form.category_id ? 'Search service types in this category…' : 'Select a category first'}
+                            emptyText={form.category_id ? 'No service types in this category yet.' : 'Select a category to load service types.'}
                         />
                     </motion.div>
 
