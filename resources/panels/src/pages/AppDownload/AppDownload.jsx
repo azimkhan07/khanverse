@@ -56,8 +56,11 @@ function AppDownload() {
                 <h1 style={{ fontSize: "clamp(30px,5vw,44px)", fontWeight: 800, color: "var(--text-primary, #0F172A)", letterSpacing: "-1px" }}>
                     SkillNest App
                 </h1>
-                <p style={{ color: "var(--text-muted, #64748B)", marginTop: 12, lineHeight: 1.7, maxWidth: 460, marginLeft: "auto", marginRight: "auto" }}>
-                    Take the marketplace with you. Fast, secure and always in sync with your web dashboard.
+                <p style={{ color: "var(--text-muted, #64748B)", marginTop: 12, lineHeight: 1.7, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+                    Mobile app is currently under development. We'll notify you as soon as it's available on the Play Store.
+                </p>
+                <p style={{ color: "var(--text-muted, #64748B)", fontSize: 13, marginTop: 8 }}>
+                    <strong>Coming soon:</strong> <a href="#" onClick={(e)=>e.preventDefault()} style={{ color: "#4F46E5" }}>Play Store (link will be added after release)</a>
                 </p>
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}

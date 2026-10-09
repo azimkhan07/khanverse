@@ -62,7 +62,6 @@ const footer = {
                 { label: "Tutorials", url: "/tutorials" },
                 { label: "Pricing", url: "/pricing" },
                 { label: "FAQ", url: "/faq" },
-                { label: "Download App", url: "/app" }
             ]
         },
 
@@ -83,7 +82,7 @@ const footer = {
             links: [
                 { label: "Sign In", url: "/login" },
                 { label: "Create Account", url: "/register" },
-                { label: "Download App", url: "/app" }
+                { label: "Download App", url: "/app-download" }
             ]
         }
 

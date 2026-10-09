@@ -47,6 +47,7 @@ function pageTitle(pathname) {
         '/compare': 'Compare Services',
         '/tutorials': 'Tutorials',
         '/app': 'Download App',
+        '/app-download': 'Download App',
         '/account/settings': 'Account Settings',
         '/login': 'Sign In',
         '/register': 'Create Account',
@@ -93,6 +94,7 @@ function AppRoutes() {
                     <Route path="/compare" element={<Compare />} />
                     <Route path="/tutorials" element={<Tutorials />} />
                     <Route path="/app" element={<AppDownload />} />
+                    <Route path="/app-download" element={<AppDownload />} />
                     <Route path="/profile" element={<PublicProfile />} />
                     <Route path="/account/settings" element={<AccountSettings />} />
                 </Route>
