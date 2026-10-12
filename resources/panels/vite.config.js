@@ -1,16 +1,20 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, __dirname, '')
+  const backendUrl = env.VITE_BACKEND_URL || 'http://127.0.0.1:8000'
+
+  return {
   plugins: [react()],
   base: command === 'build' ? '/build/' : '/',
   server: {
     proxy: {
-      '/api': 'http://127.0.0.1:8000',
+      '/api': backendUrl,
     },
   },
   css: {
@@ -46,4 +50,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-}))
+  }
+})

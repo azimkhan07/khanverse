@@ -70,6 +70,13 @@ function PageTitles() {
     return null;
 }
 
+function PanelRedirect() {
+    useEffect(() => {
+        window.location.replace(window.location.href);
+    }, []);
+    return null;
+}
+
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -105,6 +112,12 @@ function AppRoutes() {
                     <Route path="/reset-password/:token" element={<ResetPassword />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
                 </Route>
+                <Route path="/buyer" element={<PanelRedirect />} />
+                <Route path="/seller" element={<PanelRedirect />} />
+                <Route path="/admin" element={<PanelRedirect />} />
+                <Route path="/buyer/*" element={<PanelRedirect />} />
+                <Route path="/seller/*" element={<PanelRedirect />} />
+                <Route path="/admin/*" element={<PanelRedirect />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>

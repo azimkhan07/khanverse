@@ -708,9 +708,9 @@ function PublicProfile() {
                                 )}
                             </div>
                             {dashboardLink && complete && !join && (
-                                <Link to={dashboardLink} className="pp-dash">
+                                <a href={dashboardLink} className="pp-dash">
                                     Open Dashboard <ArrowRight size={15} />
-                                </Link>
+                                </a>
                             )}
                         </div>
                     </form>

@@ -155,7 +155,7 @@ function Navbar() {
                                                 <SettingsIcon size={15} /> Settings
                                             </button>
                                             {dashboardLink && (
-                                                <button className="navbar-profile-item" onClick={() => { setProfileOpen(false); setMobileOpen(false); navigate(dashboardLink); }}>
+                                                <button className="navbar-profile-item" onClick={() => { setProfileOpen(false); setMobileOpen(false); window.location.href = dashboardLink; }}>
                                                     <LayoutDashboard size={15} /> My Dashboard
                                                 </button>
                                             )}
@@ -267,7 +267,7 @@ function Navbar() {
                                         <SettingsIcon size={16} /> Settings
                                     </button>
                                     {dashboardLink && (
-                                        <button onClick={() => { setMobileOpen(false); navigate(dashboardLink); }} className="nav-btn nav-btn-primary mobile-btn">
+                                        <button onClick={() => { setMobileOpen(false); window.location.href = dashboardLink; }} className="nav-btn nav-btn-primary mobile-btn">
                                             <LayoutDashboard size={16} /> My Dashboard
                                         </button>
                                     )}
