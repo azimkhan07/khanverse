@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\Api\AdminEmailSettingApiController;
 use App\Http\Controllers\Admin\Api\AdminPaymentGatewayApiController;
 use App\Http\Controllers\Admin\Api\AdminInvoiceSettingApiController;
 use App\Http\Controllers\Admin\Api\AdminSettlementApiController;
+use App\Http\Controllers\Admin\Api\LocationApiController as AdminLocationApiController;
 
 use App\Http\Controllers\Seller\Api\DashboardApiController as SellerDashboardApiController;
 use App\Http\Controllers\Seller\Api\OrderApiController as SellerOrderApiController;
@@ -210,6 +211,29 @@ Route::middleware(['web', 'auth:web', 'role:admin'])->prefix('admin')->name('adm
         Route::put('/{id}', [AdminServiceTypeApiController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdminServiceTypeApiController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/status', [AdminServiceTypeApiController::class, 'toggleStatus'])->name('status');
+    });
+
+    Route::prefix('locations')->name('locations.')->group(function () {
+        // Countries
+        Route::get('/countries', [AdminLocationApiController::class, 'countries'])->name('countries');
+        Route::post('/countries', [AdminLocationApiController::class, 'storeCountry'])->name('countries.store');
+        Route::put('/countries/{id}', [AdminLocationApiController::class, 'updateCountry'])->name('countries.update');
+        Route::delete('/countries/{id}', [AdminLocationApiController::class, 'destroyCountry'])->name('countries.destroy');
+
+        // States
+        Route::get('/states', [AdminLocationApiController::class, 'states'])->name('states');
+        Route::post('/states', [AdminLocationApiController::class, 'storeState'])->name('states.store');
+        Route::put('/states/{id}', [AdminLocationApiController::class, 'updateState'])->name('states.update');
+        Route::delete('/states/{id}', [AdminLocationApiController::class, 'destroyState'])->name('states.destroy');
+
+        // Cities
+        Route::get('/cities', [AdminLocationApiController::class, 'cities'])->name('cities');
+        Route::post('/cities', [AdminLocationApiController::class, 'storeCity'])->name('cities.store');
+        Route::put('/cities/{id}', [AdminLocationApiController::class, 'updateCity'])->name('cities.update');
+        Route::delete('/cities/{id}', [AdminLocationApiController::class, 'destroyCity'])->name('cities.destroy');
+
+        // Bulk import (flexible columns)
+        Route::post('/import', [AdminLocationApiController::class, 'import'])->name('import');
     });
 
     Route::prefix('users')->name('users.')->group(function () {

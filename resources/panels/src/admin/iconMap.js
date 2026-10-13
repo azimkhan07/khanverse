@@ -34,6 +34,7 @@ const iconMap = {
     projects: FolderKanban, 'folder-kanban': FolderKanban,
     services: Briefcase, briefcase: Briefcase,
     categories: Tag, tag: Tag, 'service-types': Tag, 'service-type': Tag,
+    locations: MapPin, 'map-pin': MapPin, countries: Globe, cities: Navigation, states: Compass,
     buyers: Users, users: Users,
     sellers: UserCheck, 'user-check': UserCheck,
     roles: ShieldCheck, 'shield-check': ShieldCheck,
