@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use ZipArchive;
 
 class LocationApiController extends Controller
@@ -45,7 +46,7 @@ class LocationApiController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'iso2' => 'nullable|string|max:2',
+            'iso2' => 'nullable|string|max:2|unique:countries,iso2',
             'iso3' => 'nullable|string|max:3',
             'phone_code' => 'nullable|string|max:10',
             'currency' => 'nullable|string|max:10',
@@ -66,7 +67,7 @@ class LocationApiController extends Controller
         $country = Country::findOrFail($id);
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'iso2' => 'nullable|string|max:2',
+            'iso2' => ['nullable', 'string', 'max:2', Rule::unique('countries', 'iso2')->ignore($id)],
             'iso3' => 'nullable|string|max:3',
             'phone_code' => 'nullable|string|max:10',
             'currency' => 'nullable|string|max:10',
@@ -251,11 +252,15 @@ class LocationApiController extends Controller
             return response()->json(['message' => 'The uploaded file contains no data rows.'], 422);
         }
 
-        $result = match ($type) {
-            'countries' => $this->importCountries($rows),
-            'states' => $this->importStates($rows),
-            'cities' => $this->importCities($rows),
-        };
+        try {
+            $result = match ($type) {
+                'countries' => $this->importCountries($rows),
+                'states' => $this->importStates($rows),
+                'cities' => $this->importCities($rows),
+            };
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['message' => 'Import failed: a duplicate or invalid value was found. ' . $e->getMessage()], 422);
+        }
 
         return response()->json([
             'message' => sprintf(
